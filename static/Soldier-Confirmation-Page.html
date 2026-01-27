@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Booking Submitted - Army Detachment Gear</title>
+  <style>
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+    .wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .card{width:100%;max-width:520px;background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:20px}
+    h1{margin:0 0 8px;font-size:20px}
+    p{margin:0 0 12px;color:#555;font-size:14px;line-height:1.4}
+    .status{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef0f2;color:#333;font-size:12px;font-weight:700}
+    .box{margin-top:14px;padding:12px;border:1px solid #eef0f2;border-radius:10px;background:#fafbfc}
+    a.btn{display:inline-block;margin-top:14px;padding:10px 12px;border-radius:10px;background:#111;color:#fff;text-decoration:none;font-weight:700}
+    a.btn:hover{opacity:.9}
+    .small{margin-top:10px;font-size:12px;color:#666}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="Booking submitted confirmation">
+      <h1>Thanks — Your booking has been submitted</h1>
+      <p>Your gear kit request has been sent to the Quartermaster.</p>
+
+      <span class="status" id="requestStatus">Status: Pending approval</span>
+
+      <div class="box">
+        <p class="small" style="margin:0">
+          Please wait for approval. You will be notified once your request is approved and ready for pickup.
+        </p>
+      </div>
+
+      <a class="btn" href="soldier-book-gear.html">Back to booking</a>
+    </section>
+  </main>
+</body>
+</html>

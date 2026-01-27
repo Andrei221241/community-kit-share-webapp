@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Approve Requests - Army Detachment Gear</title>
+  <style>
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+    .wrap{max-width:1000px;margin:0 auto;padding:24px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+    h1{margin:0;font-size:20px}
+    .card{background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:16px}
+    .note{font-size:12px;color:#666}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border-bottom:1px solid #eef0f2;padding:10px;text-align:left;font-size:14px;vertical-align:top}
+    th{font-size:13px;color:#555}
+    .status{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef0f2;font-size:12px;font-weight:700}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{padding:8px 10px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
+    .btn-approve{background:#111;color:#fff}
+    .btn-reject{background:#fff;border:1px solid #cfd6dd}
+    .btn:hover{opacity:.9}
+    textarea{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px}
+    textarea:focus{outline:2px solid #b9d7ff;border-color:#6aa7ff}
+    @media (max-width:800px){ table{display:block;overflow:auto} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Approve Soldier Requests</h1>
+      <div class="note" id="staffInfo">Signed in: Quartermaster</div>
+    </header>
+
+    <section class="card" aria-label="Pending requests">
+      <p class="note">
+        Review each request. Kits are <strong>all-inclusive</strong> and assigned based on mission country + weather/temperature.
+      </p>
+
+      <table aria-label="Requests table">
+        <thead>
+          <tr>
+            <th>Request</th>
+            <th>Soldier</th>
+            <th>Mission</th>
+            <th>Kit</th>
+            <th>Status</th>
+            <th style="width:220px">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="requestsTableBody">
+          <tr>
+            <td><strong>REQ-0001</strong><br><span class="note">Submitted: 23 Jan 2026</span></td>
+            <td>Sassy John<br><span class="note">ID: S-10234</span></td>
+            <td>Patrol<br><span class="note">Pickup: 25 Jan 2026</span></td>
+            <td>Winter Kit<br><span class="note">Qty: 1</span></td>
+            <td><span class="status" id="status-REQ-0001">Pending</span></td>
+            <td>
+              <div class="actions">
+                <button class="btn btn-approve" type="button">Approve</button>
+                <button class="btn btn-reject" type="button">Reject</button>
+              </div>
+              <div style="margin-top:8px">
+                <label class="note" for="note-REQ-0001">Note (optional)</label>
+                <textarea id="note-REQ-0001" rows="2" placeholder="Add a note for the soldier…"></textarea>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>
