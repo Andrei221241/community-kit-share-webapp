@@ -1,0 +1,31 @@
+/* Page base */
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+
+/* Layout containers */
+.wrap{max-width:900px;margin:0 auto;padding:24px}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+h1{margin:0;font-size:20px}
+
+/* Card */
+.card{background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:16px}
+
+/* Two-column row (stacks on mobile) */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Form controls */
+label{display:block;margin:10px 0 6px;font-size:14px;font-weight:600}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:2px solid #b9d7ff;border-color:#6aa7ff}
+
+/* Table */
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border-bottom:1px solid #eef0f2;padding:10px;text-align:left;font-size:14px}
+th{font-size:13px;color:#555}
+
+/* Button + notes */
+.btn{margin-top:14px;padding:10px 12px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700;cursor:pointer}
+.btn:hover{opacity:.9}
+.note{font-size:12px;color:#666;margin-top:10px}
+
+/* Mobile */
+@media (max-width:700px){ .row{grid-template-columns:1fr} table{display:block;overflow:auto} }

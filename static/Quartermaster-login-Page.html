@@ -4,35 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Army Detachment Gear - Login</title>
-  <style>
-     body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:
-    linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
-    url("images/SLogin-Page.jpg");
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
-}
-    .wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
-    .card{width:100%;max-width:380px;background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:20px}
-    h1{margin:0 0 6px;font-size:20px}
-    p{margin:0 0 16px;color:#555;font-size:14px}
-    label{display:block;margin:10px 0 6px;font-size:14px;font-weight:600}
-    input{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px}
-    input:focus{outline:2px solid #b9d7ff;border-color:#6aa7ff}
-    button{width:100%;margin-top:14px;padding:10px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700;cursor:pointer}
-    button:hover{opacity:.9}
-    .small{margin-top:10px;font-size:12px;color:#666}
-  </style>
+
+  <!-- Page styles -->
+  <link rel="stylesheet" href="Quartermaster-login-Page.css">
 </head>
 <body>
+  <!-- Centered login card -->
   <main class="wrap">
     <section class="card" aria-label="Login">
       <h1>Army Detachment Gear</h1>
       <p>Admin / Quartermaster login</p>
 
+      <!-- Staff login form (wired up later with JS/backend) -->
       <form id="adminLoginForm" action="#" method="post">
         <label for="staffName">Full name</label>
         <input id="staffName" name="staffName" type="text" required />
