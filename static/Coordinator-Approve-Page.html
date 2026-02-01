@@ -6,7 +6,7 @@
   <title>Approve Requests - Army Detachment Gear</title> <!-- Browser tab title -->
 
   <!-- Link this HTML page to its external CSS file -->
-  <link rel="stylesheet" href="Quartermaster-Approve-Page.css">
+  <link rel="stylesheet" href="Coordinator-Approve-Page.css">
 </head>
 
 <body>
@@ -15,8 +15,8 @@
 
     <!-- Top header: page title + signed-in user info -->
     <header>
-      <h1>Approve Soldier Requests</h1>
-      <div class="note" id="staffInfo">Signed in: Quartermaster</div>
+      <h1>Approve Member Requests</h1>
+      <div class="note" id="staffInfo">Signed in: Coordinator</div>
     </header>
 
     <!-- White card section holding the table -->
@@ -24,7 +24,7 @@
 
       <!-- Short explanation note -->
       <p class="note">
-        Review each request. Kits are <strong>all-inclusive</strong> and assigned based on mission country + weather/temperature.
+       Review each request. Kits are <strong>all-inclusive</strong> and matched based on location/environment + weather/temperature.
       </p>
 
       <!-- Requests table -->
@@ -34,8 +34,8 @@
         <thead>
           <tr>
             <th>Request</th>
-            <th>Soldier</th>
-            <th>Mission</th>
+            <th>Member</th>
+            <th>Activity</th>
             <th>Kit</th>
             <th>Status</th>
             <th style="width:220px">Actions</th> <!-- fixed width for buttons/notes -->
@@ -48,11 +48,11 @@
             <!-- Request ID + submitted date -->
             <td><strong>REQ-0001</strong><br><span class="note">Submitted: 23 Jan 2026</span></td>
 
-            <!-- Soldier name + ID -->
-            <td>Sassy John<br><span class="note">ID: S-10234</span></td>
+            <!-- Member name + ID -->
+            <td>Sassy John<br><span class="note">ID: M-10234</span></td>
 
-            <!-- Mission type + pickup date -->
-            <td>Patrol<br><span class="note">Pickup: 25 Jan 2026</span></td>
+            <!-- Activity type + pickup date -->
+            <td>Outdoor activity<br><span class="note">Pickup: 25 Jan 2026</span></td>
 
             <!-- Kit type + quantity -->
             <td>Winter Kit<br><span class="note">Qty: 1</span></td>
@@ -70,7 +70,7 @@
               <!-- Small note box under the buttons -->
               <div style="margin-top:8px">
                 <label class="note" for="note-REQ-0001">Note (optional)</label>
-                <textarea id="note-REQ-0001" rows="2" placeholder="Add a note for the soldier…"></textarea>
+                <textarea id="note-REQ-0001" rows="2" placeholder="Add a note for the Member…"></textarea>
               </div>
             </td>
           </tr>
