@@ -1,6 +1,7 @@
 .db
 db
 db/*
+project-scaffold/db/
 # Logs
 logs
 *.log
