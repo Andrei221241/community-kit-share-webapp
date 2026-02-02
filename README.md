@@ -1,72 +1,138 @@
-# MySQL, PHPMyAdmin and Node.js (ready for Express development)
+# Community Kit Share – Sprint 1
 
-This will install Mysql and phpmyadmin (including all dependencies to run Phpmyadmin) AND node.js
+=== MODULE DETAILS ===
+Module: Software Engineering (Professional Practice)  
+Sprint: Sprint 1 – Workflow & Setup Review  
+Theme: Sharing, exchange, and building community  
 
-This receipe is for development - Node.js is run in using supervisor: changes to any file in the app will trigger a rebuild automatically.
+Document Date: 2 February 2026
 
-For security, this receipe uses a .env file for credentials.  A sample is provided in the env-sample file. If using these files for a fresh project, copy the env-sample file to a file called .env.  Do NOT commit the changed .env file into your new project for security reasons (in the node package its included in .gitignore so you can't anyway)
+=== PROJECT OVERVIEW (SPRINT 1) ===
+Community Kit Share is a group-based full-stack web application project focused on building a community-run platform where members can share and borrow equipment kits for group activities and events.
 
-In node.js, we use the MySQl2 packages (to avoid problems with MySQL8) and the dotenv package to read the environment variables.
+Sprint 1 is dedicated **only to project setup, workflow validation, and collaboration structure**.  
+No full application functionality is implemented at this stage.
 
-Local files are mounted into the container using the 'volumes' directive in the docker-compose.yml for ease of development.
+=== COLLABORATORS / TEAM MEMBERS ===
+This repository is collaboratively developed by the following group members:
 
-### Super-quickstart your new project:
+- **Andrei-Cristian Moaca**  
+  Role: Frontend UI (HTML/CSS)  
+  GitHub: Andrei221241  
 
-* Make sure that you don't have any other containers running usind docker ps
-* run ```docker-compose up --build```
+- **Issa Amtot**  
+  Role: Frontend JavaScript  
+  GitHub: issaamtot14-design  
 
-#### Visit phphmyadmin at:
+- **Raul Pereira**  
+  Role: Backend  
+  GitHub: Raul01Pereira  
 
-http://localhost:8081/
+- **Karim Elmenshawy**  
+  Role: Backend  
+  GitHub: Karim20221  
 
-#### Visit your express app at:
+All collaborators follow a branch-based workflow.  
+Direct pushes to `main` are avoided unless explicitly agreed.
 
-http://localhost:3000
+=== TECHNOLOGY STACK (SPRINT 1) ===
+Frontend:
+- HTML
+- CSS
+- JavaScript
 
-For reference, see the video at: https://roehampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=6f290a6b-ba94-4729-9632-adcf00ac336e
+Backend (planned, not implemented in Sprint 1):
+- Node.js
+- MySQL
 
-NB if you are running this on your own computer rather than the azure labs that has been set up for you, you will need to install the following:
+Infrastructure & Tooling:
+- Docker & Docker Compose
+- Git & GitHub
+- GitHub Projects (Kanban board)
 
-* node.js  (windows: https://nodejs.org/en/download/)
-* docker desktop (for windows, this will also prompt you to install linux subsystem for windows https://docs.docker.com/desktop/windows/install/ )
+=== SPRINT 1 OBJECTIVES ===
+Sprint 1 focuses on establishing a professional development workflow:
 
-### Whats provided in these scaffolding files?
+- GitHub repository created and shared with all collaborators  
+- Branch-based workflow enforced  
+- Scaffolding files added to the repository  
+- README documentation created  
+- GitHub Project (Kanban board) created and populated  
+- Product backlog drafted  
+- Docker environment prepared so all team members can run the project  
+- Personas identified  
+- Ethical and professional considerations discussed  
+- Meeting records documented  
 
+=== JAVASCRIPT SCOPE (SPRINT 1) ===
+Frontend JavaScript in Sprint 1 is **scaffolding only**.
 
-  * A docker setup which will provide you with node.js, mysql and phpmyadmin, including the configuration needed so that both node.js AND phpmyadmin can 'see' and connect to your mysql database.  If you don't use docker you'll have to set up and connect each of these components separately.
-  * A basic starting file structure for a node.js app.
-  * A package.json file that will pull in the node.js libraries required and start your app as needed.
-  * A db.js file which provides all the code needed to connect to the mysql database, using the credentials in the .env file, and which provides a query() function that can send queries to the database and receive a result.  In order to use this (ie. interact with the database, you simply need to include this file in any file you create that needs this database interaction) with the following code:
+It demonstrates:
+- External JavaScript file linking  
+- Safe execution using `DOMContentLoaded`  
+- A structured application entry point  
 
-```const db = require('./services/db');
-```
+No interactive features (e.g. gear selection, form handling, backend communication) are implemented during this sprint.
 
-____
+=== DOCKER SCOPE (SPRINT 1) ===
+Docker is used to ensure consistency across development environments.
 
-Useful commands:
+Sprint 1 requirement:
+- Each group member is able to run the project locally using Docker Compose  
 
-Get a shell in any of the containers
+Further container configuration and service integration are planned for later sprints.
 
-```bash
-docker exec -it <container name> bash -l
-```
+=== KANBAN BOARD ===
+A GitHub Project board is used to manage Sprint 1 tasks using the following workflow:
 
-Once in the database container, you can get a MySQL CLI in the usual way
+- To Do  
+- In Progress  
+- Completed  
 
-```bash
-mysql -uroot -p<password> 
-```
+This supports transparent collaboration and task ownership.
 
+=== ETHICAL & PROFESSIONAL CONSIDERATIONS ===
+Key considerations identified in Sprint 1 include:
 
-* Check containers are running:
+- Minimal personal data collection  
+- Secure handling of credentials  
+- Fairness and transparency in community processes  
+- Accessibility and inclusive design  
+- Clear code of conduct and accountability  
 
-* docker compose ps
+Full details are included in the Sprint 1 submission PDF.
 
+=== SPRINT 1 SUBMISSION ===
+Sprint 1 is submitted as **a single PDF document** containing:
 
-* If they’re not running, start them:
+- Group details  
+- Refined project description  
+- Code of conduct  
+- Personas  
+- Ethical issues  
+- Meeting records  
+- Kanban board link  
+- GitHub repository link  
 
-* docker compose up -d
+Only one team member submits on behalf of the group.
 
-* If changes don’t show, restart containers:
+=== LINKS ===
+GitHub Repository:  
+https://github.com/Andrei221241/army-detachment-gear-webapp
 
-* docker compose restart
+GitHub Project (Kanban Board):  
+(Provided in Sprint 1 submission PDF)
+
+=== SPRINT 1 CHECKLIST ===
+- [x] GitHub repository created with commits from all members  
+- [x] Collaborators added and branch workflow enforced  
+- [x] Scaffolding files added  
+- [x] README documented  
+- [x] Kanban board and backlog created  
+- [x] Docker environment prepared  
+- [x] Sprint 1 documentation completed  
+
+=== NEXT STEPS ===
+Sprint 2 will focus on extending frontend structure and introducing controlled interactivity once the project structure is stable.
+
+---
