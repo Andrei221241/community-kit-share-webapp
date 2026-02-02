@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /> <!-- Character encoding -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Mobile responsive -->
+  <title>Approve Requests - Army Detachment Gear</title> <!-- Browser tab title -->
+
+  <!-- Link this HTML page to its external CSS file -->
+  <link rel="stylesheet" href="Coordinator-Approve-Page.css">
+</head>
+
+<body>
+  <!-- Main page container (centers content and adds padding via CSS) -->
+  <div class="wrap">
+
+    <!-- Top header: page title + signed-in user info -->
+    <header>
+      <h1>Approve Member Requests</h1>
+      <div class="note" id="staffInfo">Signed in: Coordinator</div>
+    </header>
+
+    <!-- White card section holding the table -->
+    <section class="card" aria-label="Pending requests">
+
+      <!-- Short explanation note -->
+      <p class="note">
+       Review each request. Kits are <strong>all-inclusive</strong> and matched based on location/environment + weather/temperature.
+      </p>
+
+      <!-- Requests table -->
+      <table aria-label="Requests table">
+
+        <!-- Table headings -->
+        <thead>
+          <tr>
+            <th>Request</th>
+            <th>Member</th>
+            <th>Activity</th>
+            <th>Kit</th>
+            <th>Status</th>
+            <th style="width:220px">Actions</th> <!-- fixed width for buttons/notes -->
+          </tr>
+        </thead>
+
+        <!-- Table rows -->
+        <tbody id="requestsTableBody">
+          <tr>
+            <!-- Request ID + submitted date -->
+            <td><strong>REQ-0001</strong><br><span class="note">Submitted: 23 Jan 2026</span></td>
+
+            <!-- Member name + ID -->
+            <td>Sassy John<br><span class="note">ID: M-10234</span></td>
+
+            <!-- Activity type + pickup date -->
+            <td>Outdoor activity<br><span class="note">Pickup: 25 Jan 2026</span></td>
+
+            <!-- Kit type + quantity -->
+            <td>Winter Kit<br><span class="note">Qty: 1</span></td>
+
+            <!-- Status badge -->
+            <td><span class="status" id="status-REQ-0001">Pending</span></td>
+
+            <!-- Approve/Reject actions + optional note -->
+            <td>
+              <div class="actions">
+                <button class="btn btn-approve" type="button">Approve</button>
+                <button class="btn btn-reject" type="button">Reject</button>
+              </div>
+
+              <!-- Small note box under the buttons -->
+              <div style="margin-top:8px">
+                <label class="note" for="note-REQ-0001">Note (optional)</label>
+                <textarea id="note-REQ-0001" rows="2" placeholder="Add a note for the Member…"></textarea>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+  <script src="JavaScript.js"></script>
+</body>
+</html>
