@@ -10,6 +10,11 @@ app.use(express.static("static"));
 // Get the functions in the db.js file to use
 const db = require('./services/db');
 
+// Create a route for root - /
+app.get("/", function(req, res) {
+    res.send("Hello world!");
+});
+
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database

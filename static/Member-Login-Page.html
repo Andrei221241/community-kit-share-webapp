@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Member Login - Army Detachment Gear</title>
+
+  <!-- Page styles -->
+  <link rel="stylesheet" href="Member-Login-Page.css">
+</head>
+
+<body>
+  <!-- Centered login card -->
+  <main class="wrap">
+    <section class="card" aria-label="Community member login">
+      <h1>Community Member Login</h1>
+      <p>Enter your name and Member ID to continue</p>
+
+      <!-- Community member login form (wired up with JS/backend) -->
+      <form id="soldierLoginForm" action="#" method="post">
+        <label for="soldierName">Full name</label>
+        <input id="soldierName" name="soldierName" type="text" required />
+
+        <label for="soldierId">Community ID</label>
+        <input id="soldierId" name="soldierId" type="text" required
+               placeholder="e.g., M-10234" />
+
+        <button id="soldierLoginBtn" type="submit">Log in</button>
+        <p class="small" id="soldierLoginMsg">For demo use only — no real personal data.</p>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
