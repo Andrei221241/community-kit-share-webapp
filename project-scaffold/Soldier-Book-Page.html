@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book Gear - community-kit-share-webapp</title>
+  <style>
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+    .wrap{max-width:900px;margin:0 auto;padding:24px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+    h1{margin:0;font-size:20px}
+    .card{background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:16px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;margin:10px 0 6px;font-size:14px;font-weight:600}
+    input,select,textarea{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px}
+    input:focus,select:focus,textarea:focus{outline:2px solid #b9d7ff;border-color:#6aa7ff}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border-bottom:1px solid #eef0f2;padding:10px;text-align:left;font-size:14px}
+    th{font-size:13px;color:#555}
+    .btn{margin-top:14px;padding:10px 12px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700;cursor:pointer}
+    .btn:hover{opacity:.9}
+    .note{font-size:12px;color:#666;margin-top:10px}
+    @media (max-width:700px){ .row{grid-template-columns:1fr} table{display:block;overflow:auto} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Book Gear</h1>
+      <div class="note" id="soldierInfo">Signed in: Soldier</div>
+    </header>
+
+    <section class="card" aria-label="Gear booking form">
+      <form id="gearBookingForm" action="#" method="post">
+
+        <div class="row">
+          <div>
+            <label for="missionType">Mission type</label>
+            <select id="missionType" name="missionType" required>
+              <option value="">Select…</option>
+              <option value="training">Training</option>
+              <option value="patrol">Patrol</option>
+              <option value="support">Support</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="pickupDate">Pickup date</label>
+            <input id="pickupDate" name="pickupDate" type="date" required />
+          </div>
+        </div>
+
+        <p class="note" id="allInclusiveNote">
+          Note: Gear is issued as an <strong>all-inclusive mission kit</strong>. Soldiers do not choose individual items.
+          The kit is allocated based on the <strong>mission country</strong> and expected <strong>weather/temperature</strong>.
+        </p>
+
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" name="notes" rows="3" placeholder="Any notes for the quartermaster…"></textarea>
+
+        <label>Requested kit</label>
+        <table aria-label="Requested kit table">
+          <thead>
+            <tr>
+              <th>Kit type</th>
+              <th style="width:140px">Quantity</th>
+            </tr>
+          </thead>
+          <tbody id="gearRequestRows">
+            <tr>
+              <td>
+                <select name="kitType1" required>
+                  <option value="">Select kit…</option>
+                  <option value="tropical">Tropical Kit</option>
+                  <option value="winter">Winter Kit</option>
+                  <option value="saharan">Saharan / Desert Kit</option>
+                  <option value="urban">Urban Operations Kit</option>
+                  <option value="mountain">Mountain / Alpine Kit</option>
+                </select>
+              </td>
+              <td><input name="qty1" type="number" min="1" value="1" required /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="btn" id="submitBookingBtn" type="submit">Submit booking</button>
+        <p class="note" id="bookingMsg">This is a UI form only — backend/JS will process it later.</p>
+
+      </form>
+    </section>
+  </div>
+</body>
+</html>

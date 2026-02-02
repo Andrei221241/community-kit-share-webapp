@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>community-kit-share-webapp - Login</title>
+  <style>
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+    .wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .card{width:100%;max-width:380px;background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:20px}
+    h1{margin:0 0 6px;font-size:20px}
+    p{margin:0 0 16px;color:#555;font-size:14px}
+    label{display:block;margin:10px 0 6px;font-size:14px;font-weight:600}
+    input{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px}
+    input:focus{outline:2px solid #b9d7ff;border-color:#6aa7ff}
+    button{width:100%;margin-top:14px;padding:10px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700;cursor:pointer}
+    button:hover{opacity:.9}
+    .small{margin-top:10px;font-size:12px;color:#666}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="Login">
+      <h1>community-kit-share-webapp</h1>
+      <p>Admin / Quartermaster login</p>
+
+      <form id="adminLoginForm" action="#" method="post">
+        <label for="staffName">Full name</label>
+        <input id="staffName" name="staffName" type="text" required />
+
+        <label for="staffId">Staff ID</label>
+        <input id="staffId" name="staffId" type="text" required placeholder="e.g., A-1001 / Q-2001" />
+
+        <button id="adminLoginBtn" type="submit">Log in</button>
+        <p class="small" id="adminLoginMsg">Authorised staff only.</p>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
