@@ -1,7 +1,7 @@
 const App = {
 
   config: {
-    appName: "Army Detachment Gear",
+    appName: "community-kit-share-webapp",
     sprint: 1,
     debug: true
   },
