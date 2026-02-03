@@ -64,3 +64,23 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+app
+  .js
+  express?
+static or public
+  assets/imngs/docs
+styles
+  css
+pages
+  big layouts hmtls
+views
+  inners/ views per subpage/product (align with the project)
+controllers
+  inners/ functions respoonsible foir handling the particular routes
+models
+  entitys models or scrap this folder if not needed
+routes
+  jujst the file or files with routes which will be calling the particular controllers
+'global' files like docker-compose, env, readme, etc
