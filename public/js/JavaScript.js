@@ -11,8 +11,8 @@ const App = {
 
   // Entry point for the application
   init() {
-    this.logStartup();   // Log app startup info
-    UI.init();           // Initialise UI behaviour
+    this.logStartup();
+    UI.init(); // Initialise UI behaviour
   },
 
   // Logs startup details if debug mode is enabled
