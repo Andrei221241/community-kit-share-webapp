@@ -2,13 +2,13 @@ const App = {
 
   config: {
     appName: "community-kit-share-webapp",
-    sprint: 1,
+    sprint: 2,
     debug: true
   },
 
   init() {
     this.logStartup();
-    this.registerPlaceholders();
+    UI.init(); 
   },
 
   logStartup() {
@@ -17,11 +17,12 @@ const App = {
         `[${this.config.appName}] Sprint ${this.config.sprint} initialised`
       );
     }
-  },
+  }
+};
 
-  registerPlaceholders() {
-    console.log("UI interaction placeholders registered");
-    console.log("Feature logic scheduled for Sprint-2");
+const UI = {
+  init() {
+    console.log("UI layer initialised (Sprint 2)");
   }
 };
 
