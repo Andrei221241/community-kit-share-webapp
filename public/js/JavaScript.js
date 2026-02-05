@@ -8,7 +8,7 @@ const App = {
 
   init() {
     this.logStartup();
-    UI.init(); 
+    UI.init();
   },
 
   logStartup() {
@@ -23,6 +23,18 @@ const App = {
 const UI = {
   init() {
     console.log("UI layer initialised (Sprint 2)");
+    this.bindButtons(); 
+  },
+
+  bindButtons() {
+    const buttons = document.querySelectorAll("[data-action]");
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.action;
+        console.log(`Button clicked: ${action}`);
+      });
+    });
   }
 };
 
