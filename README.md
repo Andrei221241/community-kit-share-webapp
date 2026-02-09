@@ -121,7 +121,7 @@ GitHub Repository:
 https://github.com/Andrei221241/army-detachment-gear-webapp
 
 GitHub Project (Kanban Board):  
-(Provided in Sprint 1 submission PDF)
+https://github.com/users/Andrei221241/projects/3/views/1
 
 === SPRINT 1 CHECKLIST ===
 - [x] GitHub repository created with commits from all members  
