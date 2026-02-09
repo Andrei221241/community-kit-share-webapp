@@ -1,18 +1,3 @@
-# Node junk
+.git
 node_modules
 npm-debug.log
-
-# Git
-.git
-.gitignore
-
-# Environment
-.env
-
-# Docker / runtime junk
-db/
-*.sock
-
-# OS junk
-.DS_Store
-Thumbs.db

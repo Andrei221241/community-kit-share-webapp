@@ -1,155 +1,72 @@
-Community Kit Share – Sprint 1
+# MySQL, PHPMyAdmin and Node.js (ready for Express development)
 
-Community Kit Share (Community-Kit-Share-Webapp) is a community-run gear-sharing platform designed to support cooperative access to equipment kits for group activities, training sessions, and community events. The project aligns with the theme “Sharing, exchange, and building community” by prioritising shared resources, sustainability, and mutual benefit rather than financial gain.
+This will install Mysql and phpmyadmin (including all dependencies to run Phpmyadmin) AND node.js
 
-=== MODULE DETAILS ===
+This receipe is for development - Node.js is run in using supervisor: changes to any file in the app will trigger a rebuild automatically.
 
-Module: Software Engineering (Professional Practice)
-Sprint: Sprint 1 – Workflow & Setup Review
-Theme: Sharing, exchange, and building community
-Document Date: 2 February 2026
+For security, this receipe uses a .env file for credentials.  A sample is provided in the env-sample file. If using these files for a fresh project, copy the env-sample file to a file called .env.  Do NOT commit the changed .env file into your new project for security reasons (in the node package its included in .gitignore so you can't anyway)
 
-=== PROJECT OVERVIEW ===
+In node.js, we use the MySQl2 packages (to avoid problems with MySQL8) and the dotenv package to read the environment variables.
 
-Community Kit Share is a full-stack web application developed as a group project for the Software Engineering module. The application aims to reduce unnecessary individual ownership of equipment by enabling community members to borrow and share pre-assembled equipment kits for specific environments or activities (e.g. Winter Kits, Tropical Kits, Desert Kits).
+Local files are mounted into the container using the 'volumes' directive in the docker-compose.yml for ease of development.
 
-Instead of purchasing equipment independently, users can request access to kits that are collectively owned and managed. Each request is reviewed by a designated coordinator to ensure availability, suitability, and fair use across the community. This structured request-and-approval process helps maintain trust, accountability, and transparency.
+### Super-quickstart your new project:
 
-The platform is designed to support:
+* Make sure that you don't have any other containers running usind docker ps
+* run ```docker-compose up --build```
 
-Browsing equipment kits by category or tag
-Viewing detailed kit information and availability
-Requesting kits for specific dates or events
-Coordinator approval or rejection of requests
-Tracking current and past borrowing activity through user profiles
+#### Visit phphmyadmin at:
 
-The application deliberately avoids financial transactions. Its focus is on co-operative sharing, accessibility, and responsible use of shared resources, directly supporting the module’s community-focused theme.
+http://localhost:8081/
 
-Development is carried out incrementally using a Scrum-based approach, with functionality introduced progressively across four sprints. Sprint 1 focuses exclusively on planning, workflow setup, documentation, and environment configuration, providing a strong foundation for later development.
+#### Visit your express app at:
 
-=== COLLABORATORS / TEAM MEMBERS ===
+http://localhost:3000
 
-This repository is collaboratively developed by the following group members:
+For reference, see the video at: https://roehampton.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=6f290a6b-ba94-4729-9632-adcf00ac336e
 
-Andrei-Cristian Moaca
-Role: Frontend UI (HTML / CSS)
-GitHub: Andrei221241
+NB if you are running this on your own computer rather than the azure labs that has been set up for you, you will need to install the following:
 
-Issa Amtot
-Role: Frontend JavaScript
-GitHub: issaamtot14-design
+* node.js  (windows: https://nodejs.org/en/download/)
+* docker desktop (for windows, this will also prompt you to install linux subsystem for windows https://docs.docker.com/desktop/windows/install/ )
 
-Raul Pereira
-Role: Backend Development
-GitHub: Raul01Pereira
+### Whats provided in these scaffolding files?
 
-Karim Elmenshawy
-Role: Backend Development & Infrastructure
-GitHub: Karim20221
 
-All contributors follow a branch-based Git workflow.
-Direct pushes to the main branch are avoided unless explicitly agreed by the team.
+  * A docker setup which will provide you with node.js, mysql and phpmyadmin, including the configuration needed so that both node.js AND phpmyadmin can 'see' and connect to your mysql database.  If you don't use docker you'll have to set up and connect each of these components separately.
+  * A basic starting file structure for a node.js app.
+  * A package.json file that will pull in the node.js libraries required and start your app as needed.
+  * A db.js file which provides all the code needed to connect to the mysql database, using the credentials in the .env file, and which provides a query() function that can send queries to the database and receive a result.  In order to use this (ie. interact with the database, you simply need to include this file in any file you create that needs this database interaction) with the following code:
 
-=== TECHNOLOGY STACK (SPRINT 1) ===
-Frontend
+```const db = require('./services/db');
+```
 
-HTML
-CSS
-JavaScript
+____
 
-Backend (planned for later sprints)
+Useful commands:
 
-Node.js
-Express.js
-MySQL
+Get a shell in any of the containers
 
-Infrastructure & Tooling
+```bash
+docker exec -it <container name> bash -l
+```
 
-Docker & Docker Compose
-Git & GitHub
-GitHub Projects (Kanban board)
+Once in the database container, you can get a MySQL CLI in the usual way
 
-=== SPRINT 1 SCOPE & OBJECTIVES ===
+```bash
+mysql -uroot -p<password> 
+```
 
-Sprint 1 is dedicated to workflow validation and project setup only.
-No application features are implemented during this sprint.
 
-Key objectives include:
+* Check containers are running:
 
-GitHub repository created and shared with all collaborators
-Branch-based workflow established and enforced
-Scaffolding files added to the repository
-README documentation created and maintained
-GitHub Project (Kanban board) created and populated
-Product backlog drafted
-Docker environment prepared and runnable by all team members
-Personas identified
-Ethical and professional considerations discussed
-Meeting records documented
+* docker compose ps
 
-=== JAVASCRIPT SCOPE (SPRINT 1) ===
 
-JavaScript in Sprint 1 is limited to application scaffolding only.
+* If they’re not running, start them:
 
-It demonstrates:
-External JavaScript file usage
-Safe execution using DOMContentLoaded
-A structured application entry point
-No interactive features (e.g. form handling, gear selection, backend communication) are implemented during this sprint.
+* docker compose up -d
 
-=== DOCKER SCOPE (SPRINT 1) ===
+* If changes don’t show, restart containers:
 
-Docker is used to ensure a consistent development environment across all team members.
-
-Sprint 1 requirement:
-
-Every group member must be able to run the project locally using Docker Compose
-Further service integration and CI/CD workflows are planned for later sprints.
-
-=== KANBAN BOARD ===
-
-A GitHub Project board is used to manage Sprint 1 tasks using the following workflow:
-
-To Do
-In Progress
-Completed
-
-This supports transparency, task ownership, and effective collaboration.
-
-=== ETHICAL & PROFESSIONAL CONSIDERATIONS ===
-
-Key considerations identified during Sprint 1 include:
-
-Minimal personal data collection
-Secure handling of credentials
-Fairness and transparency in request approvals
-Accessibility and inclusive design
-Clear code of conduct and accountability
-Full details are included in the Sprint 1 submission PDF.
-
-=== SPRINT 1 SUBMISSION ===
-
-Sprint 1 is submitted as a single PDF document containing:
-
-Group details
-Refined project description
-Code of conduct
-Personas
-Ethical issues
-Meeting records
-Kanban board link
-GitHub repository link
-
-Only one team member submits on behalf of the group.
-
-=== LINKS ===
-
-GitHub Repository:
-https://github.com/Andrei221241/community-kit-share-webapp
-
-GitHub Project (Kanban Board):
-https://github.com/users/Andrei221241/projects/3/views/1
-
-=== NEXT STEPS ===
-
-Sprint 2 will focus on refining requirements, producing design artefacts, and preparing the application structure for controlled interactivity and backend integration in Sprint 3.
+* docker compose restart
