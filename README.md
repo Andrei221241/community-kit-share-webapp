@@ -148,7 +148,7 @@ GitHub Repository:
 https://github.com/Andrei221241/community-kit-share-webapp
 
 GitHub Project (Kanban Board):
-Provided in the Sprint 1 submission PDF
+https://github.com/users/Andrei221241/projects/3/views/1
 
 === NEXT STEPS ===
 
