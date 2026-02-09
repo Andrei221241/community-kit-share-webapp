@@ -145,7 +145,7 @@ Only one team member submits on behalf of the group.
 === LINKS ===
 
 GitHub Repository:
-https://github.com/Andrei221241/army-detachment-gear-webapp
+https://github.com/Andrei221241/community-kit-share-webapp
 
 GitHub Project (Kanban Board):
 Provided in the Sprint 1 submission PDF
