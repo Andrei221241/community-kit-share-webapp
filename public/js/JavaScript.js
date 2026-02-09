@@ -20,7 +20,6 @@ const App = {
   }
 };
 
-
 const UI = {
 
   init() {
@@ -30,13 +29,14 @@ const UI = {
     this.bindForms();
   },
 
-  
+  // Detect which page we are currently on
   detectPage() {
     const page = document.body.dataset.page || "unknown";
     console.log(`Current page context: ${page}`);
     return page;
   },
 
+  // Attach click listeners to buttons
   bindButtons() {
     const buttons = document.querySelectorAll("[data-action]");
     if (!buttons.length) return;
@@ -54,7 +54,7 @@ const UI = {
     });
   },
 
- 
+  // Attach submit listeners to forms
   bindForms() {
     const forms = document.querySelectorAll("form[data-form]");
     if (!forms.length) return;
@@ -70,6 +70,15 @@ const UI = {
           data[field.dataset.field] = field.value.trim();
         });
 
+        const errors = this.validateFormData(data);
+
+        if (errors.length) {
+          this.showFeedback(form, errors.join(", "), "error");
+          return;
+        }
+
+        this.showFeedback(form, "Form submitted successfully", "success");
+
         console.log({
           type: "form",
           form: form.dataset.form,
@@ -78,6 +87,35 @@ const UI = {
         });
       });
     });
+  },
+
+  // Validate form data before submission
+  validateFormData(data) {
+    const errors = [];
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (!value) {
+        errors.push(`${key} is required`);
+      }
+    });
+
+    return errors;
+  },
+
+  // Display success or error messages to the user
+  showFeedback(form, message, type = "info") {
+    let feedback = form.querySelector(".form-feedback");
+
+    if (!feedback) {
+      feedback = document.createElement("div");
+      feedback.className = "form-feedback";
+      form.appendChild(feedback);
+    }
+
+    feedback.textContent = message;
+    feedback.style.marginTop = "10px";
+    feedback.style.fontWeight = "bold";
+    feedback.style.color = type === "error" ? "red" : "green";
   }
 };
 
