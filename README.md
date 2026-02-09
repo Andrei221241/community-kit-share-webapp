@@ -1,7 +1,7 @@
 # Community Kit Share – Sprint 1
 
 === MODULE DETAILS ===
-Module: Software Engineering (Professional Practice)  
+Module: Software Engineering 
 Sprint: Sprint 1 – Workflow & Setup Review  
 Theme: Sharing, exchange, and building community  
 
