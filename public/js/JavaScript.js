@@ -6,7 +6,7 @@ const App = {
   // Basic app configuration (used for logging + environment control)
   config: {
     appName: "community-kit-share-webapp",
-    sprint: 2,
+    sprint: 3,
     debug: true
   },
 
@@ -14,7 +14,10 @@ const App = {
   init() {
     Logger.log("Application starting...");
     this.logStartup();
-    UI.init();   // Hand control over to UI layer
+
+    DataStore.load();   // NEW: Load persisted state
+
+    UI.init();          // Hand control over to UI layer
   },
 
   // Logs startup information if debug mode is enabled
@@ -22,6 +25,8 @@ const App = {
     Logger.log(`Sprint ${this.config.sprint} initialised`);
   }
 };
+
+
 
 // LOGGER UTILITY
 // Centralised logging so we can control debug output properly
@@ -34,31 +39,63 @@ const Logger = {
   }
 };
 
+
+
+// DATA STORE MODULE
+// Responsible for managing application state and persistence
+
+const DataStore = {
+
+  storageKey: "community-kit-share-data",
+
+  state: {
+    users: [],
+    kits: [],
+    requests: [],
+    currentUser: null
+  },
+
+  // Load state from localStorage
+  load() {
+    const saved = localStorage.getItem(this.storageKey);
+
+    if (saved) {
+      this.state = JSON.parse(saved);
+      Logger.log("DataStore loaded from localStorage");
+    } else {
+      Logger.log("No existing data found, using default state");
+    }
+  },
+
+  // Save state to localStorage
+  save() {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+    Logger.log("DataStore saved to localStorage");
+  }
+};
+
+
+
 // UI LAYER
 // Handles DOM interaction only (no business logic here)
 
 const UI = {
 
-  // Called once when app starts
   init() {
     Logger.log("UI layer initialised");
 
-    this.page = this.detectPage();  // Work out which page is loaded
-    this.bindButtons();             // Attach button listeners
-    this.bindForms();               // Attach form listeners
-
-    this.loadPageController();      // Initialise page-specific logic
+    this.page = this.detectPage();
+    this.bindButtons();
+    this.bindForms();
+    this.loadPageController();
   },
 
-  // Detect current page using <body data-page="">
-  // This allows one JS file to behave differently per page
   detectPage() {
     const page = document.body.dataset.page || "unknown";
     Logger.log(`Detected page: ${page}`);
     return page;
   },
 
-  // If a page-specific controller exists, initialise it
   loadPageController() {
     if (Pages[this.page]) {
       Logger.log(`Loading controller for page: ${this.page}`);
@@ -68,7 +105,6 @@ const UI = {
     }
   },
 
-  // Attach click listeners to all elements using data-action
   bindButtons() {
     const buttons = document.querySelectorAll("[data-action]");
     if (!buttons.length) return;
@@ -83,7 +119,6 @@ const UI = {
     });
   },
 
-  // Central action routing system (scalable and clean)
   handleAction(action) {
     const actions = {
       login: () => Logger.log("Login action triggered"),
@@ -98,7 +133,6 @@ const UI = {
     }
   },
 
-  // Attach submit listeners to forms marked with data-form
   bindForms() {
     const forms = document.querySelectorAll("form[data-form]");
     if (!forms.length) return;
@@ -125,7 +159,6 @@ const UI = {
     });
   },
 
-  // Collects form field values into a structured object
   collectFormData(form) {
     const fields = form.querySelectorAll("[data-field]");
     const data = {};
@@ -137,7 +170,6 @@ const UI = {
     return data;
   },
 
-  // Display feedback messages under the form
   showFeedback(form, message, type = "info") {
     let feedback = form.querySelector(".form-feedback");
 
@@ -154,22 +186,21 @@ const UI = {
   }
 };
 
+
+
 // VALIDATION MODULE
-// Handles structured validation logic separate from UI
 
 const Validator = {
 
   validate(data, formType) {
     const errors = [];
 
-    // Basic empty check (applies to all forms)
     Object.entries(data).forEach(([key, value]) => {
       if (!value) {
         errors.push(`${key} is required`);
       }
     });
 
-    // Example: Login-specific rules
     if (formType === "login") {
 
       if (data.email && !data.email.includes("@")) {
@@ -185,8 +216,9 @@ const Validator = {
   }
 };
 
+
+
 // PAGE-SPECIFIC CONTROLLERS
-// Each page can have isolated behaviour here
 
 const Pages = {
 
@@ -212,7 +244,6 @@ const Pages = {
 
 
 // APPLICATION STARTUP
-// Ensures DOM is fully loaded before initialising the app
 
 document.addEventListener("DOMContentLoaded", () => {
   App.init();

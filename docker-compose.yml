@@ -5,6 +5,7 @@ services:
       context: ./
     volumes:
       - .:/src
+      - /src/node_modules
     command: supervisor -e  'js,pug,html' index.js
     ports:
       - "3000:3000"
