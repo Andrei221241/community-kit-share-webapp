@@ -5,31 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Community Member Login - Community Kit Share</title>
 
-  <!-- Page styles -->
   <link rel="stylesheet" href="/styles/css/Member-Login-Page.css">
 </head>
 
-<body>
-  <!-- Centered login card -->
+<body data-page="memberLogin">
+
   <main class="wrap">
     <section class="card" aria-label="Community member login">
       <h1>Community Member Login</h1>
-      <p>Enter your name and Member ID to continue</p>
+      <p>Enter your email and password to continue</p>
 
-      <!-- Community member login form (wired up with JS/backend) -->
-      <form id="memberLoginForm" action="#" method="post">
-        <label for="memberName">Full name</label>
-        <input id="memberName" name="memberName" type="text" required />
+      <!-- NOW wired into JS architecture -->
+      <form data-form="login">
 
-        <label for="memberId">Community ID</label>
-        <input id="memberId" name="memberId" type="text" required
-               placeholder="e.g., M-10234" />
+        <label for="email">Email</label>
+        <input id="email" type="email" data-field="email" required />
 
-        <button id="memberLoginBtn" type="submit">Log in</button>
-        <p class="small" id="memberLoginMsg">For demo use only — no real personal data.</p>
+        <label for="password">Password</label>
+        <input id="password" type="password" data-field="password" required />
+
+        <button type="submit">Log in</button>
+
       </form>
+
     </section>
   </main>
+
   <script src="/js/JavaScript.js"></script>
+
 </body>
 </html>

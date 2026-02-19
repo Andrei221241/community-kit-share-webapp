@@ -3,29 +3,24 @@
 
 const App = {
 
-  // Basic app configuration (used for logging + environment control)
   config: {
     appName: "community-kit-share-webapp",
     sprint: 3,
     debug: true
   },
 
-  // Entry point of the entire application
   init() {
     Logger.log("Application starting...");
     this.logStartup();
 
-    DataStore.load();   // NEW: Load persisted state
-
-    UI.init();          // Hand control over to UI layer
+    DataStore.load();
+    UI.init();
   },
 
-  // Logs startup information if debug mode is enabled
   logStartup() {
     Logger.log(`Sprint ${this.config.sprint} initialised`);
   }
 };
-
 
 
 // LOGGER UTILITY
@@ -38,7 +33,6 @@ const Logger = {
     }
   }
 };
-
 
 
 // DATA STORE MODULE
@@ -55,7 +49,6 @@ const DataStore = {
     currentUser: null
   },
 
-  // Load state from localStorage
   load() {
     const saved = localStorage.getItem(this.storageKey);
 
@@ -67,13 +60,76 @@ const DataStore = {
     }
   },
 
-  // Save state to localStorage
   save() {
     localStorage.setItem(this.storageKey, JSON.stringify(this.state));
     Logger.log("DataStore saved to localStorage");
   }
 };
 
+
+// SERVICE LAYER
+// Structured so we can later replace this with real API calls
+
+const AuthService = {
+
+  async login(credentials) {
+
+    await new Promise(res => setTimeout(res, 300));
+
+    return {
+      id: Date.now(),
+      email: credentials.email
+    };
+  }
+};
+
+const RequestService = {
+
+  async createRequest(data) {
+
+    await new Promise(res => setTimeout(res, 300));
+
+    return {
+      id: Date.now(),
+      ...data,
+      status: "pending"
+    };
+  }
+};
+
+
+// CONTROLLER LAYER
+// Handles business logic separate from UI
+
+const Controller = {
+
+  async login(credentials) {
+
+    const user = await AuthService.login(credentials);
+
+    DataStore.state.currentUser = user;
+    DataStore.save();
+
+    Logger.log("User logged in");
+
+    // Redirect using Express route (not HTML file)
+    window.location.href = "/member/book";
+  },
+
+  async requestKit(requestData) {
+
+    const newRequest = await RequestService.createRequest(requestData);
+
+    DataStore.state.requests.push(newRequest);
+    DataStore.save();
+
+    Logger.log("New kit request stored");
+
+    // Redirect using Express route
+    window.location.href = "/member/confirmation";
+  }
+
+};
 
 
 // UI LAYER
@@ -85,7 +141,6 @@ const UI = {
     Logger.log("UI layer initialised");
 
     this.page = this.detectPage();
-    this.bindButtons();
     this.bindForms();
     this.loadPageController();
   },
@@ -105,40 +160,13 @@ const UI = {
     }
   },
 
-  bindButtons() {
-    const buttons = document.querySelectorAll("[data-action]");
-    if (!buttons.length) return;
-
-    buttons.forEach(button => {
-      button.addEventListener("click", () => {
-        const action = button.dataset.action;
-
-        Logger.log(`Button clicked: ${action}`);
-        this.handleAction(action);
-      });
-    });
-  },
-
-  handleAction(action) {
-    const actions = {
-      login: () => Logger.log("Login action triggered"),
-      approve: () => Logger.log("Approve action triggered"),
-      requestKit: () => Logger.log("Request Kit action triggered")
-    };
-
-    if (actions[action]) {
-      actions[action]();
-    } else {
-      console.warn(`No handler defined for action: ${action}`);
-    }
-  },
-
   bindForms() {
     const forms = document.querySelectorAll("form[data-form]");
     if (!forms.length) return;
 
     forms.forEach(form => {
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
+
         e.preventDefault();
 
         const formType = form.dataset.form;
@@ -151,15 +179,20 @@ const UI = {
           return;
         }
 
-        this.showFeedback(form, "Form validated successfully", "success");
+        if (formType === "login") {
+          await Controller.login(data);
+        }
 
-        Logger.log(`Form submitted: ${formType}`);
-        console.log({ form: formType, payload: data });
+        if (formType === "requestKit") {
+          await Controller.requestKit(data);
+        }
+
       });
     });
   },
 
   collectFormData(form) {
+
     const fields = form.querySelectorAll("[data-field]");
     const data = {};
 
@@ -171,6 +204,7 @@ const UI = {
   },
 
   showFeedback(form, message, type = "info") {
+
     let feedback = form.querySelector(".form-feedback");
 
     if (!feedback) {
@@ -187,12 +221,12 @@ const UI = {
 };
 
 
-
 // VALIDATION MODULE
 
 const Validator = {
 
   validate(data, formType) {
+
     const errors = [];
 
     Object.entries(data).forEach(([key, value]) => {
@@ -212,10 +246,20 @@ const Validator = {
       }
     }
 
+    if (formType === "requestKit") {
+
+      if (!data.kitType) {
+        errors.push("Please select a kit type");
+      }
+
+      if (!data.quantity || parseInt(data.quantity) <= 0) {
+        errors.push("Quantity must be at least 1");
+      }
+    }
+
     return errors;
   }
 };
-
 
 
 // PAGE-SPECIFIC CONTROLLERS
@@ -224,23 +268,32 @@ const Pages = {
 
   memberLogin: {
     init() {
-      Logger.log("Member Login page controller initialised");
+      Logger.log("Member Login page initialised");
+    }
+  },
+
+  memberBook: {
+    init() {
+
+      Logger.log("Member Book page initialised");
+
+      if (DataStore.state.currentUser) {
+        const soldierInfo = document.getElementById("soldierInfo");
+        if (soldierInfo) {
+          soldierInfo.textContent =
+            "Signed in: " + DataStore.state.currentUser.email;
+        }
+      }
     }
   },
 
   coordinatorApprove: {
     init() {
-      Logger.log("Coordinator Approval page controller initialised");
-    }
-  },
-
-  memberDashboard: {
-    init() {
-      Logger.log("Member Dashboard controller initialised");
+      Logger.log("Coordinator Approve page initialised");
     }
   }
-};
 
+};
 
 
 // APPLICATION STARTUP
