@@ -1,0 +1,34 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Community Kit Share - Login
+
+    // Page styles
+    link(rel="stylesheet", href="/styles/css/Coordinator-Login-Page.css")
+
+  body
+    // Centered login card
+    main.wrap
+      section.card(aria-label="Login")
+        h1 Community Kit Share
+        p Admin / Coordinator login
+
+        // Staff login form
+        form#adminLoginForm(action="#", method="post")
+          label(for="staffName") Full name
+          input#staffName(name="staffName", type="text", required)
+
+          label(for="staffId") Staff ID
+          input#staffId(
+            name="staffId",
+            type="text",
+            required,
+            placeholder="e.g., A-1001 / Q-2001"
+          )
+
+          button#adminLoginBtn(type="submit") Log in
+          p.small#adminLoginMsg Authorised staff only.
+
+    script(src="/js/JavaScript.js")

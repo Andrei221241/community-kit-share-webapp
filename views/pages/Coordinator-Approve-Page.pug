@@ -1,0 +1,82 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Approve Requests - Army Detachment Gear
+
+    // Page styles
+    link(rel="stylesheet", href="/styles/css/Coordinator-Approve-Page.css")
+
+  body
+    .wrap
+
+      // Header
+      header
+        h1 Approve Member Requests
+        .note#staffInfo Signed in: Coordinator
+
+      // Card section
+      section.card(aria-label="Pending requests")
+
+        // Info note
+        p.note
+          | Review each request. Kits are 
+          strong all-inclusive
+          |  and matched based on location/environment + weather/temperature.
+
+        // Requests table
+        table(aria-label="Requests table")
+          thead
+            tr
+              th Request
+              th Member
+              th Activity
+              th Kit
+              th Status
+              th(style="width:220px") Actions
+
+          tbody#requestsTableBody
+            tr
+              // Request ID + date
+              td
+                strong REQ-0001
+                br
+                span.note Submitted: 23 Jan 2026
+
+              // Member
+              td
+                | Sassy John
+                br
+                span.note ID: M-10234
+
+              // Activity
+              td
+                | Outdoor activity
+                br
+                span.note Pickup: 25 Jan 2026
+
+              // Kit
+              td
+                | Winter Kit
+                br
+                span.note Qty: 1
+
+              // Status
+              td
+                span.status#status-REQ-0001 Pending
+
+              // Actions
+              td
+                .actions
+                  button.btn.btn-approve(type="button") Approve
+                  button.btn.btn-reject(type="button") Reject
+
+                div(style="margin-top:8px")
+                  label.note(for="note-REQ-0001") Note (optional)
+                  textarea#note-REQ-0001(
+                    rows="2",
+                    placeholder="Add a note for the Member…"
+                  )
+
+    script(src="/js/JavaScript.js")

@@ -1,0 +1,77 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Request a Kit - Community Kit Share
+
+    // Page styles
+    link(rel="stylesheet", href="/styles/css/Member-Book-Page.css")
+
+  body
+    .wrap
+      header
+        h1 Request a Kit
+        .note#soldierInfo Signed in: Soldier
+
+      // Booking form card
+      section.card(aria-label="Gear booking form")
+        form#gearBookingForm(action="#", method="post")
+
+          // Mission type + pickup date
+          .row
+            div
+              label(for="missionType") Training / Event type
+              select#missionType(name="missionType", required)
+                option(value="") Select…
+                option(value="training") Training session
+                option(value="exercise") Exercise / drill
+                option(value="outdoor") Outdoor activity
+
+            div
+              label(for="pickupDate") Pickup date
+              input#pickupDate(name="pickupDate", type="date", required)
+
+          // All-inclusive kit note
+          p.note#allInclusiveNote
+            | Note: Kits are borrowed as an 
+            strong all-inclusive kit
+            | . Members do not choose individual items.
+            |  A coordinator matches the kit to the 
+            strong location/environment
+            |  and expected 
+            strong weather/temperature
+            | .
+
+          // Optional notes
+          label(for="notes") Notes (optional)
+          textarea#notes(
+            name="notes",
+            rows="3",
+            placeholder="Any notes for the coordinator"
+          )
+
+          // Kit selection table
+          label Requested kit
+          table(aria-label="Requested kit table")
+            thead
+              tr
+                th Kit type
+                th(style="width:140px") Quantity
+            tbody#gearRequestRows
+              tr
+                td
+                  select(name="kitType1", required)
+                    option(value="") Select kit…
+                    option(value="tropical") Tropical Kit
+                    option(value="winter") Winter Kit
+                    option(value="saharan") Saharan / Desert Kit
+                    option(value="urban") Urban Operations Kit
+                    option(value="mountain") Mountain / Alpine Kit
+                td
+                  input(name="qty1", type="number", min="1", value="1", required)
+
+          button.btn#submitBookingBtn(type="submit") Submit booking
+          p.note#bookingMsg This is a UI form only.
+
+    script(src="/js/JavaScript.js")
