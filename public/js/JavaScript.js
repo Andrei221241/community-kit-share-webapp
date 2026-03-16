@@ -112,7 +112,6 @@ const Controller = {
 
     Logger.log("User logged in");
 
-    // Redirect using Express route (not HTML file)
     window.location.href = "/member/book";
   },
 
@@ -125,8 +124,29 @@ const Controller = {
 
     Logger.log("New kit request stored");
 
-    // Redirect using Express route
     window.location.href = "/member/confirmation";
+  },
+
+  approveRequest(id) {
+
+    const request = DataStore.state.requests.find(r => r.id == id);
+
+    if (request) {
+      request.status = "approved";
+      DataStore.save();
+      Logger.log("Request approved");
+    }
+  },
+
+  rejectRequest(id) {
+
+    const request = DataStore.state.requests.find(r => r.id == id);
+
+    if (request) {
+      request.status = "rejected";
+      DataStore.save();
+      Logger.log("Request rejected");
+    }
   }
 
 };
@@ -142,6 +162,7 @@ const UI = {
 
     this.page = this.detectPage();
     this.bindForms();
+    this.bindButtons();
     this.loadPageController();
   },
 
@@ -188,6 +209,29 @@ const UI = {
         }
 
       });
+    });
+  },
+
+  bindButtons() {
+
+    document.addEventListener("click", (e) => {
+
+      const button = e.target.closest("[data-action]");
+      if (!button) return;
+
+      const action = button.dataset.action;
+      const id = button.dataset.id;
+
+      if (action === "approve") {
+        Controller.approveRequest(id);
+        location.reload();
+      }
+
+      if (action === "reject") {
+        Controller.rejectRequest(id);
+        location.reload();
+      }
+
     });
   },
 
@@ -288,8 +332,53 @@ const Pages = {
   },
 
   coordinatorApprove: {
+
     init() {
+
       Logger.log("Coordinator Approve page initialised");
+      this.renderRequests();
+    },
+
+    renderRequests() {
+
+      const tbody = document.getElementById("requestsTableBody");
+      if (!tbody) return;
+
+      tbody.innerHTML = "";
+
+      const requests = DataStore.state.requests;
+
+      if (!requests.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">No requests found.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      requests.forEach(request => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>REQ-${request.id}</td>
+          <td>${request.missionType}</td>
+          <td>${request.kitType} (Qty: ${request.quantity})</td>
+          <td>${request.pickupDate}</td>
+          <td>${request.status}</td>
+          <td>
+            <button data-action="approve" data-id="${request.id}">
+              Approve
+            </button>
+            <button data-action="reject" data-id="${request.id}">
+              Reject
+            </button>
+          </td>
+        `;
+
+        tbody.appendChild(row);
+      });
     }
   }
 
