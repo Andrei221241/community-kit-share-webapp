@@ -1,5 +1,15 @@
-/* Page base */
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+/* Background image + dark overlay */
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
+    url("../assets/images/must-have-camping-gearjpg"),
+    #335135;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
 
 /* Layout containers */
 .wrap{max-width:900px;margin:0 auto;padding:24px}
