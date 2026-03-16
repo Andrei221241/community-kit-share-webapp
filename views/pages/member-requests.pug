@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  h1 My Requests
+  p.muted Viewing requests for 
+    strong= userName
+  if !requests.length
+    p No requests found.
+  else
+    table
+      thead
+        tr
+          th Kit
+          th Start
+          th End
+          th Status
+      tbody
+        each request in requests
+          tr
+            td= request.kit_name
+            td= request.start_date
+            td= request.end_date
+            td= request.status

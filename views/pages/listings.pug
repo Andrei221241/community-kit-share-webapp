@@ -1,0 +1,44 @@
+extends ../layout
+
+block content
+  h1 Listing Page
+  p.muted US1/US2: list kits with availability and filter/search.
+
+  form(method="get" action="/listings")
+    .row
+      div
+        label(for="search") Search
+        br
+        input#search(type="text" name="search" value=selected.search placeholder="kit name or description")
+      div
+        label(for="category") Category
+        br
+        select#category(name="category")
+          option(value="") All
+          each category in categories
+            option(value=category.name selected=(selected.category===category.name))= category.name
+      div
+        label(for="tag") Tag
+        br
+        select#tag(name="tag")
+          option(value="") All
+          each tagItem in tags
+            option(value=tagItem.name selected=(selected.tag===tagItem.name))= tagItem.name
+    .row
+      button(type="submit") Apply Filters
+      a(href="/listings") Clear Filters
+
+  if !kits.length
+    p No kits found for current filters.
+  else
+    each kit in kits
+      .card
+        h3
+          a(href=`/listings/${kit.id}`)= kit.name
+        p
+          strong Category: 
+          | #{kit.category || 'Uncategorized'}
+        p= kit.short_description
+        p
+          strong Availability: 
+          span(class=(kit.availability_status === 'Available' ? 'ok' : 'warn'))= kit.availability_status || 'Unknown'

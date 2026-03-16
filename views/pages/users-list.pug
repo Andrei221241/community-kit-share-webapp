@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  h1 Users List
+  p.muted From database `users` table.
+  if !users.length
+    p No users found.
+  else
+    table
+      thead
+        tr
+          th Name
+          th Role
+          th Email
+          th Profile
+      tbody
+        each user in users
+          tr
+            td= user.name
+            td= user.role
+            td= user.email
+            td
+              a(href=`/users/${user.id}`) View
