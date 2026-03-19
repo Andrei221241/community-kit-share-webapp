@@ -55,3 +55,14 @@ module.exports = {
     goodbye,
     hello,
 };
+
+exports.dbTest = (req, res) => {
+  db.query('SELECT * FROM users', (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.send('Database error');
+    }
+
+    res.json(results);
+  });
+};

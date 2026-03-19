@@ -1,3 +1,5 @@
+const db = require('../app/services/db');
+
 const express = require("express");
 
 const pages = require("../controllers/pages.controller");
