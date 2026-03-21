@@ -35,6 +35,12 @@ The code expects these tables to exist and be populated:
 - `kit_items`
 - `borrow_requests`
 
+## Login and DB correlation
+
+Login is directly tied to the database. The member and coordinator login handlers query the `users` table by `email`, read `role` and `password_hash`, and verify the submitted password with `bcrypt`.
+
+If authentication succeeds, the app stores `userId`, `userName`, and `userRole` in the session. Protected routes then use that session state to control access instead of re-checking credentials on every page load.
+
 ## Run
 
 ```bash
