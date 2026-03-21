@@ -46,6 +46,7 @@ Where:
 ### 4) Added authentication flow for demo login
 - Added session middleware and user session propagation to templates.
 - Added member/coordinator login POST handlers using bcrypt password check.
+- Wired login directly to the database by querying the `users` table for `email`, `role`, and `password_hash`, then storing the authenticated user's id/name/role in session state for protected routes.
 - Added route guards for member/coordinator protected pages and logout route.
 
 Where:
