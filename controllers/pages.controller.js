@@ -1,35 +1,39 @@
-const path = require("path");
-
 const db = require("../app/services/db");
 
-const pagesRoot = path.join(__dirname, "..", "views", "pages");
-
-function sendPage(res, fileName) {
-    res.sendFile(path.join(pagesRoot, fileName));
-}
-
 function memberLogin(req, res) {
-    sendPage(res, "Member-Login-Page.html");
+    res.render("pages/Member-Login-Page");
 }
 
 function memberBook(req, res) {
-    sendPage(res, "Member-Book-Page.html");
+    res.render("pages/Member-Book-Page");
 }
 
 function memberConfirmation(req, res) {
-    sendPage(res, "Member-Confirmation-Page.html");
+    res.render("pages/Member-Confirmation-Page");
 }
 
 function coordinatorLogin(req, res) {
-    sendPage(res, "Coordinator-login-Page.html");
+    res.render("pages/Coordinator-login-Page");
 }
 
-function coordinatorApprove(req, res) {
-    sendPage(res, "Coordinator-Approve-Page.html");
+async function coordinatorApprove(req, res) {
+    try {
+        const sql = "SELECT * FROM requests";
+        const requests = await db.query(sql);
+
+        res.render("pages/Coordinator-Approve-Page", {
+            requests
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Database error");
+    }
 }
 
 function dbTest(req, res) {
     const sql = "select * from test_table";
+
     db.query(sql).then((results) => {
         console.log(results);
         res.send(results);

@@ -5,18 +5,16 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     title Community Member Login - Community Kit Share
 
-    // Page styles
     link(rel="stylesheet", href="/styles/css/Member-Login-Page.css")
 
   body
-    // Centered login card
     main.wrap
       section.card(aria-label="Community member login")
         h1 Community Member Login
         p Enter your name and Member ID to continue
 
-        // Community member login form
-        form#memberLoginForm(action="#", method="post")
+        // 🔥 FIXED FORM (removed action)
+        form#memberLoginForm
           label(for="memberName") Full name
           input#memberName(name="memberName", type="text", required)
 
