@@ -6,11 +6,15 @@ services:
     volumes:
       - .:/src
       - /src/node_modules
-    command: supervisor -e  'js,pug,html' index.js
+    command: supervisor -e 'js,pug,html' index.js
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy   # ✅ waits for MySQL to actually be ready
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
   db:
     image: mysql
     restart: always
@@ -20,6 +24,12 @@ services:
       - "3308:3306"
     volumes:
       - ./db:/var/lib/mysql
+    healthcheck:                                          # ✅ add this
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always

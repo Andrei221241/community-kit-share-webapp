@@ -1,20 +1,29 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASS,
-  database: process.env.MYSQL_DATABASE,
-  port: process.env.DB_PORT
+const pool = mysql.createPool({
+    host: process.env.MYSQL_HOST || 'db',
+    user: process.env.MYSQL_USER || 'root',
+    password: process.env.MYSQL_PASSWORD || 'password',
+    database: process.env.MYSQL_DATABASE || 'sd2-db',
+    port: process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Database connection failed:', err);
-  } else {
-    console.log('Connected to MySQL database');
-  }
-});
+const promisePool = pool.promise();
 
-module.exports = db;
+function testConnection(retries = 10) {
+    pool.query('SELECT 1', (err) => {
+        if (err) {
+            console.error(`DB not ready, retrying... (${retries} left)`, err.message);
+            if (retries > 0) setTimeout(() => testConnection(retries - 1), 3000);
+        } else {
+            console.log('✅ Connected to MySQL database');
+        }
+    });
+}
+
+testConnection();
+
+module.exports = promisePool;
