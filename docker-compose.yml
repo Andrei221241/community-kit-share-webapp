@@ -1,24 +1,26 @@
-version: '3.3'
 services:
   web:
     build:
       context: ./
     volumes:
       - .:/src
-    command: supervisor -e  'js,pug,html' index.js
+    command: supervisor -e 'js,pug,html' index.js
     ports:
       - "3000:3000"
     depends_on:
       - db
+
   db:
-    image: mysql
+    image: mysql:8.0
     restart: always
     env_file:
       - ./.env
     ports:
       - "3308:3306"
     volumes:
-      - ./db:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+      - ./sd2-db.sql:/docker-entrypoint-initdb.d/sd2-db.sql
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
@@ -26,3 +28,6 @@ services:
       - ./.env
     ports:
       - "8081:80"
+
+volumes:
+  mysql_data:
