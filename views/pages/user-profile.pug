@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  h1 User Profile
+  .card
+    h2= user.name
+    p
+      strong Role: 
+      | #{user.role}
+    p
+      strong Email: 
+      | #{user.email || 'N/A'}
+    p
+      strong Bio: 
+      | #{user.bio || 'No bio available'}
+
+  h3 Recent Requests
+  if !requests.length
+    p This user has no requests yet.
+  else
+    table
+      thead
+        tr
+          th Kit
+          th Start
+          th End
+          th Status
+      tbody
+        each req in requests
+          tr
+            td= req.kit_name
+            td= req.start_date
+            td= req.end_date
+            td= req.status

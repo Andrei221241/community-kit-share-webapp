@@ -1,0 +1,53 @@
+extends ../layout
+
+block content
+  h1 Detail Page
+  .card
+    h2= kit.name
+    p
+      strong Category: 
+      | #{kit.category || 'Uncategorized'}
+    p
+      strong Availability: 
+      span(class=(kit.availability_status === 'Available' ? 'ok' : 'warn'))= kit.availability_status || 'Unknown'
+    p= kit.description || 'No description provided'
+
+  h3 Included Items
+  if !items.length
+    p No item breakdown available.
+  else
+    ul
+      each item in items
+        li #{item.item_name} (x#{item.quantity})
+
+  h3 Tags
+  if !tags.length
+    p No tags assigned.
+  else
+    p
+      each tag in tags
+        span.badge= tag.name
+        | 
+
+  h3 Submit Borrow Request
+  if currentUserId
+    form(method="post" action="/requests")
+      input(type="hidden" name="kitId" value=kit.id)
+      .row
+        div
+          label(for="startDate") Start Date
+          br
+          input#startDate(type="date" name="startDate" required)
+        div
+          label(for="endDate") End Date
+          br
+          input#endDate(type="date" name="endDate" required)
+      div
+        label(for="note") Note (optional)
+        br
+        textarea#note(name="note" rows="3" cols="60")
+      button(type="submit") Submit Request
+  else
+    p
+      a(href="/member/login") Log in
+      |  to submit a borrow request.

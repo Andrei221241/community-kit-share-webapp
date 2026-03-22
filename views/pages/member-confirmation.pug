@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  h1 Request Confirmation
+  if !request
+    p Request saved (or id missing).
+  else
+    .card
+      p
+        strong Request ID: 
+        | #{request.id}
+      p
+        strong Member: 
+        | #{request.user_name}
+      p
+        strong Kit: 
+        | #{request.kit_name}
+      p
+        strong Date range: 
+        | #{request.start_date} to #{request.end_date}
+      p
+        strong Status: 
+        | #{request.status}
+      p
+        strong Note: 
+        | #{request.note || 'None'}
+  p
+    a(href="/listings") Back to Listings

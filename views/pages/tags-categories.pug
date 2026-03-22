@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  h1 Tags / Categories
+  p.muted Required sprint page using DB data.
+  .row
+    .card
+      h3 Categories
+      if !categories.length
+        p None found.
+      else
+        ul
+          each category in categories
+            li= category.name
+    .card
+      h3 Tags
+      if !tags.length
+        p None found.
+      else
+        ul
+          each tag in tags
+            li= tag.name

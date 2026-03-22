@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  h1 Pending Requests
+  p.muted US7, US8, US9 coordinator processing page.
+  if !requests.length
+    p No pending requests.
+  else
+    each request in requests
+      .card
+        p
+          strong Request #
+          | #{request.id}
+        p
+          strong Requester: 
+          | #{request.requester_name}
+        p
+          strong Kit: 
+          | #{request.kit_name}
+        p
+          strong Range: 
+          | #{request.start_date} to #{request.end_date}
+        p
+          strong Note: 
+          | #{request.note || 'No note'}
+        form.inline(method="post" action=`/coordinator/requests/${request.id}/approve`)
+          button(type="submit") Approve
+        form.inline(method="post" action=`/coordinator/requests/${request.id}/reject`)
+          input(type="text" name="reason" placeholder="Optional rejection reason")
+          button(type="submit") Reject
