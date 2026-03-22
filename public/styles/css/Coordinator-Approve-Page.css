@@ -1,0 +1,35 @@
+/* Page base */
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+
+/* Layout containers */
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+
+/* Headings + card container */
+h1{margin:0;font-size:20px}
+.card{background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:16px}
+.note{font-size:12px;color:#666}
+
+/* Table styling */
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border-bottom:1px solid #eef0f2;padding:10px;text-align:left;font-size:14px;vertical-align:top}
+th{font-size:13px;color:#555}
+.col-actions{width:220px}
+
+/* Status badge */
+.status{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef0f2;font-size:12px;font-weight:700}
+
+/* Buttons + actions layout */
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:8px 10px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
+.btn-approve{background:#111;color:#fff}
+.btn-reject{background:#fff;border:1px solid #cfd6dd}
+.btn:hover{opacity:.9}
+
+/* Note box + textarea */
+.note-box{margin-top:8px}
+textarea{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:10px;font-size:14px}
+textarea:focus{outline:2px solid #b9d7ff;border-color:#6aa7ff}
+
+/* Responsive */
+@media (max-width:800px){ table{display:block;overflow:auto} }
