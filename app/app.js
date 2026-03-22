@@ -15,6 +15,20 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+// Makes sessionUser available in every pug template
+app.use((req, res, next) => {
+    if (req.session.userId) {
+        res.locals.sessionUser = {
+            id: req.session.userId,
+            name: req.session.userName,
+            role: req.session.userRole
+        };
+    } else {
+        res.locals.sessionUser = null;
+    }
+    next();
+});
+
 app.use("/", routes);
 
 module.exports = app;
