@@ -11,9 +11,13 @@ services:
       - "3000:3000"
     depends_on:
       db:
-        condition: service_healthy   # ✅ waits for MySQL to actually be ready
+        condition: service_healthy
     environment:
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=sd2-db
+      - DB_PORT=3306
 
   db:
     image: mysql
@@ -24,7 +28,8 @@ services:
       - "3308:3306"
     volumes:
       - ./db:/var/lib/mysql
-    healthcheck:                                          # ✅ add this
+      - ./docker/init/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 5s
