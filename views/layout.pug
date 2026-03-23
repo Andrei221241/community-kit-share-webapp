@@ -4,6 +4,7 @@ html(lang="en")
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title #{title}
+
     style.
       body { font-family: Arial, sans-serif; margin: 24px; line-height: 1.4; }
       nav a { margin-right: 12px; }
@@ -17,20 +18,30 @@ html(lang="en")
       table { border-collapse: collapse; width: 100%; margin-top: 8px; }
       th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
       form.inline { display: inline; }
+
+    // 🔥 THIS IS WHAT YOU WERE MISSING
+    block styles
+
   body
     nav
+      a(href="/") Home
       a(href="/users") Users
       a(href="/listings") Listings
       a(href="/tags") Tags/Categories
+
       if sessionUser && sessionUser.role === 'Coordinator'
         a(href="/coordinator/requests/pending") Pending Requests
+
       if sessionUser && sessionUser.role === 'Member'
         a(href="/member/requests") My Requests
+
       if sessionUser
         span.muted  |  #{sessionUser.name} (#{sessionUser.role})
         |   
         a(href="/logout") Log out
       else
         a(href="/member/login") Log in
+
     hr
+
     block content

@@ -18,8 +18,11 @@ function requireCoordinator(req, res, next) {
     next();
 }
 
+// Public intro page
+router.get("/", pages.getIntroPage);
+router.get("/intro", pages.getIntroPage);
+
 // Member auth
-router.get("/", pages.memberLogin);
 router.get("/member/login", pages.memberLogin);
 router.post("/member/login", pages.postMemberLogin);
 router.get("/member/book", requireMember, pages.memberBook);

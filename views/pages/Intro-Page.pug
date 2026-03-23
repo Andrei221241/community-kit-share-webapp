@@ -1,42 +1,34 @@
 extends ../layout
 
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    title Community Kit Share
-    link(rel="stylesheet", href="/Intro-Page.css")
+block styles
+  link(rel="stylesheet", href="/Intro-Page.css")
 
-  body
+block content
+  section.hero
+    h1 Community Kit Share
+    p Sharing equipment, building community, and supporting outdoor experiences.
 
-    // HERO SECTION
-    section.hero
-      h1 Community Kit Share
-      p Sharing equipment, building community, and supporting outdoor experiences.
+    .buttons
+      a.btn(href="/member/login") Member Login
+      a.btn.secondary(href="/coordinator/login") Admin Login
+      a.btn.outline(href="/find-campsites") Campsite Finder
 
-      .buttons
-        a.btn(href="/member-login") Member Login
-        a.btn.secondary(href="/admin-login") Admin Login
-        a.btn.outline(href="/map") Campsite Finder
+  section.about
+    h2 About Us
+    p
+      | We are a team of software engineering students developing a community-driven platform
+      | that allows users to borrow and share outdoor equipment kits. Our goal is to promote
+      | sustainability, reduce costs, and encourage community collaboration by making essential
+      | gear accessible to everyone.
 
-    // ABOUT SECTION
-    section.about
-      h2 About Us
-      p 
-        | We are a team of software engineering students developing a community-driven platform 
-        | that allows users to borrow and share outdoor equipment kits. Our goal is to promote 
-        | sustainability, reduce costs, and encourage community collaboration by making essential 
-        | gear accessible to everyone.
+  section.videos
+    h2 Explore Outdoor Inspiration
 
-    // VIDEOS SECTION
-    section.videos
-      h2 Explore Outdoor Inspiration
+    .video-grid
+      iframe(src="https://www.youtube.com/embed/u1deJaJq4Ho", allowfullscreen)
+      iframe(src="https://www.youtube.com/embed/djziBOPR9VE", allowfullscreen)
+      iframe(src="https://www.youtube.com/embed/Uu25VdfxE6U", allowfullscreen)
+      iframe(src="https://www.youtube.com/embed/HICGhesPSAY", allowfullscreen)
 
-      .video-grid
-        iframe(src="https://www.youtube.com/embed/u1deJaJq4Ho", allowfullscreen)
-        iframe(src="https://www.youtube.com/embed/djziBOPR9VE", allowfullscreen)
-        iframe(src="https://www.youtube.com/embed/Uu25VdfxE6U", allowfullscreen)
-        iframe(src="https://www.youtube.com/embed/HICGhesPSAY", allowfullscreen)
-
-    // FOOTER
-    footer
-      p © 2026 Community Kit Share | Built by our team
+  footer
+    p © 2026 Community Kit Share | Built by our team

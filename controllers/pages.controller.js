@@ -564,6 +564,13 @@ const findCampsites = (req, res) => {
     });
 };
 
+// GET /intro
+const getIntroPage = (req, res) => {
+    res.render("pages/Intro-Page", {
+        title: "Community Kit Share"
+    });
+};
+
 // TEST / UTILITY ROUTES
 
 // GET /db_test - Simple DB test route
@@ -584,6 +591,7 @@ function hello(req, res) {
 
 // Export all controller functions so they can be used in routes/index.js
 module.exports = {
+    getIntroPage,
     memberLogin,
     postMemberLogin,
     memberBook,
