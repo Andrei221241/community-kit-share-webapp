@@ -1,28 +1,34 @@
-extends ../layout
-
-block content
-  h1 Request Confirmation
-  if !request
-    p Request saved (or id missing).
-  else
-    .card
-      p
-        strong Request ID: 
-        | #{request.id}
-      p
-        strong Member: 
-        | #{request.user_name}
-      p
-        strong Kit: 
-        | #{request.kit_name}
-      p
-        strong Date range: 
-        | #{request.start_date} to #{request.end_date}
-      p
-        strong Status: 
-        | #{request.status}
-      p
-        strong Note: 
-        | #{request.note || 'None'}
-  p
-    a(href="/listings") Back to Listings
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Request Submitted - Community Kit Share
+    link(rel="stylesheet" href="/styles/css/Member-Confirmation-Page.css")
+  body
+    main.wrap
+      section.card(aria-label="Booking submitted confirmation")
+        if !request
+          h1 Request saved
+          p Your request was saved, but the request details are not available in this view.
+        else
+          h1 Thanks, your request has been submitted
+          p Your community kit request has been sent for coordinator review.
+          span.status Status: #{request.status}
+          .box
+            p.small(style="margin:0")
+              strong Request ID:
+              |  #{request.id}
+            p.small(style="margin:8px 0 0")
+              strong Member:
+              |  #{request.user_name}
+            p.small(style="margin:8px 0 0")
+              strong Kit:
+              |  #{request.kit_name}
+            p.small(style="margin:8px 0 0")
+              strong Date range:
+              |  #{request.start_date} to #{request.end_date}
+            p.small(style="margin:8px 0 0")
+              strong Note:
+              |  #{request.note || 'None'}
+        a.btn(href="/listings") Back to listings

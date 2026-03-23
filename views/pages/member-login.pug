@@ -3,13 +3,13 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1")
-    title Member Login
+    title Community Member Login - Community Kit Share
     link(rel="stylesheet" href="/styles/css/Member-Login-Page.css")
   body
     main.wrap
-      section.card(aria-label="Member Login")
-        h1 Community Kit Share
-        p Member login
+      section.card(aria-label="Community member login")
+        h1 Community Member Login
+        p Sign in with your email and password to continue.
         if error
           p.small.err= error
         form(method="post" action="/member/login")
