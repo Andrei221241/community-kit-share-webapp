@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS borrow_requests (
 );
 
 INSERT INTO users (name, email, role, bio, password_hash) VALUES
-('Karim Elmenshawy', 'karim.elmenshawy@gmail.com', 'Member', 'Outdoor enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Andrei Moaca', 'andrei.moaca@yahoo.co.uk', 'Member', 'Hiking lover', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Karim Elmenshawy', 'karim.elmenshawy@gmail.com', 'Coordinator', 'Outdoor enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Andrei Moaca', 'andrei.moaca@yahoo.co.uk', 'Coordinator', 'Hiking lover', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 ('Raul Pereira', 'raul.pereira@gmail.com', 'Coordinator', 'Kit coordinator', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 ('Issa Amtot', 'issa.amtot@gmail.com', 'Coordinator', 'Community organiser', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 ('James Carter', 'james.carter@gmail.com', 'Member', 'Camping fan', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),

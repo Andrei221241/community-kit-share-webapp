@@ -44,6 +44,7 @@ router.get("/users/:id", pages.userProfile);
 router.get("/listings", pages.kitsList);
 router.get("/listings/:id", pages.kitDetail);
 router.get("/tags", pages.tagsAndCategories);
+router.get("/find-campsites", pages.findCampsites);
 
 router.get("/db_test", pages.dbTest);
 router.get("/goodbye", pages.goodbye);

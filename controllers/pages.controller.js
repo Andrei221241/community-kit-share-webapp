@@ -556,6 +556,14 @@ const rejectRequest = withErrorBoundary(async (req, res) => {
     res.redirect("/coordinator/requests/pending");
 });
 
+// GET /find-campsites
+
+const findCampsites = (req, res) => {
+    res.render("pages/find-campsites-page", {
+        title: "Find Campsites",
+    });
+};
+
 // TEST / UTILITY ROUTES
 
 // GET /db_test - Simple DB test route
@@ -597,4 +605,5 @@ module.exports = {
     dbTest,
     goodbye,
     hello,
+    findCampsites,
 };
