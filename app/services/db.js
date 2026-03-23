@@ -1,29 +1,44 @@
-require("dotenv").config();
+// Import the mysql2 library for connecting to MySQL
+const mysql = require('mysql2');
 
-const mysql = require('mysql2/promise');
+// Load environment variables from the .env file (e.g. DB host, user, password)
+require('dotenv').config();
 
-const config = {
-  db: { /* do not put password or any sensitive info here, done only for demo */
-    host: process.env.DB_CONTAINER,
-    port: process.env.DB_PORT,
-    user: process.env.MYSQL_ROOT_USER,
-    password: process.env.MYSQL_ROOT_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    waitForConnections: true,
-    connectionLimit: 2,
-    queueLimit: 0,
-  },
-};
-  
-const pool = mysql.createPool(config.db);
+// Create a connection pool instead of a single connection
+// A pool manages multiple connections efficiently - better for a web app
+// where multiple users might be making requests at the same time
+const pool = mysql.createPool({
+    host: process.env.MYSQL_HOST || 'db',         // Docker service name 'db' (not localhost!)
+    user: process.env.MYSQL_USER || 'root',        // MySQL username from .env
+    password: process.env.MYSQL_PASSWORD || 'password', // MySQL password from .env
+    database: process.env.MYSQL_DATABASE || 'sd2-db',   // Database name from .env
+    port: process.env.DB_PORT || 3306,             // MySQL default port
+    waitForConnections: true,   // Queue requests if all connections are busy
+    connectionLimit: 10,        // Maximum number of simultaneous connections
+});
 
-// Utility function to query the database
-async function query(sql, params) {
-  const [rows, fields] = await pool.execute(sql, params);
+// Convert the pool to use Promises so we can use async/await in controllers
+// Without this, db.query() would use callbacks instead of async/await
+const promisePool = pool.promise();
 
-  return rows;
+// Test the database connection on startup with retry logic
+// This is needed because the web container starts before MySQL is fully ready
+function testConnection(retries = 10) {
+    // Run a simple query to check if the DB is ready
+    pool.query('SELECT 1', (err) => {
+        if (err) {
+            // If connection fails, log the error and try again after 3 seconds
+            console.error(`DB not ready, retrying... (${retries} left)`, err.message);
+            if (retries > 0) setTimeout(() => testConnection(retries - 1), 3000);
+        } else {
+            // Connection successful
+            console.log('✅ Connected to MySQL database');
+        }
+    });
 }
 
-module.exports = {
-  query,
-}
+// Run the connection test when the app starts
+testConnection();
+
+// Export the promise-based pool so controllers can use await db.query()
+module.exports = promisePool;

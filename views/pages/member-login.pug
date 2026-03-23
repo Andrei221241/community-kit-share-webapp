@@ -1,0 +1,26 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Member Login
+    link(rel="stylesheet" href="/styles/css/Member-Login-Page.css")
+  body
+    main.wrap
+      section.card(aria-label="Member Login")
+        h1 Community Kit Share
+        p Member login
+        if error
+          p.small.err= error
+        form(method="post" action="/member/login")
+          label(for="email") Email
+          input#email(type="email" name="email" required autofocus)
+
+          label(for="password") Password
+          input#password(type="password" name="password" required)
+
+          button(type="submit") Log in
+          p.small Demo accounts: raul@example.com, andrei@example.com, issa@example.com
+          p.small Default password: password123
+          p.small
+            a(href="/coordinator/login") Coordinator login →

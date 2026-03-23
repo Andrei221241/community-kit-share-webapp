@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  h1= title
+  p.err= message
+  if details
+    p.muted Details: #{details}
+  p
+    a(href="/listings") Back to listings

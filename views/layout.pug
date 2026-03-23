@@ -1,0 +1,36 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title #{title}
+    style.
+      body { font-family: Arial, sans-serif; margin: 24px; line-height: 1.4; }
+      nav a { margin-right: 12px; }
+      .muted { color: #666; }
+      .card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+      .row { display: flex; gap: 12px; flex-wrap: wrap; }
+      .badge { display: inline-block; padding: 2px 8px; border: 1px solid #999; border-radius: 12px; font-size: 12px; }
+      .ok { color: #0a7a0a; }
+      .warn { color: #a85d00; }
+      .err { color: #b00020; }
+      table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+      th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+      form.inline { display: inline; }
+  body
+    nav
+      a(href="/users") Users
+      a(href="/listings") Listings
+      a(href="/tags") Tags/Categories
+      if sessionUser && sessionUser.role === 'Coordinator'
+        a(href="/coordinator/requests/pending") Pending Requests
+      if sessionUser && sessionUser.role === 'Member'
+        a(href="/member/requests") My Requests
+      if sessionUser
+        span.muted  |  #{sessionUser.name} (#{sessionUser.role})
+        |   
+        a(href="/logout") Log out
+      else
+        a(href="/member/login") Log in
+    hr
+    block content
