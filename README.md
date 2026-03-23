@@ -5,11 +5,11 @@ Database schema/content is owned by Karim and is **not modified** here.
 
 ## Implemented pages (DB-backed)
 
-- `GET /users` → Users list page
-- `GET /users/:id` → User profile page
-- `GET /listings` → Listing page (search/filter by category/tag)
-- `GET /listings/:id` → Detail page
-- `GET /tags` → Tags/categories page
+- `GET /users` -> Users list page
+- `GET /users/:id` -> User profile page
+- `GET /listings` -> Listing page (search/filter by category/tag)
+- `GET /listings/:id` -> Detail page
+- `GET /tags` -> Tags/categories page
 
 ## User stories covered
 
