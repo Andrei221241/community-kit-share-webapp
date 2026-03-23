@@ -37,11 +37,11 @@ block content
         div
           label(for="startDate") Start Date
           br
-          input#startDate(type="date" name="startDate" required)
+          input#startDate(type="date" name="startDate" required min=new Date().toISOString().slice(0,10))
         div
           label(for="endDate") End Date
           br
-          input#endDate(type="date" name="endDate" required)
+          input#endDate(type="date" name="endDate" required min=new Date().toISOString().slice(0,10))
       div
         label(for="note") Note (optional)
         br

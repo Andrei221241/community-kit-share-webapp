@@ -1,10 +1,11 @@
-/* Page background (image + dark overlay) */
+/* Background image + dark overlay */
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:
     linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
-    url("/assets/images/S-login-page.jpg");
+    url("/assets/images/must-have-camping-gear.jpg"),
+    #335135;
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
