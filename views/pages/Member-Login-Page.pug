@@ -4,30 +4,24 @@ html(lang="en")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     title Community Member Login - Community Kit Share
-
     link(rel="stylesheet", href="/styles/css/Member-Login-Page.css")
 
   body
     main.wrap
       section.card(aria-label="Community member login")
         h1 Community Member Login
-        p Enter your name and Member ID to continue
+        p Enter your email and password to continue
 
-        // 🔥 FIXED FORM (removed action)
-        form#memberLoginForm
-          label(for="memberName") Full name
-          input#memberName(name="memberName", type="text", required)
+        if error
+          p.err= error
 
-          label(for="memberId") Community ID
-          input#memberId(
-            name="memberId",
-            type="text",
-            required,
-            placeholder="e.g., M-10234"
-          )
+        form#memberLoginForm(action="/member/login", method="post")
+          label(for="email") Email
+          input#email(name="email", type="email", required)
+
+          label(for="password") Password
+          input#password(name="password", type="password", required)
 
           button#memberLoginBtn(type="submit") Log in
-          p.small#memberLoginMsg
-            | For demo use only — no real personal data.
 
     script(src="/js/JavaScript.js")
