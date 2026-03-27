@@ -18,8 +18,11 @@ function requireCoordinator(req, res, next) {
     next();
 }
 
+// Public intro page
+router.get("/", pages.getIntroPage);
+router.get("/intro", pages.getIntroPage);
+
 // Member auth
-router.get("/", pages.memberLogin);
 router.get("/member/login", pages.memberLogin);
 router.post("/member/login", pages.postMemberLogin);
 router.get("/member/book", requireMember, pages.memberBook);
@@ -44,6 +47,7 @@ router.get("/users/:id", pages.userProfile);
 router.get("/listings", pages.kitsList);
 router.get("/listings/:id", pages.kitDetail);
 router.get("/tags", pages.tagsAndCategories);
+router.get("/find-campsites", pages.findCampsites);
 
 router.get("/db_test", pages.dbTest);
 router.get("/goodbye", pages.goodbye);

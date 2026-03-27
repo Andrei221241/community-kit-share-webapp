@@ -1,0 +1,221 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title #{title} | Community Kit Share
+
+    style.
+      /* ===============================
+         RESET & BASE
+      =============================== */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: #f9f9f9; }
+
+      /* ===============================
+         LAYOUT
+      =============================== */
+      .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+      /* ===============================
+         NAV
+      =============================== */
+      nav {
+        background: linear-gradient(135deg, #1e3c72, #315b2e);
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin-right: 15px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        padding: 6px 12px;
+        border-radius: 20px;
+        transition: 0.3s;
+      }
+      nav a:hover { background: rgba(255,255,255,0.2); }
+      nav .muted { color: #ccc; font-size: 0.9rem; margin-left: 10px; }
+      hr { display: none; }
+
+      /* ===============================
+         HEADINGS
+      =============================== */
+      h1 { font-size: 2rem; color: #1e3c72; margin-bottom: 8px; margin-top: 10px; }
+      h2 { font-size: 1.5rem; color: #315b2e; margin-bottom: 8px; }
+      h3 { font-size: 1.2rem; color: #1e3c72; margin-bottom: 6px; }
+
+      /* ===============================
+         CARDS
+      =============================== */
+      .card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 20px 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: box-shadow 0.3s, transform 0.3s;
+      }
+      .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
+      .card h3 a { color: #1e3c72; text-decoration: none; }
+      .card h3 a:hover { text-decoration: underline; }
+      .card p { color: #555; font-size: 0.95rem; margin-bottom: 6px; }
+
+      /* ===============================
+         BADGES & STATUS
+      =============================== */
+      .badge {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid #999;
+      }
+      .ok { color: white; background: #2e7d32; border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; font-weight: bold; }
+      .warn { color: white; background: #e65100; border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; font-weight: bold; }
+      .err { color: white; background: #b00020; border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; font-weight: bold; }
+      .muted { color: #666; font-size: 0.9rem; }
+
+      /* ===============================
+         BUTTONS
+      =============================== */
+      button, .btn {
+        display: inline-block;
+        padding: 10px 25px;
+        background: #1e3c72;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.3s;
+      }
+      button:hover, .btn:hover { background: #315b2e; }
+      button.danger { background: #b00020; }
+      button.danger:hover { background: #8b0000; }
+      button.success { background: #2e7d32; }
+      button.success:hover { background: #1b5e20; }
+      a.btn-link {
+        color: #1e3c72;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      a.btn-link:hover { text-decoration: underline; }
+
+      /* ===============================
+         FORMS & INPUTS
+      =============================== */
+      input, select, textarea {
+        padding: 9px 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: Arial, sans-serif;
+        width: 100%;
+        transition: border 0.3s;
+      }
+      input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #1e3c72;
+        box-shadow: 0 0 0 2px rgba(30,60,114,0.15);
+      }
+      label { font-weight: bold; font-size: 0.9rem; color: #444; display: block; margin-bottom: 4px; }
+      .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; }
+      .row div { flex: 1; min-width: 150px; }
+
+      /* ===============================
+         TABLES
+      =============================== */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 16px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      }
+      th {
+        background: linear-gradient(135deg, #1e3c72, #315b2e);
+        color: white;
+        padding: 12px 16px;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+      td { padding: 12px 16px; border-bottom: 1px solid #eee; font-size: 0.95rem; }
+      tr:last-child td { border-bottom: none; }
+      tr:hover td { background: #f5f5f5; }
+
+      /* ===============================
+         LINKS
+      =============================== */
+      a { color: #1e3c72; }
+      a:hover { color: #315b2e; }
+
+      /* ===============================
+         LISTS
+      =============================== */
+      ul { padding-left: 20px; }
+      ul li { margin-bottom: 6px; font-size: 0.95rem; color: #555; }
+
+      /* ===============================
+         ALERTS & ERRORS
+      =============================== */
+      .alert {
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-weight: bold;
+      }
+      .alert-error { background: #fdecea; color: #b00020; border: 1px solid #f5c6cb; }
+      .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+
+      /* ===============================
+         FOOTER
+      =============================== */
+      footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 60px;
+        background: linear-gradient(135deg, #1e3c72, #315b2e);
+        color: white;
+        font-size: 0.9rem;
+      }
+
+    block styles
+
+  body
+    nav
+      a(href="/") Home
+      a(href="/users") Users
+      a(href="/listings") Listings
+      a(href="/tags") Tags/Categories
+
+      if sessionUser && sessionUser.role === 'Coordinator'
+        a(href="/coordinator/requests/pending") Pending Requests
+
+      if sessionUser && sessionUser.role === 'Member'
+        a(href="/member/requests") My Requests
+
+      if sessionUser
+        span.muted  |  #{sessionUser.name} (#{sessionUser.role})
+        |   
+        a(href="/logout") Log out
+      else
+        a(href="/member/login") Log in
+
+    hr
+
+    .page-wrapper
+      block content
+
+    footer
+      p © 2026 Community Kit Share | Built by our team

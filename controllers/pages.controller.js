@@ -29,6 +29,16 @@ function withErrorBoundary(handler) {
     };
 }
 
+// GET / and GET /intro
+const getIntroPage = (req, res) => {
+    res.render("pages/Intro-Page", { title: "Community Kit Share" });
+};
+
+// GET /find-campsites
+const findCampsites = (req, res) => {
+    res.render("pages/find-campsites-page", { title: "Find Campsites" });
+};
+
 const memberLogin = (req, res) => {
     if (req.session.userId) {
         return res.redirect("/listings");
@@ -471,6 +481,8 @@ function hello(req, res) {
 }
 
 module.exports = {
+    getIntroPage,
+    findCampsites,
     memberLogin,
     postMemberLogin,
     memberBook,
