@@ -1,13 +1,9 @@
 /* Background image + dark overlay */
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:
-    linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
-    url("../assets/images/VLs5NQ.jpg");
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #315b2e);
+  min-height: 100vh;
 }
 
 /* Center card */

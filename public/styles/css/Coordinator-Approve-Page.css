@@ -1,5 +1,10 @@
-/* Page base */
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8}
+/* Background image + dark overlay */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #315b2e);
+  min-height: 100vh;
+}
 
 /* Layout containers */
 .wrap{max-width:1000px;margin:0 auto;padding:24px}
@@ -22,8 +27,8 @@ th{font-size:13px;color:#555}
 /* Buttons + actions layout */
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .btn{padding:8px 10px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
-.btn-approve{background:#111;color:#fff}
-.btn-reject{background:#fff;border:1px solid #cfd6dd}
+.btn-approve{background:#e68900;color:#fff}
+.btn-reject{background:#050000;border:1px solid #cfd6dd; color:#fff;}
 .btn:hover{opacity:.9}
 
 /* Note box + textarea */
