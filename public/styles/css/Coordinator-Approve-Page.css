@@ -1,14 +1,9 @@
 /* Background image + dark overlay */
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:
-    linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
-    url("../assets/images/must-have-camping-gearjpg"),
-    #335135;
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #315b2e);
+  min-height: 100vh;
 }
 
 /* Layout containers */
@@ -32,8 +27,8 @@ th{font-size:13px;color:#555}
 /* Buttons + actions layout */
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .btn{padding:8px 10px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
-.btn-approve{background:#111;color:#fff}
-.btn-reject{background:#fff;border:1px solid #cfd6dd}
+.btn-approve{background:#e68900;color:#fff}
+.btn-reject{background:#050000;border:1px solid #cfd6dd; color:#fff;}
 .btn:hover{opacity:.9}
 
 /* Note box + textarea */
