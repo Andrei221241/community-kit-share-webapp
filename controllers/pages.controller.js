@@ -467,6 +467,24 @@ const rejectRequest = withErrorBoundary(async (req, res) => {
     res.redirect("/coordinator/requests/pending");
 });
 
+// GET /find-campsites
+
+const findCampsites = (req, res) => {
+    res.render("pages/find-campsites-page", {
+        title: "Find Campsites",
+    });
+};
+
+// GET /intro
+const getIntroPage = (req, res) => {
+    res.render("pages/Intro-Page", {
+        title: "Community Kit Share"
+    });
+};
+
+// TEST / UTILITY ROUTES
+
+// GET /db_test - Simple DB test route
 const dbTest = withErrorBoundary(async (req, res) => {
     const [results] = await db.query("SELECT 1");
     res.send(results);
@@ -482,7 +500,6 @@ function hello(req, res) {
 
 module.exports = {
     getIntroPage,
-    findCampsites,
     memberLogin,
     postMemberLogin,
     memberBook,
@@ -504,4 +521,5 @@ module.exports = {
     dbTest,
     goodbye,
     hello,
+    findCampsites,
 };

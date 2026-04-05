@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Campsites</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="Find-Campsites-Page.css">
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Find Campsites</h1>
+    <p>Explore suggested campsite locations across the UK.</p>
+
+    <div class="buttons">
+      <button id="locationBtn" class="btn">Use My Location</button>
+      <button id="nearestSearchBtn" class="btn secondary">Find Nearest</button>
+    </div>
+  </section>
+
+  <!-- FILTER -->
+  <section class="about">
+    <h2>Filter Campsites</h2>
+    <select id="activityFilter">
+      <option value="all">All Campsites</option>
+      <option value="tent">Camping</option>
+      <option value="hiking">Hiking</option>
+      <option value="cooking">Cooking</option>
+      <option value="family">Family</option>
+    </select>
+  </section>
+
+  <!-- MAP -->
+  <section class="videos">
+    <h2>Campsite Map</h2>
+    <div id="map"></div>
+  </section>
+
+  <!-- INFO -->
+  <section class="about">
+    <h2>Suggested Campsites</h2>
+    <ul class="place-list">
+      <li>Lake District – Hiking and scenic camping</li>
+      <li>Snowdonia – Mountain trips and hiking</li>
+      <li>New Forest – Family camping and cooking</li>
+      <li>Peak District – Walking and outdoor exploration</li>
+      <li>Cornwall – Coastal camping and family stays</li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Powered by OpenStreetMap</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+</html>

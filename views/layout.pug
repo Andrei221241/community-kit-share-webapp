@@ -19,35 +19,13 @@ html(lang="en")
       th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
       form.inline { display: inline; }
 
-      /* NAV STYLING */
-      nav { background: linear-gradient(135deg, #1e3c72, #315b2e); padding: 15px 20px; margin: -24px -24px 24px -24px; }
-      nav a { color: white; text-decoration: none; margin-right: 15px; font-weight: bold; }
-      nav a:hover { text-decoration: underline; }
-      nav .muted { color: #ddd; }
-      hr { display: none; }
-
-      /* CARD STYLING */
-      .card { border: 1px solid #ddd; border-radius: 12px; padding: 20px 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: 0.3s; }
-      .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
-      .card h3 a { color: #1e3c72; text-decoration: none; }
-      .card h3 a:hover { text-decoration: underline; }
-
-      /* BUTTON STYLING */
-      button { padding: 10px 25px; background: #ff9800; color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-      button:hover { background: #e68900; }
-
-      /* FORM STYLING */
-      input, select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
-
-      /* HEADINGS */
-      h1 { color: #1e3c72; margin-bottom: 10px; }
-      h2 { color: #315b2e; margin-bottom: 10px; }
-
+    // 🔥 THIS IS WHAT YOU WERE MISSING
     block styles
 
   body
     nav
       a(href="/") Home
+      a(href="/users") Users
       a(href="/listings") Listings
       a(href="/tags") Tags/Categories
 

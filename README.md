@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+Backend-Karim
+=======
 # Community Kit Share – Sprint 1
 
 === MODULE DETAILS ===
@@ -136,3 +139,4 @@ https://github.com/users/Andrei221241/projects/3/views/1
 Sprint 2 will focus on extending frontend structure and introducing controlled interactivity once the project structure is stable.
 
 ---
+>>>>>>> fa182d9f76281095da68b1973b1683eab6eb2c51
