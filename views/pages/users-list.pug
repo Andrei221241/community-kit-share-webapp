@@ -1,23 +1,24 @@
 extends ../layout
 
 block content
-  h1 Users List
-  p.muted From database `users` table.
-  if !users.length
-    p No users found.
-  else
+  h1 Users
+  p.muted All community members
+
+  if users && users.length
     table
       thead
         tr
           th Name
           th Role
           th Email
-          th Profile
+          th Actions
       tbody
         each user in users
           tr
             td= user.name
             td= user.role
-            td= user.email
+            td= user.email || 'N/A'
             td
-              a(href=`/users/${user.id}`) View
+              a(href=`/users/${user.id}`) View Profile
+  else
+    p No users found

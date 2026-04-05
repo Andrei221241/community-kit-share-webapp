@@ -32,7 +32,7 @@ function testConnection(retries = 10) {
             if (retries > 0) setTimeout(() => testConnection(retries - 1), 3000);
         } else {
             // Connection successful
-            console.log('✅ Connected to MySQL database');
+            console.log('Connected to MySQL database');
         }
     });
 }

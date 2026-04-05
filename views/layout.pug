@@ -48,11 +48,11 @@ html(lang="en")
   body
     nav
       a(href="/") Home
-      a(href="/users") Users
       a(href="/listings") Listings
       a(href="/tags") Tags/Categories
 
       if sessionUser && sessionUser.role === 'Coordinator'
+        a(href="/users") Users
         a(href="/coordinator/requests/pending") Pending Requests
 
       if sessionUser && sessionUser.role === 'Member'

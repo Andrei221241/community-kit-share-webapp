@@ -1,14 +1,9 @@
 /* Background image + dark overlay */
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:
-    linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
-    url("../assets/images/must-have-camping-gearjpg"),
-    #335135;
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #315b2e);
+  min-height: 100vh;
 }
 
 /* Layout containers */
@@ -33,7 +28,7 @@ th,td{border-bottom:1px solid #eef0f2;padding:10px;text-align:left;font-size:14p
 th{font-size:13px;color:#555}
 
 /* Button + notes */
-.btn{margin-top:14px;padding:10px 12px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700;cursor:pointer}
+.btn{margin-top:14px;padding:10px 12px;border:0;border-radius:10px;background:#bb5f0a;color:#ffffff;font-weight:700;cursor:pointer}
 .btn:hover{opacity:.9}
 .note{font-size:12px;color:#666;margin-top:10px}
 

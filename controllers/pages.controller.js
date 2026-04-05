@@ -352,7 +352,7 @@ const memberRequests = withErrorBoundary(async (req, res) => {
     const userId = req.session.userId;
 
     const [requests] = await db.query(
-        `SELECT br.id, br.start_date, br.end_date, br.status,
+        `SELECT br.id, br.start_date, br.end_date, br.status, br.rejection_reason,
                 k.name AS kit_name
          FROM borrow_requests br
          INNER JOIN kits k ON k.id = br.kit_id

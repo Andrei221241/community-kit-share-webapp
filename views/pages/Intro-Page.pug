@@ -2,11 +2,12 @@ doctype html
 html(lang="en")
   head
     meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1")
     title Community Kit Share
     link(rel="stylesheet", href="/styles/css/Intro-Page.css")
 
   body
+
+    // HERO SECTION
     section.hero
       h1 Community Kit Share
       p Sharing equipment, building community, and supporting outdoor experiences.
@@ -16,14 +17,16 @@ html(lang="en")
         a.btn.secondary(href="/coordinator/login") Admin Login
         a.btn.outline(href="/find-campsites") Campsite Finder
 
+    // ABOUT SECTION
     section.about
       h2 About Us
-      p
-        | We are a team of software engineering students developing a community-driven platform
-        | that allows users to borrow and share outdoor equipment kits. Our goal is to promote
-        | sustainability, reduce costs, and encourage community collaboration by making essential
+      p 
+        | We are a team of software engineering students developing a community-driven platform 
+        | that allows users to borrow and share outdoor equipment kits. Our goal is to promote 
+        | sustainability, reduce costs, and encourage community collaboration by making essential 
         | gear accessible to everyone.
 
+    // VIDEOS SECTION
     section.videos
       h2 Explore Outdoor Inspiration
 
@@ -33,5 +36,6 @@ html(lang="en")
         iframe(src="https://www.youtube.com/embed/Uu25VdfxE6U", allowfullscreen)
         iframe(src="https://www.youtube.com/embed/HICGhesPSAY", allowfullscreen)
 
+    // FOOTER
     footer
       p © 2026 Community Kit Share | Built by our team
