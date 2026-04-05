@@ -1,5 +1,6 @@
 const db = require("../app/services/db");
 const bcrypt = require("bcryptjs");
+
 function asNumber(value) {
     const parsed = Number.parseInt(value, 10);
     return Number.isNaN(parsed) ? null : parsed;
@@ -28,11 +29,21 @@ function withErrorBoundary(handler) {
     };
 }
 
+// GET / and GET /intro
+const getIntroPage = (req, res) => {
+    res.render("pages/Intro-Page", { title: "Community Kit Share" });
+};
+
+// GET /find-campsites
+const findCampsites = (req, res) => {
+    res.render("pages/find-campsites-page", { title: "Find Campsites" });
+};
+
 const memberLogin = (req, res) => {
     if (req.session.userId) {
         return res.redirect("/listings");
     }
-    res.render("pages/member-login", { title: "Member Login", error: null });
+    res.render("pages/Member-Login-Page", { title: "Member Login", error: null });
 };
 
 const postMemberLogin = withErrorBoundary(async (req, res) => {
@@ -40,14 +51,14 @@ const postMemberLogin = withErrorBoundary(async (req, res) => {
     const password = req.body.password || "";
 
     if (!email || !password) {
-        return res.render("pages/member-login", { title: "Member Login", error: "Email and password are required." });
+        return res.render("pages/Member-Login-Page", { title: "Member Login", error: "Email and password are required." });
     }
 
-    const rows = await db.query(`SELECT id, name, role, password_hash FROM users WHERE email = ?`, [email]);
+    const [rows] = await db.query(`SELECT id, name, role, password_hash FROM users WHERE email = ?`, [email]);
     const user = rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-        return res.render("pages/member-login", { title: "Member Login", error: "Invalid email or password." });
+        return res.render("pages/Member-Login-Page", { title: "Member Login", error: "Invalid email or password." });
     }
 
     req.session.userId = user.id;
@@ -69,7 +80,7 @@ const memberConfirmation = withErrorBoundary(async (req, res) => {
     let requestRow = null;
 
     if (requestId) {
-        const rows = await db.query(
+        const [rows] = await db.query(
             `SELECT br.id, br.start_date, br.end_date, br.status, br.note,
                     k.name AS kit_name,
                     u.name AS user_name
@@ -79,11 +90,10 @@ const memberConfirmation = withErrorBoundary(async (req, res) => {
              WHERE br.id = ?`,
             [requestId]
         );
-
         requestRow = rows[0] || null;
     }
 
-    res.render("pages/member-confirmation", {
+    res.render("pages/Member-Confirmation-Page", {
         title: "Request Confirmation",
         request: requestRow,
     });
@@ -93,7 +103,7 @@ const coordinatorLogin = (req, res) => {
     if (req.session.userId && req.session.userRole === "Coordinator") {
         return res.redirect("/coordinator/requests/pending");
     }
-    res.render("pages/coordinator-login", { title: "Coordinator Login", error: null });
+    res.render("pages/Coordinator-login-Page", { title: "Coordinator Login", error: null });
 };
 
 const postCoordinatorLogin = withErrorBoundary(async (req, res) => {
@@ -101,14 +111,14 @@ const postCoordinatorLogin = withErrorBoundary(async (req, res) => {
     const password = req.body.password || "";
 
     if (!email || !password) {
-        return res.render("pages/coordinator-login", { title: "Coordinator Login", error: "Email and password are required." });
+        return res.render("pages/Coordinator-login-Page", { title: "Coordinator Login", error: "Email and password are required." });
     }
 
-    const rows = await db.query(`SELECT id, name, role, password_hash FROM users WHERE email = ? AND role = 'Coordinator'`, [email]);
+    const [rows] = await db.query(`SELECT id, name, role, password_hash FROM users WHERE email = ? AND role = 'Coordinator'`, [email]);
     const user = rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-        return res.render("pages/coordinator-login", { title: "Coordinator Login", error: "Invalid credentials or not a coordinator account." });
+        return res.render("pages/Coordinator-login-Page", { title: "Coordinator Login", error: "Invalid credentials or not a coordinator account." });
     }
 
     req.session.userId = user.id;
@@ -129,7 +139,7 @@ const coordinatorApprove = withErrorBoundary(async (req, res) => {
 });
 
 const usersList = withErrorBoundary(async (req, res) => {
-    const users = await db.query(
+    const [users] = await db.query(
         `SELECT id, name, role, email
          FROM users
          ORDER BY name ASC`
@@ -152,7 +162,7 @@ const userProfile = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const users = await db.query(
+    const [users] = await db.query(
         `SELECT id, name, email, role, bio
          FROM users
          WHERE id = ?`,
@@ -169,7 +179,7 @@ const userProfile = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const requests = await db.query(
+    const [requests] = await db.query(
         `SELECT br.id, br.start_date, br.end_date, br.status,
                 k.name AS kit_name
          FROM borrow_requests br
@@ -211,7 +221,7 @@ const kitsList = withErrorBoundary(async (req, res) => {
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
-    const kits = await db.query(
+    const [kits] = await db.query(
         `SELECT DISTINCT k.id, k.name,
                 c.name AS category,
                 k.short_description,
@@ -225,8 +235,8 @@ const kitsList = withErrorBoundary(async (req, res) => {
         params
     );
 
-    const categories = await db.query(`SELECT name FROM categories ORDER BY name ASC`);
-    const tags = await db.query(`SELECT name FROM tags ORDER BY name ASC`);
+    const [categories] = await db.query(`SELECT name FROM categories ORDER BY name ASC`);
+    const [tags] = await db.query(`SELECT name FROM tags ORDER BY name ASC`);
 
     res.render("pages/listings", {
         title: "Kits Listing",
@@ -248,7 +258,7 @@ const kitDetail = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const kits = await db.query(
+    const [kits] = await db.query(
         `SELECT k.id, k.name, k.description, k.availability_status,
                 c.name AS category
          FROM kits k
@@ -267,7 +277,7 @@ const kitDetail = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const items = await db.query(
+    const [items] = await db.query(
         `SELECT item_name, quantity
          FROM kit_items
          WHERE kit_id = ?
@@ -275,7 +285,7 @@ const kitDetail = withErrorBoundary(async (req, res) => {
         [kitId]
     );
 
-    const tags = await db.query(
+    const [tags] = await db.query(
         `SELECT t.name
          FROM tags t
          INNER JOIN kit_tags kt ON kt.tag_id = t.id
@@ -294,8 +304,8 @@ const kitDetail = withErrorBoundary(async (req, res) => {
 });
 
 const tagsAndCategories = withErrorBoundary(async (req, res) => {
-    const categories = await db.query(`SELECT id, name FROM categories ORDER BY name ASC`);
-    const tags = await db.query(`SELECT id, name FROM tags ORDER BY name ASC`);
+    const [categories] = await db.query(`SELECT id, name FROM categories ORDER BY name ASC`);
+    const [tags] = await db.query(`SELECT id, name FROM tags ORDER BY name ASC`);
 
     res.render("pages/tags-categories", {
         title: "Tags & Categories",
@@ -329,7 +339,7 @@ const submitBorrowRequest = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const result = await db.query(
+    const [result] = await db.query(
         `INSERT INTO borrow_requests (user_id, kit_id, start_date, end_date, note, status)
          VALUES (?, ?, ?, ?, ?, 'Pending')`,
         [userId, kitId, startDate, endDate, note || null]
@@ -341,8 +351,8 @@ const submitBorrowRequest = withErrorBoundary(async (req, res) => {
 const memberRequests = withErrorBoundary(async (req, res) => {
     const userId = req.session.userId;
 
-    const requests = await db.query(
-        `SELECT br.id, br.start_date, br.end_date, br.status,
+    const [requests] = await db.query(
+        `SELECT br.id, br.start_date, br.end_date, br.status, br.rejection_reason,
                 k.name AS kit_name
          FROM borrow_requests br
          INNER JOIN kits k ON k.id = br.kit_id
@@ -360,7 +370,7 @@ const memberRequests = withErrorBoundary(async (req, res) => {
 });
 
 const coordinatorPending = withErrorBoundary(async (req, res) => {
-    const requests = await db.query(
+    const [requests] = await db.query(
         `SELECT br.id, br.start_date, br.end_date, br.note,
                 u.name AS requester_name,
                 k.name AS kit_name
@@ -371,7 +381,7 @@ const coordinatorPending = withErrorBoundary(async (req, res) => {
          ORDER BY br.created_at ASC`
     );
 
-    res.render("pages/coordinator-pending", {
+    res.render("pages/Coordinator-Approve-Page", {
         title: "Pending Requests",
         requests,
     });
@@ -388,7 +398,7 @@ const approveRequest = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const rows = await db.query(
+    const [rows] = await db.query(
         `SELECT id, kit_id, start_date, end_date
          FROM borrow_requests
          WHERE id = ? AND status = 'Pending'`,
@@ -405,7 +415,7 @@ const approveRequest = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const conflicts = await db.query(
+    const [conflicts] = await db.query(
         `SELECT id
          FROM borrow_requests
          WHERE kit_id = ?
@@ -458,7 +468,7 @@ const rejectRequest = withErrorBoundary(async (req, res) => {
 });
 
 const dbTest = withErrorBoundary(async (req, res) => {
-    const results = await db.query("SELECT * FROM test_table");
+    const [results] = await db.query("SELECT 1");
     res.send(results);
 });
 
@@ -471,6 +481,8 @@ function hello(req, res) {
 }
 
 module.exports = {
+    getIntroPage,
+    findCampsites,
     memberLogin,
     postMemberLogin,
     memberBook,

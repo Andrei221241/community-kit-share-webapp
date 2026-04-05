@@ -1,22 +1,26 @@
 extends ../layout
 
 block content
-  h1 Tags / Categories
-  p.muted Required sprint page using DB data.
+  h1 Tags & Categories
+  p.muted Browse all available tags and categories
+
   .row
-    .card
-      h3 Categories
-      if !categories.length
-        p None found.
-      else
+    .card(style="flex: 1;")
+      h2 Categories
+      if categories.length
         ul
           each category in categories
-            li= category.name
-    .card
-      h3 Tags
-      if !tags.length
-        p None found.
+            li
+              a(href=`/listings?category=${encodeURIComponent(category.name)}`)= category.name
       else
+        p No categories defined.
+
+    .card(style="flex: 1;")
+      h2 Tags
+      if tags.length
         ul
           each tag in tags
-            li= tag.name
+            li
+              a(href=`/listings?tag=${encodeURIComponent(tag.name)}`)= tag.name
+      else
+        p No tags defined.

@@ -2,22 +2,30 @@ extends ../layout
 
 block content
   h1 My Requests
-  p.muted Viewing requests for 
-    strong= userName
-  if !requests.length
-    p No requests found.
+  p Hello, #{userName}! Here are your past and current borrow requests.
+
+  if requests && requests.length
+    each req in requests
+      .card
+        h3 Request ID: #{req.id}
+        p
+          strong Kit: 
+          | #{req.kit_name}
+        p
+          strong Dates: 
+          | #{req.start_date} to #{req.end_date}
+        p
+          strong Status: 
+          if req.status === 'Approved'
+            span.badge.ok Approved
+          else if req.status === 'Rejected'
+            span.badge.err Rejected
+          else
+            span.badge.warn Pending
+        if req.status === 'Rejected' && req.rejection_reason
+          p
+            strong Reason: 
+            | #{req.rejection_reason}
   else
-    table
-      thead
-        tr
-          th Kit
-          th Start
-          th End
-          th Status
-      tbody
-        each request in requests
-          tr
-            td= request.kit_name
-            td= request.start_date
-            td= request.end_date
-            td= request.status
+    p You haven't made any borrow requests yet. 
+    a.btn(href="/listings") Browse Kits

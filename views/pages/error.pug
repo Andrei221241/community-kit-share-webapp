@@ -1,9 +1,15 @@
 extends ../layout
 
 block content
-  h1= title
-  p.err= message
-  if details
-    p.muted Details: #{details}
-  p
-    a(href="/listings") Back to listings
+  .card(style="border-color: #b00020;")
+    h1.err= title || "An Error Occurred"
+    p= message || "Something went wrong."
+    
+    if details
+      hr(style="display: block; border: none; border-top: 1px solid #ddd; margin: 15px 0;")
+      p.muted Error details:
+      pre(style="background: #f8f8f8; padding: 10px; border-radius: 4px; overflow-x: auto;")= details
+      
+    br
+    //- Add a margin to the button so it stands out
+    a(href="javascript:history.back()", style="display: inline-block; padding: 10px 25px; background: #1e3c72; color: white; border-radius: 30px; text-decoration: none; font-weight: bold;") Go Back

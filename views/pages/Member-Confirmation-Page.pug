@@ -3,28 +3,14 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    title Request Submitted - Community Kit Share
-
-    // Page styles
+    title Confirmation
     link(rel="stylesheet", href="/styles/css/Member-Confirmation-Page.css")
 
   body
-    // Centered confirmation card
     main.wrap
-      section.card(aria-label="Booking submitted confirmation")
-        h1 Thanks — Your request has been submitted
-        p Your gear kit request has been sent to the Quartermaster.
+      section.card
+        h1 Request Submitted
 
-        // Status badge
-        span.status#requestStatus
-          | Status: Pending approval
+        p Your request is pending approval.
 
-        // Info box
-        div.box
-          p.small
-            | Please wait for approval. You will be notified once your request is approved and ready for pickup.
-
-        // Back link
-        a.btn(href="/member-book") Back to booking
-
-    script(src="/js/JavaScript.js")  
+        a.btn(href="/member/book") Back to booking

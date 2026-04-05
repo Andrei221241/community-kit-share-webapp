@@ -1,29 +1,31 @@
 extends ../layout
 
 block content
-  h1 User Profile
   .card
-    h2= user.name
+    h1 User Profile
+    p 
+      strong Name: 
+      | #{user.name}
     p
       strong Role: 
       | #{user.role}
     p
       strong Email: 
       | #{user.email || 'N/A'}
-    p
-      strong Bio: 
-      | #{user.bio || 'No bio available'}
+    if user.bio
+      p
+        strong Bio:
+        br
+        | #{user.bio}
 
-  h3 Recent Requests
-  if !requests.length
-    p This user has no requests yet.
-  else
+  h2 Borrow Requests
+  if requests && requests.length
     table
       thead
         tr
-          th Kit
-          th Start
-          th End
+          th Kit Name
+          th Start Date
+          th End Date
           th Status
       tbody
         each req in requests
@@ -31,4 +33,12 @@ block content
             td= req.kit_name
             td= req.start_date
             td= req.end_date
-            td= req.status
+            td
+              if req.status === 'Approved'
+                span.badge.ok Approved
+              else if req.status === 'Rejected'
+                span.badge.err Rejected
+              else
+                span.badge.warn Pending
+  else
+    p This user has no borrow requests.

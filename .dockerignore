@@ -1,4 +1,8 @@
 .git
 node_modules
 npm-debug.log
+
+# CRITICAL
 db/
+*.sock
+.env

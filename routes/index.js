@@ -18,8 +18,11 @@ function requireCoordinator(req, res, next) {
     next();
 }
 
+// Public intro page
+router.get("/", pages.getIntroPage);
+router.get("/intro", pages.getIntroPage);
+
 // Member auth
-router.get("/", pages.memberLogin);
 router.get("/member/login", pages.memberLogin);
 router.post("/member/login", pages.postMemberLogin);
 router.get("/member/book", requireMember, pages.memberBook);
@@ -34,16 +37,17 @@ router.get("/coordinator/approve", requireCoordinator, pages.coordinatorApprove)
 router.get("/coordinator/requests/pending", requireCoordinator, pages.coordinatorPending);
 router.post("/coordinator/requests/:id/approve", requireCoordinator, pages.approveRequest);
 router.post("/coordinator/requests/:id/reject", requireCoordinator, pages.rejectRequest);
+router.get("/users", requireCoordinator, pages.usersList);
+router.get("/users/:id", requireCoordinator, pages.userProfile);
 
 // Logout
 router.get("/logout", pages.logout);
 
 // Public pages
-router.get("/users", pages.usersList);
-router.get("/users/:id", pages.userProfile);
 router.get("/listings", pages.kitsList);
 router.get("/listings/:id", pages.kitDetail);
 router.get("/tags", pages.tagsAndCategories);
+router.get("/find-campsites", pages.findCampsites);
 
 router.get("/db_test", pages.dbTest);
 router.get("/goodbye", pages.goodbye);
