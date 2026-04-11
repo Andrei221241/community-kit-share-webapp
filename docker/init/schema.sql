@@ -61,26 +61,26 @@ CREATE TABLE IF NOT EXISTS borrow_requests (
 );
 
 INSERT INTO users (name, email, role, bio, password_hash) VALUES
-('Karim Elmenshawy', 'karim.elmenshawy@gmail.com', 'Coordinator', 'Outdoor enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Andrei Moaca', 'andrei.moaca@yahoo.co.uk', 'Coordinator', 'Hiking lover', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Raul Pereira', 'raul.pereira@gmail.com', 'Coordinator', 'Kit coordinator', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Issa Amtot', 'issa.amtot@gmail.com', 'Coordinator', 'Community organiser', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('James Carter', 'james.carter@gmail.com', 'Member', 'Camping fan', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Emily Watson', 'emily.watson@yahoo.co.uk', 'Member', 'Nature lover', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Daniel Smith', 'daniel.smith@gmail.com', 'Member', 'Adventure seeker', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Olivia Brown', 'olivia.brown@gmail.com', 'Member', 'Trail runner', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Noah Johnson', 'noah.johnson@gmail.com', 'Member', 'Wild camper', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Sophia Taylor', 'sophia.taylor@yahoo.co.uk', 'Member', 'Navigation expert', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Liam Wilson', 'liam.wilson@gmail.com', 'Coordinator', 'Senior coordinator', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Ava Davis', 'ava.davis@gmail.com', 'Member', 'Cooking enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Ethan Miller', 'ethan.miller@gmail.com', 'Member', 'Survival expert', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Mia Anderson', 'mia.anderson@gmail.com', 'Member', 'Hiking enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Lucas Thomas', 'lucas.thomas@gmail.com', 'Member', 'Outdoor photographer', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Isabella Moore', 'isabella.moore@gmail.com', 'Coordinator', 'Kit manager', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Mason Martin', 'mason.martin@gmail.com', 'Member', 'Backpacker', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Amelia Jackson', 'amelia.jackson@yahoo.co.uk', 'Member', 'Rock climber', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Logan White', 'logan.white@gmail.com', 'Member', 'Cyclist', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Charlotte Harris', 'charlotte.harris@gmail.com', 'Member', 'Wildlife watcher', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+('Karim Elmenshawy', 'karim.elmenshawy@example.com', 'Coordinator', 'Outdoor enthusiast', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Andrei Moaca', 'andrei.moaca@example.com', 'Coordinator', 'Hiking lover', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Raul Pereira', 'raul.pereira@example.com', 'Coordinator', 'Kit coordinator', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Issa Amtot', 'issa.amtot@example.com', 'Coordinator', 'Community organiser', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('James Carter', 'james.carter@example.com', 'Member', 'Camping fan', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Emily Watson', 'emily.watson@example.com', 'Member', 'Nature lover', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Daniel Smith', 'daniel.smith@example.com', 'Member', 'Adventure seeker', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Olivia Brown', 'olivia.brown@example.com', 'Member', 'Trail runner', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Noah Johnson', 'noah.johnson@example.com', 'Member', 'Wild camper', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Sophia Taylor', 'sophia.taylor@example.com', 'Member', 'Navigation expert', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Liam Wilson', 'liam.wilson@example.com', 'Coordinator', 'Senior coordinator', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Ava Davis', 'ava.davis@example.com', 'Member', 'Cooking enthusiast', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Ethan Miller', 'ethan.miller@example.com', 'Member', 'Survival expert', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Mia Anderson', 'mia.anderson@example.com', 'Member', 'Hiking enthusiast', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Lucas Thomas', 'lucas.thomas@example.com', 'Member', 'Outdoor photographer', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Isabella Moore', 'isabella.moore@example.com', 'Coordinator', 'Kit manager', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Mason Martin', 'mason.martin@example.com', 'Member', 'Backpacker', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Amelia Jackson', 'amelia.jackson@example.com', 'Member', 'Rock climber', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Logan White', 'logan.white@example.com', 'Member', 'Cyclist', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO'),
+('Charlotte Harris', 'charlotte.harris@example.com', 'Member', 'Wildlife watcher', '$2b$10$bVtV3eJpcJK0zA3JEoguc.auQogbRQ./KtBhGqweNdVogtfZQXkDO');
 
 INSERT INTO categories (name) VALUES
 ('Camping'), ('Hiking'), ('Survival'), ('Navigation'), ('Cooking');

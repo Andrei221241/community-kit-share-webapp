@@ -1,38 +1,127 @@
+// Define HTML document type
 doctype html
+
+// Root HTML element
 html(lang="en")
   head
+    // Character encoding
     meta(charset="utf-8")
+
+    // Responsive layout
     meta(name="viewport" content="width=device-width, initial-scale=1")
+
+    // Dynamic page title (passed from each page)
     title #{title}
 
+    // Global styles (apply to all pages)
     style.
       body { font-family: Arial, sans-serif; margin: 24px; line-height: 1.4; }
+
+      /* Navigation links spacing */
       nav a { margin-right: 12px; }
+
+      /* Muted/secondary text */
       .muted { color: #666; }
+
+      /* Basic card styling */
       .card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+
+      /* Flex row layout */
       .row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+      /* Badge styling (status labels) */
       .badge { display: inline-block; padding: 2px 8px; border: 1px solid #999; border-radius: 12px; font-size: 12px; }
+
+      /* Status colors */
       .ok { color: #0a7a0a; }
       .warn { color: #a85d00; }
       .err { color: #b00020; }
+
+      /* Table styling */
       table { border-collapse: collapse; width: 100%; margin-top: 8px; }
       th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+
+      /* Inline forms (buttons side by side) */
       form.inline { display: inline; }
 
-    // 🔥 THIS IS WHAT YOU WERE MISSING
+      /* NAV STYLING */
+      nav { background: linear-gradient(135deg, #1e3c72, #315b2e); padding: 15px 20px; margin: -24px -24px 24px -24px; }
+
+      /* Navigation links */
+      nav a { color: white; text-decoration: none; margin-right: 15px; font-weight: bold; }
+      nav a:hover { text-decoration: underline; }
+
+      /* Muted text in nav */
+      nav .muted { color: #ddd; }
+
+      /* Hide horizontal rule (used for spacing) */
+      hr { display: none; }
+
+      /* CARD ENHANCEMENTS */
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: 0.3s;
+      }
+
+      /* Hover effect for cards */
+      .card:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+      }
+
+      /* Card links styling */
+      .card h3 a { color: #1e3c72; text-decoration: none; }
+      .card h3 a:hover { text-decoration: underline; }
+
+      /* BUTTON STYLING */
+      button {
+        padding: 10px 25px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      /* Button hover effect */
+      button:hover { background: #e68900; }
+
+      /* FORM INPUT STYLING */
+      input, select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+
+      /* HEADINGS */
+      h1 { color: #1e3c72; margin-bottom: 10px; }
+      h2 { color: #315b2e; margin-bottom: 10px; }
+
+    // Placeholder for page-specific CSS
     block styles
 
   body
+
+    // Navigation bar (shown on all pages)
     nav
+      // Always visible links
       a(href="/") Home
-      a(href="/users") Users
       a(href="/listings") Listings
       a(href="/tags") Tags/Categories
 
+      // Show coordinator-only links
       if sessionUser && sessionUser.role === 'Coordinator'
         a(href="/users") Users
         a(href="/coordinator/requests/pending") Pending Requests
 
+      // Show member-only link
       if sessionUser && sessionUser.role === 'Member'
         a(href="/member/requests") My Requests
 
@@ -43,6 +132,8 @@ html(lang="en")
       else
         a(href="/member/login") Log in
 
+    // Spacer (hidden visually)
     hr
 
+    // Placeholder where each page inserts its content
     block content
