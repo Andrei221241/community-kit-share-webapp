@@ -1,8 +1,8 @@
-// Use shared layout (header, footer, etc.)
 extends ../layout
 
-// Main content block
 block content
+
+  // Use shared layout (header, footer, etc.)
 
   // Page title
   h1 My Requests
@@ -37,13 +37,11 @@ block content
           // If approved
           if req.status === 'Approved'
             span.badge.ok Approved
-
-          // If rejected
           else if req.status === 'Rejected'
+            // If rejected
             span.badge.err Rejected
-
-          // Otherwise pending
           else
+            // Otherwise pending
             span.badge.warn Pending
 
         // Show rejection reason if applicable
@@ -52,8 +50,8 @@ block content
             strong Reason: 
             | #{req.rejection_reason}
 
-  // If no requests exist
   else
+    // If no requests exist
     p You haven't made any borrow requests yet. 
 
     // Link to browse kits
