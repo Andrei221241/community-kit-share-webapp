@@ -1,8 +1,8 @@
-// Use shared layout (header, footer, etc.)
 extends ../layout
 
-// Main content block
 block content
+
+  // Use shared layout (header, footer, etc.)
 
   // Kit details card
   .card
@@ -81,14 +81,11 @@ block content
   script.
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Get date input fields
       const startInput = document.getElementById('startDate');
       const endInput = document.getElementById('endDate');
       
-      // Stop if inputs don’t exist
       if (!startInput || !endInput) return;
 
-      // Set minimum date to today
       const today = new Date();
       const tzOffset = today.getTimezoneOffset() * 60000;
       const todayLocal = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
@@ -96,15 +93,12 @@ block content
       startInput.min = todayLocal;
       endInput.min = todayLocal;
 
-      // Update end date when start date changes
       startInput.addEventListener('change', (e) => {
         const selectedStart = e.target.value;
 
         if (selectedStart) {
-          // Prevent end date being before start date
           endInput.min = selectedStart;
 
-          // Auto-correct invalid end date
           if (endInput.value && endInput.value < selectedStart) {
             endInput.value = selectedStart;
           }

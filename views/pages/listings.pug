@@ -1,8 +1,9 @@
-// Use shared layout (header, footer, navigation)
 extends ../layout
 
-// Main content section
 block content
+
+  // Use shared layout (header, footer, navigation)
+  // Main content section
 
   // Page title
   h1 Listing Page
@@ -65,7 +66,6 @@ block content
   if !kits.length
     p No kits found for current filters.
 
-  // If kits exist
   else
     // Loop through each kit and display it
     each kit in kits

@@ -1,0 +1,119 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 24px;
+  line-height: 1.4;
+}
+
+/* Navigation links spacing */
+nav a {
+  margin-right: 12px;
+}
+
+/* Muted text */
+.muted {
+  color: #666;
+}
+
+/* Card styling */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+/* Layout */
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid #999;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.ok { color: #0a7a0a; }
+.warn { color: #a85d00; }
+.err { color: #b00020; }
+
+/* Table */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 8px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+/* Forms */
+form.inline {
+  display: inline;
+}
+
+/* NAVBAR (ORANGE) */
+nav {
+  background: #ff9800;
+  padding: 15px 20px;
+  margin: -24px -24px 24px -24px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+nav .muted {
+  color: #fff3e0;
+}
+
+/* Buttons */
+button {
+  padding: 10px 25px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e68900;
+}
+
+/* Inputs */
+input, select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Headings */
+h1 { color: #1e3c72; }
+h2 { color: #315b2e; }
+
+/* Hide hr */
+hr {
+  display: none;
+}

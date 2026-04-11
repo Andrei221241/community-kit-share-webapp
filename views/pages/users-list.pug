@@ -1,8 +1,9 @@
-// Use shared layout (header, footer, etc.)
 extends ../layout
 
-// Main content block
 block content
+
+  // Use shared layout (header, footer, etc.)
+  // Main content block
 
   // Page title
   h1 Users
@@ -40,6 +41,6 @@ block content
             td
               a(href=`/users/${user.id}`) View Profile
 
-  // If no users exist
   else
+    // If no users exist
     p No users found

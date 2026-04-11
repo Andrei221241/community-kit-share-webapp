@@ -1,8 +1,9 @@
-// Use shared layout (header, footer, etc.)
 extends ../layout
 
-// Main content block
 block content
+
+  // Use shared layout (header, footer, etc.)
+  // Main content block
 
   // User profile card
   .card
@@ -70,6 +71,6 @@ block content
               else
                 span.badge.warn Pending
 
-  // If no requests exist
   else
+    // If no requests exist
     p This user has no borrow requests.
