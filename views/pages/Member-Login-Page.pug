@@ -1,0 +1,39 @@
+// Define HTML document type
+doctype html
+
+// Root HTML element
+html(lang="en")
+  head
+    // Character encoding
+    meta(charset="UTF-8")
+
+    // Responsive layout for mobile devices
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    // Page title (shown in browser tab)
+    title Member Login
+
+    // Link to external CSS for styling
+    link(rel="stylesheet", href="/styles/css/Member-Login-Page.css")
+
+  body
+    // Main wrapper for centering the login card
+    main.wrap
+      section.card
+
+        // Page heading
+        h1 Community Member Login
+
+        // Login form (POST request to backend)
+        form(method="POST", action="/member/login")
+
+          // Email input field
+          label(for="email") Email
+          input#email(type="email", name="email", required)
+
+          // Password input field
+          label(for="password") Password
+          input#password(type="password", name="password", required)
+
+          // Submit button
+          button(type="submit") Log in

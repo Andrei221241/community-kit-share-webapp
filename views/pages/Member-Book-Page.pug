@@ -1,0 +1,47 @@
+// Define HTML document type
+doctype html
+
+// Root HTML element
+html(lang="en")
+  head
+    // Character encoding
+    meta(charset="UTF-8")
+
+    // Responsive design for mobile devices
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    // Page title (browser tab)
+    title Book Kit
+
+    // Link to external CSS for styling
+    link(rel="stylesheet", href="/styles/css/Member-Book-Page.css")
+
+  body
+    // Main wrapper for centering content
+    main.wrap
+      section.card
+
+        // Page heading
+        h1 Request a Kit
+
+        // Form to submit kit request (POST request to backend)
+        form(method="POST", action="/requests")
+
+          // Mission type input (e.g. training, event)
+          label(for="missionType") Mission Type
+          input#missionType(type="text", name="missionType", required)
+
+          // Kit type input (user selects desired kit)
+          label(for="kitType") Kit Type
+          input#kitType(type="text", name="kitType", required)
+
+          // Quantity input (minimum 1)
+          label(for="quantity") Quantity
+          input#quantity(type="number", name="quantity", min="1", value="1")
+
+          // Optional notes textarea
+          label(for="notes") Notes
+          textarea(name="notes")
+
+          // Submit button
+          button(type="submit") Submit Request

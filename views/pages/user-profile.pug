@@ -1,0 +1,75 @@
+// Use shared layout (header, footer, etc.)
+extends ../layout
+
+// Main content block
+block content
+
+  // User profile card
+  .card
+
+    // Page title
+    h1 User Profile
+
+    // Display user name
+    p 
+      strong Name: 
+      | #{user.name}
+
+    // Display user role (e.g. member, coordinator)
+    p
+      strong Role: 
+      | #{user.role}
+
+    // Display email (fallback if not available)
+    p
+      strong Email: 
+      | #{user.email || 'N/A'}
+
+    // Display bio if it exists
+    if user.bio
+      p
+        strong Bio:
+        br
+        | #{user.bio}
+
+  // Section heading for requests
+  h2 Borrow Requests
+
+  // Check if user has any requests
+  if requests && requests.length
+
+    // Table of requests
+    table
+      thead
+        tr
+          th Kit Name
+          th Start Date
+          th End Date
+          th Status
+
+      tbody
+        // Loop through each request
+        each req in requests
+          tr
+
+            // Kit name
+            td= req.kit_name
+
+            // Start date
+            td= req.start_date
+
+            // End date
+            td= req.end_date
+
+            // Status with conditional styling
+            td
+              if req.status === 'Approved'
+                span.badge.ok Approved
+              else if req.status === 'Rejected'
+                span.badge.err Rejected
+              else
+                span.badge.warn Pending
+
+  // If no requests exist
+  else
+    p This user has no borrow requests.

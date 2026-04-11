@@ -1,0 +1,162 @@
+/* Reset default margin and set background */
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+
+  /* Dark green gradient background */
+  background: linear-gradient(135deg, #1b3a2f, #244d3a);
+}
+
+/* Main page container (centers content) */
+.page{
+  min-height:calc(100vh - 80px);
+
+  /* Center card horizontally + vertically */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:24px;
+  box-sizing:border-box;
+}
+
+/* Main content card */
+.page .card{
+  width:100%;
+  max-width:1100px;
+
+  /* Slight transparency */
+  background:rgba(255,255,255,0.96);
+
+  border:1px solid #e6e8eb;
+  border-radius:16px;
+  padding:20px;
+
+  /* Soft shadow for depth */
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+
+  box-sizing:border-box;
+}
+
+/* Top bar (filters + buttons) */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  /* Allows wrapping on small screens */
+  flex-wrap:wrap;
+
+  gap:16px;
+  margin-bottom:15px;
+}
+
+/* Container for controls */
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* Labels styling */
+label{
+  font-size:14px;
+  font-weight:600;
+  color:#2c372c;
+}
+
+/* Dropdown styling */
+select{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #cfd6dd;
+  min-width:170px;
+}
+
+/* Focus effect for dropdowns */
+select:focus{
+  outline:2px solid #b9d7ff;
+  border-color:#6aa7ff;
+}
+
+/* Buttons styling */
+button{
+  padding:10px 14px;
+  border:0;
+  border-radius:10px;
+
+  background:#111;
+  color:#fff;
+
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* Hover effect */
+button:hover{
+  opacity:.9;
+}
+
+/* ===== MAIN LAYOUT (MAP + INFO PANEL) ===== */
+.content-grid{
+  display:flex;
+
+  /* Space between map and side panel */
+  gap:24px;
+
+  align-items:flex-start;
+  justify-content:space-between;
+
+  margin-top:16px;
+}
+
+/* ===== MAP (LEFT SIDE) ===== */
+#map{
+  width:650px;
+  height:650px;
+
+  border:1px solid #d9dee4;
+  border-radius:12px;
+
+  /* Prevent shrinking in flex layout */
+  flex-shrink:0;
+
+  overflow:hidden;
+}
+
+/* ===== INFO PANEL (RIGHT SIDE) ===== */
+.info-panel{
+  width:400px;
+
+  /* Dark green panel */
+  background:#3c5836;
+  color:#fff;
+
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:16px;
+
+  box-sizing:border-box;
+}
+
+/* Panel heading */
+.info-panel h2{
+  margin-top:0;
+}
+
+/* List styling */
+.place-list{
+  padding-left:18px;
+}
+
+/* List item spacing */
+.place-list li{
+  margin-bottom:10px;
+}
+
+/* Footer small text */
+.small{
+  margin-top:10px;
+  font-size:12px;
+  color:#666;
+}

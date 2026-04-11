@@ -1,0 +1,31 @@
+// Define HTML document type
+doctype html
+
+// Root HTML element
+html(lang="en")
+  head
+    // Character encoding
+    meta(charset="UTF-8")
+
+    // Responsive layout for mobile devices
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    // Page title (shown in browser tab)
+    title Confirmation
+
+    // Link to CSS styling for this page
+    link(rel="stylesheet", href="/styles/css/Member-Confirmation-Page.css")
+
+  body
+    // Main wrapper for centering content
+    main.wrap
+      section.card
+
+        // Confirmation heading
+        h1 Request Submitted
+
+        // Message informing user of request status
+        p Your request is pending approval.
+
+        // Button to return to booking page
+        a.btn(href="/member/book") Back to booking

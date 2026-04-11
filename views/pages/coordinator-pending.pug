@@ -1,0 +1,58 @@
+// Use shared layout (header, footer, etc.)
+extends ../layout
+
+// Main content block
+block content
+
+  // Page title
+  h1 Pending Requests
+
+  // Small description / reference to user stories
+  p.muted US7, US8, US9 coordinator processing page.
+
+  // If there are NO requests
+  if !requests.length
+    p No pending requests.
+
+  // If requests exist
+  else
+    // Loop through each request
+    each request in requests
+      .card
+        // Display request ID
+        p
+          strong Request #
+          | #{request.id}
+
+        // Display requester name
+        p
+          strong Requester: 
+          | #{request.requester_name}
+
+        // Display kit name
+        p
+          strong Kit: 
+          | #{request.kit_name}
+
+        // Display date range
+        p
+          strong Range: 
+          | #{request.start_date} to #{request.end_date}
+
+        // Display note (fallback if empty)
+        p
+          strong Note: 
+          | #{request.note || 'No note'}
+
+        // Approve form (sends POST request to backend)
+        form.inline(method="post" action=`/coordinator/requests/${request.id}/approve`)
+          button(type="submit") Approve
+
+        // Reject form with optional reason
+        form.inline(method="post" action=`/coordinator/requests/${request.id}/reject`)
+          input(
+            type="text"
+            name="reason"
+            placeholder="Optional rejection reason"
+          )
+          button(type="submit") Reject

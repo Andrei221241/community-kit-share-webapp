@@ -1,0 +1,60 @@
+// Use shared layout (header, footer, etc.)
+extends ../layout
+
+// Main content block
+block content
+
+  // Page title
+  h1 My Requests
+
+  // Personalised greeting using logged-in user's name
+  p Hello, #{userName}! Here are your past and current borrow requests.
+
+  // Check if user has any requests
+  if requests && requests.length
+
+    // Loop through each request
+    each req in requests
+      .card
+
+        // Display request ID
+        h3 Request ID: #{req.id}
+
+        // Display kit name
+        p
+          strong Kit: 
+          | #{req.kit_name}
+
+        // Display booking dates
+        p
+          strong Dates: 
+          | #{req.start_date} to #{req.end_date}
+
+        // Display request status with different styles
+        p
+          strong Status: 
+
+          // If approved
+          if req.status === 'Approved'
+            span.badge.ok Approved
+
+          // If rejected
+          else if req.status === 'Rejected'
+            span.badge.err Rejected
+
+          // Otherwise pending
+          else
+            span.badge.warn Pending
+
+        // Show rejection reason if applicable
+        if req.status === 'Rejected' && req.rejection_reason
+          p
+            strong Reason: 
+            | #{req.rejection_reason}
+
+  // If no requests exist
+  else
+    p You haven't made any borrow requests yet. 
+
+    // Link to browse kits
+    a.btn(href="/listings") Browse Kits

@@ -1,0 +1,36 @@
+// Use shared layout (header, footer, etc.)
+extends ../layout
+
+// Main content block
+block content
+
+  // Error card with red border styling
+  .card(style="border-color: #b00020;")
+
+    // Error title (fallback if not provided)
+    h1.err= title || "An Error Occurred"
+
+    // Main error message (fallback if not provided)
+    p= message || "Something went wrong."
+    
+    // If additional error details exist
+    if details
+
+      // Divider line
+      hr(style="display: block; border: none; border-top: 1px solid #ddd; margin: 15px 0;")
+
+      // Label for details section
+      p.muted Error details:
+
+      // Display technical error info in formatted block
+      pre(
+        style="background: #f8f8f8; padding: 10px; border-radius: 4px; overflow-x: auto;"
+      )= details
+      
+    br
+
+    // Back button to return to previous page
+    a(
+      href="javascript:history.back()",
+      style="display: inline-block; padding: 10px 25px; background: #1e3c72; color: white; border-radius: 30px; text-decoration: none; font-weight: bold;"
+    ) Go Back
