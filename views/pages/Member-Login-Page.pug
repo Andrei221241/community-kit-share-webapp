@@ -12,6 +12,9 @@ html(lang="en")
       section.card
         h1 Community Member Login
 
+        if error
+          p.error-message= error
+
         form(method="POST", action="/member/login")
           label(for="email") Email
           input#email(type="email", name="email", required)
