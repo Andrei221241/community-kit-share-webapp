@@ -8,6 +8,7 @@ const getForgotPasswordPage = (req, res) => {
         title: "Forgot Password",
         error: null,
         success: null,
+        resetLink: null,
     });
 };
 
@@ -19,6 +20,7 @@ const postForgotPassword = withErrorBoundary(async (req, res) => {
             title: "Forgot Password",
             error: "Enter your email.",
             success: null,
+            resetLink: null,
         });
     }
 
@@ -27,18 +29,18 @@ const postForgotPassword = withErrorBoundary(async (req, res) => {
         [email]
     );
 
-    // security: always same response
     if (!rows.length) {
         return res.render("pages/member-forgot-password", {
             title: "Forgot Password",
             error: null,
             success: "If an account exists, a reset link was generated.",
+            resetLink: null,
         });
     }
 
     const user = rows[0];
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const expiry = new Date(Date.now() + 60 * 60 * 1000);
 
     await db.query(
         `UPDATE users 
@@ -47,16 +49,17 @@ const postForgotPassword = withErrorBoundary(async (req, res) => {
         [resetToken, expiry, user.id]
     );
 
-    const link = `http://localhost:3000/member/reset-password/${resetToken}`;
+    const link = `/member/reset-password/${resetToken}`;
 
     console.log("==== RESET LINK ====");
-    console.log(link);
+    console.log(`http://localhost:3000${link}`);
     console.log("====================");
 
     res.render("pages/member-forgot-password", {
         title: "Forgot Password",
         error: null,
-        success: "Reset link generated (check terminal).",
+        success: "Reset link generated. Click the button below.",
+        resetLink: link,
     });
 });
 
