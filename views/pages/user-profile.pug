@@ -2,44 +2,48 @@ extends ../layout
 
 block content
 
-  // Use shared layout (header, footer, etc.)
-  // Main content block
-
-  // User profile card
   .card
 
-    // Page title
     h1 User Profile
 
-    // Display user name
     p 
       strong Name: 
       | #{user.name}
 
-    // Display user role (e.g. member, coordinator)
-    p
+    pgit
       strong Role: 
       | #{user.role}
 
-    // Display email (fallback if not available)
     p
       strong Email: 
       | #{user.email || 'N/A'}
 
-    // Display bio if it exists
     if user.bio
       p
         strong Bio:
         br
         | #{user.bio}
 
-  // Section heading for requests
+    // Loyalty Points
+    p
+      strong Loyalty Points:
+      |  #{user.loyalty_points || 0}
+
+    // Badge
+    p
+      strong Badge:
+      span.badge.ok #{badge}
+
+    // Rating
+    p
+      strong Rating:
+      |  #{averageRating || 'No ratings'} (#{totalRatings} reviews)
+
+
+  // Borrow Requests
   h2 Borrow Requests
 
-  // Check if user has any requests
   if requests && requests.length
-
-    // Table of requests
     table
       thead
         tr
@@ -49,28 +53,62 @@ block content
           th Status
 
       tbody
-        // Loop through each request
         each req in requests
           tr
-
-            // Kit name
             td= req.kit_name
-
-            // Start date
             td= req.start_date
-
-            // End date
             td= req.end_date
-
-            // Status with conditional styling
             td
               if req.status === 'Approved'
                 span.badge.ok Approved
               else if req.status === 'Rejected'
                 span.badge.err Rejected
+              else if req.status === 'Returned'
+                span.badge.ok Returned
               else
                 span.badge.warn Pending
-
   else
-    // If no requests exist
     p This user has no borrow requests.
+
+
+  // Points
+  h2 Points History
+
+  if history && history.length
+    table
+      thead
+        tr
+          th Action
+          th Points
+          th Date
+
+      tbody
+        each h in history
+          tr
+            td= h.action_type
+            td
+              if h.points_change > 0
+                span.badge.ok +#{h.points_change}
+              else
+                span.badge.err #{h.points_change}
+            td= h.created_at
+  else
+    p No points history yet.
+
+
+  // Reviews
+  h2 Reviews
+
+  if reviews && reviews.length
+    each r in reviews
+      .card
+        p
+          strong #{r.reviewer_name}
+          |  – #{r.stars}/5
+
+        if r.comment
+          p= r.comment
+
+        small #{r.created_at}
+  else
+    p No reviews yet.

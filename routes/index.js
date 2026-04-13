@@ -37,6 +37,8 @@ router.get("/coordinator/approve", requireCoordinator, pages.coordinatorApprove)
 router.get("/coordinator/requests/pending", requireCoordinator, pages.coordinatorPending);
 router.post("/coordinator/requests/:id/approve", requireCoordinator, pages.approveRequest);
 router.post("/coordinator/requests/:id/reject", requireCoordinator, pages.rejectRequest);
+router.post("/coordinator/requests/:id/complete-return", requireCoordinator, pages.completeReturn);
+router.post("/ratings/add", requireMember, pages.addRating);
 router.get("/users", requireCoordinator, pages.usersList);
 router.get("/users/:id", requireCoordinator, pages.userProfile);
 

@@ -1,5 +1,6 @@
 const db = require("../app/services/db");
 const bcrypt = require("bcryptjs");
+const { addPoints, getBadge, getAverageRating } = require("./trust.controller");
 
 function asNumber(value) {
     const parsed = Number.parseInt(value, 10);
@@ -51,14 +52,25 @@ const postMemberLogin = withErrorBoundary(async (req, res) => {
     const password = req.body.password || "";
 
     if (!email || !password) {
-        return res.render("pages/Member-Login-Page", { title: "Member Login", error: "Email and password are required." });
+        return res.render("pages/Member-Login-Page", {
+            title: "Member Login",
+            error: "Email and password are required."
+        });
     }
 
-    const [rows] = await db.query(`SELECT id, name, role, password_hash FROM users WHERE email = ?`, [email]);
+    const [rows] = await db.query(
+        `SELECT id, name, role, password_hash
+         FROM users
+         WHERE email = ?`,
+        [email]
+    );
     const user = rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-        return res.render("pages/Member-Login-Page", { title: "Member Login", error: "Invalid email or password." });
+        return res.render("pages/Member-Login-Page", {
+            title: "Member Login",
+            error: "Invalid email or password."
+        });
     }
 
     req.session.userId = user.id;
@@ -68,6 +80,7 @@ const postMemberLogin = withErrorBoundary(async (req, res) => {
     if (user.role === "Coordinator") {
         return res.redirect("/coordinator/requests/pending");
     }
+
     res.redirect("/listings");
 });
 
@@ -111,14 +124,25 @@ const postCoordinatorLogin = withErrorBoundary(async (req, res) => {
     const password = req.body.password || "";
 
     if (!email || !password) {
-        return res.render("pages/Coordinator-login-Page", { title: "Coordinator Login", error: "Email and password are required." });
+        return res.render("pages/Coordinator-login-Page", {
+            title: "Coordinator Login",
+            error: "Email and password are required."
+        });
     }
 
-    const [rows] = await db.query(`SELECT id, name, role, password_hash FROM users WHERE email = ? AND role = 'Coordinator'`, [email]);
+    const [rows] = await db.query(
+        `SELECT id, name, role, password_hash
+         FROM users
+         WHERE email = ? AND role = 'Coordinator'`,
+        [email]
+    );
     const user = rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-        return res.render("pages/Coordinator-login-Page", { title: "Coordinator Login", error: "Invalid credentials or not a coordinator account." });
+        return res.render("pages/Coordinator-login-Page", {
+            title: "Coordinator Login",
+            error: "Invalid credentials or not a coordinator account."
+        });
     }
 
     req.session.userId = user.id;
@@ -163,7 +187,7 @@ const userProfile = withErrorBoundary(async (req, res) => {
     }
 
     const [users] = await db.query(
-        `SELECT id, name, email, role, bio
+        `SELECT id, name, email, role, bio, loyalty_points
          FROM users
          WHERE id = ?`,
         [userId]
@@ -189,10 +213,36 @@ const userProfile = withErrorBoundary(async (req, res) => {
         [userId]
     );
 
+    const [history] = await db.query(
+        `SELECT action_type, points_change, created_at
+         FROM points_history
+         WHERE user_id = ?
+         ORDER BY created_at DESC`,
+        [userId]
+    );
+
+    const [reviews] = await db.query(
+        `SELECT r.stars, r.comment, r.created_at,
+                u.name AS reviewer_name
+         FROM ratings r
+         INNER JOIN users u ON u.id = r.reviewer_user_id
+         WHERE r.rated_user_id = ?
+         ORDER BY r.created_at DESC`,
+        [userId]
+    );
+
+    const ratingData = await getAverageRating(db, userId);
+    const badge = getBadge(user.loyalty_points || 0);
+
     res.render("pages/user-profile", {
         title: "User Profile",
         user,
         requests,
+        history,
+        reviews,
+        badge,
+        averageRating: ratingData.average_rating,
+        totalRatings: ratingData.total_ratings,
     });
 });
 
@@ -399,7 +449,7 @@ const approveRequest = withErrorBoundary(async (req, res) => {
     }
 
     const [rows] = await db.query(
-        `SELECT id, kit_id, start_date, end_date
+        `SELECT id, user_id, kit_id, start_date, end_date
          FROM borrow_requests
          WHERE id = ? AND status = 'Pending'`,
         [requestId]
@@ -441,7 +491,135 @@ const approveRequest = withErrorBoundary(async (req, res) => {
         [requestId]
     );
 
+    await addPoints(db, requestRow.user_id, 5, "Request Approved", requestId);
+
     res.redirect("/coordinator/requests/pending");
+});
+
+const completeReturn = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+
+    if (!requestId) {
+        res.status(400).render("pages/error", {
+            title: "Invalid Request",
+            message: "A valid request id is required.",
+            details: null,
+        });
+        return;
+    }
+
+    const [rows] = await db.query(
+        `SELECT id, user_id, status
+         FROM borrow_requests
+         WHERE id = ?`,
+        [requestId]
+    );
+
+    const requestRow = rows[0];
+    if (!requestRow) {
+        res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "No request exists for the provided id.",
+            details: null,
+        });
+        return;
+    }
+
+    if (requestRow.status !== "Approved") {
+        res.status(400).render("pages/error", {
+            title: "Invalid Status",
+            message: "Only approved requests can be marked as returned.",
+            details: null,
+        });
+        return;
+    }
+
+    await db.query(
+        `UPDATE borrow_requests
+         SET status = 'Returned'
+         WHERE id = ?`,
+        [requestId]
+    );
+
+    await addPoints(db, requestRow.user_id, 10, "Completed Return", requestId);
+
+    res.redirect("/coordinator/requests/pending");
+});
+
+const addRating = withErrorBoundary(async (req, res) => {
+    const ratedUserId = asNumber(req.body.rated_user_id);
+    const reviewerUserId = req.session.userId;
+    const requestId = asNumber(req.body.request_id);
+    const stars = asNumber(req.body.stars);
+    const comment = (req.body.comment || "").trim();
+
+    if (!ratedUserId || !reviewerUserId || !requestId || !stars) {
+        res.status(400).render("pages/error", {
+            title: "Missing Rating Data",
+            message: "Rated user, request, and star rating are required.",
+            details: null,
+        });
+        return;
+    }
+
+    if (stars < 1 || stars > 5) {
+        res.status(400).render("pages/error", {
+            title: "Invalid Rating",
+            message: "Rating must be between 1 and 5 stars.",
+            details: null,
+        });
+        return;
+    }
+
+    const [requestRows] = await db.query(
+        `SELECT id, user_id, status
+         FROM borrow_requests
+         WHERE id = ?`,
+        [requestId]
+    );
+
+    const requestRow = requestRows[0];
+    if (!requestRow) {
+        res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "No request exists for the provided id.",
+            details: null,
+        });
+        return;
+    }
+
+    if (requestRow.status !== "Returned") {
+        res.status(400).render("pages/error", {
+            title: "Rating Not Allowed",
+            message: "Ratings can only be submitted after a completed return.",
+            details: null,
+        });
+        return;
+    }
+
+    const [existing] = await db.query(
+        `SELECT id
+         FROM ratings
+         WHERE request_id = ? AND reviewer_user_id = ?`,
+        [requestId, reviewerUserId]
+    );
+
+    if (existing.length > 0) {
+        res.status(400).render("pages/error", {
+            title: "Duplicate Rating",
+            message: "You have already rated this request.",
+            details: null,
+        });
+        return;
+    }
+
+    await db.query(
+        `INSERT INTO ratings (rated_user_id, reviewer_user_id, request_id, stars, comment)
+         VALUES (?, ?, ?, ?, ?)`,
+        [ratedUserId, reviewerUserId, requestId, stars, comment || null]
+    );
+
+    res.redirect(`/users/${ratedUserId}`);
 });
 
 const rejectRequest = withErrorBoundary(async (req, res) => {
@@ -501,6 +679,8 @@ module.exports = {
     coordinatorPending,
     approveRequest,
     rejectRequest,
+    completeReturn,
+    addRating,
     dbTest,
     goodbye,
     hello,

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(50) NOT NULL,
     bio TEXT,
     password_hash VARCHAR(255)
+    loyalty_points INT DEFAULT 0,
 );
 
 CREATE TABLE IF NOT EXISTS categories (
@@ -60,9 +61,33 @@ CREATE TABLE IF NOT EXISTS borrow_requests (
     FOREIGN KEY (kit_id) REFERENCES kits(id)
 );
 
+CREATE TABLE IF NOT EXISTS ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rated_user_id INT NOT NULL,
+    reviewer_user_id INT NOT NULL,
+    request_id INT NOT NULL,
+    stars INT NOT NULL,
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (rated_user_id) REFERENCES users(id),
+    FOREIGN KEY (reviewer_user_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES borrow_requests(id)
+);
+
+CREATE TABLE IF NOT EXISTS points_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    request_id INT NULL,
+    action_type VARCHAR(50) NOT NULL,
+    points_change INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES borrow_requests(id)
+);
+
 INSERT INTO users (name, email, role, bio, password_hash) VALUES
-('Karim Elmenshawy', 'karim.elmenshawy@gmail.com', 'Member', 'Outdoor enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Andrei Moaca', 'andrei.moaca@yahoo.co.uk', 'Member', 'Hiking lover', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Karim Elmenshawy', 'karim.elmenshawy@gmail.com', 'Coordinator', 'Outdoor enthusiast', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Andrei Moaca', 'andrei.moaca@yahoo.co.uk', 'Coordinator', 'Hiking lover', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 ('Raul Pereira', 'raul.pereira@gmail.com', 'Coordinator', 'Kit coordinator', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 ('Issa Amtot', 'issa.amtot@gmail.com', 'Coordinator', 'Community organiser', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 ('James Carter', 'james.carter@gmail.com', 'Member', 'Camping fan', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
