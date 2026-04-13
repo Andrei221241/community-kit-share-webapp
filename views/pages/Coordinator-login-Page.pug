@@ -1,46 +1,31 @@
-// Define HTML document type
 doctype html
 
-// Root HTML element with language set to English
 html(lang="en")
   head
-    // Character encoding
     meta(charset="UTF-8")
-
-    // Makes page responsive on mobile devices
     meta(name="viewport", content="width=device-width, initial-scale=1")
-
-    // Page title (shown in browser tab)
     title Coordinator Login
-
-    // Link to external CSS file for styling
     link(rel="stylesheet", href="/styles/css/Coordinator-Login-Page.css")
 
   body
-    // Main wrapper for centering content
     main.wrap
       section.card
-        // Page heading
         h1 Coordinator Login
 
-        // Login form (sends data to backend route)
-        form(method="POST", action="/coordinator/login")
+        if error
+          p.error-message= error
 
-          // Email input field
+        form(method="POST", action="/coordinator/login")
           label(for="email") Email
           input#email(type="email", name="email", required)
 
-          // Password input field
           label(for="password") Password
           input#password(type="password", name="password", required)
 
-          // Submit button
           button(type="submit") Log in
 
-           // HOME BUTTON
-          form(action="/", method="GET")
+        form(action="/", method="GET")
           button(type="submit") Back to Home
 
-           // Forgot password link
-          p.auth-link
+        p.auth-link
           a(href="/member/forgot-password") Forgot Password?

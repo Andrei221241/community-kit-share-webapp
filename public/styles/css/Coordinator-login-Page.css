@@ -25,3 +25,11 @@ button:hover{opacity:.9}
 
 /* Small helper text */
 .small{margin-top:10px;font-size:12px;color:#666}
+
+.error-message {
+  color: #b00020;   
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
