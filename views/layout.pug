@@ -33,10 +33,12 @@ html(lang="en")
       if sessionUser && sessionUser.role === 'Coordinator'
         a(href="/users") Users
         a(href="/coordinator/requests/pending") Pending Requests
+        a(href="/member/profile") My Profile
 
       // Show only for Member users
       if sessionUser && sessionUser.role === 'Member'
         a(href="/member/requests") My Requests
+        a(href="/member/profile") My Profile
 
       // If user is logged in
       if sessionUser

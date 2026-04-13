@@ -1,66 +1,69 @@
 extends ../layout
+
 block styles
-  // Add page-specific CSS
   link(rel="stylesheet", href="/styles/css/Coordinator-Approve-Page.css")
+
 block content
-  // Main content of the page
   main.wrap
     section.card
-      // Page title
-      h1 Pending Requests
+      h1 Manage Requests
 
-      // Check if there are any requests
       if requests && requests.length
-
-        // Loop through each request
         each req in requests
           div.card
-            // Display request ID
             p
-              strong Request ID: 
-              | #{req.id}
+              strong Request ID:
+              |  #{req.id}
 
-            // Display member name
             p
-              strong Member: 
-              | #{req.requester_name}
+              strong Member:
+              |  #{req.requester_name}
 
-            // Display kit name
             p
-              strong Kit: 
-              | #{req.kit_name}
+              strong Kit:
+              |  #{req.kit_name}
 
-            // Display request dates
             p
-              strong Dates: 
-              | #{req.start_date} to #{req.end_date}
+              strong Dates:
+              |  #{req.start_date} to #{req.end_date}
 
-            // Display optional note (fallback to 'None')
             p
-              strong Note: 
-              | #{req.note || 'None'}
+              strong Note:
+              |  #{req.note || 'None'}
 
-            // Action buttons container
-            div(style="display: flex; gap: 10px; margin-top: 10px;")
+            p
+              strong Status:
+              if req.displayStatus === 'Currently Borrowed'
+                span.badge.ok Currently Borrowed
+              else if req.displayStatus === 'Overdue'
+                span.badge.err Overdue by #{req.overdueDays} day#{req.overdueDays === 1 ? '' : 's'}
+              else if req.displayStatus === 'Rejected'
+                span.badge.err Rejected
+              else if req.displayStatus === 'Returned'
+                span.badge.ok Returned
+              else
+                span.badge.warn Pending
 
-              // Approve request form
-              form(method="POST", action=`/coordinator/requests/${req.id}/approve`)
-                button(type="submit", style="background-color: #28a745;") Approve
+            div(style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;")
+              if req.status === 'Pending'
+                form(method="POST", action=`/coordinator/requests/${req.id}/approve`)
+                  button(type="submit", style="background-color: #28a745;") Approve
 
-              // Reject request form with optional reason
-              form(method="POST", action=`/coordinator/requests/${req.id}/reject`)
-                input(
-                  type="text",
-                  name="reason",
-                  placeholder="Optional reason...",
-                  style="margin-right: 10px;"
-                )
-                button(type="submit", style="background-color: #dc3545;") Reject
+                form(method="POST", action=`/coordinator/requests/${req.id}/reject`)
+                  input(
+                    type="text",
+                    name="reason",
+                    placeholder="Optional reason...",
+                    style="margin-right: 10px;"
+                  )
+                  button(type="submit", style="background-color: #dc3545;") Reject
+
+              if req.canReturn
+                form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
+                  button(type="submit") Return Kit for User
       else
-        // If no requests exist
-        p(style="margin-bottom: 20px;") No pending requests found
+        p(style="margin-bottom: 20px;") No requests found
 
-        // Link back to listings page
         a(
           href="/listings",
           style="display: inline-block; padding: 10px 20px; background: #1e3c72; color: white; border-radius: 20px; text-decoration: none;"

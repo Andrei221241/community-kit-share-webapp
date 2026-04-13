@@ -12,6 +12,41 @@ const getForgotPasswordPage = (req, res) => {
     });
 };
 
+function normaliseRequestStatus(req) {
+    const today = new Date();
+    const end = new Date(req.end_date);
+    const returnedAt = req.returned_at ? new Date(req.returned_at) : null;
+
+    let displayStatus = req.status;
+    let overdueDays = 0;
+    let canReturn = false;
+
+    if (req.status === "Returned") {
+        displayStatus = "Returned";
+    } else if (req.status === "Rejected") {
+        displayStatus = "Rejected";
+    } else if (req.status === "Pending") {
+        displayStatus = "Pending";
+    } else if (req.status === "Approved") {
+        canReturn = true;
+
+        if (today > end) {
+            overdueDays = Math.floor((today - end) / (1000 * 60 * 60 * 24));
+            displayStatus = overdueDays > 0 ? "Overdue" : "Currently Borrowed";
+        } else {
+            displayStatus = "Currently Borrowed";
+        }
+    }
+
+    return {
+        ...req,
+        returned_at: returnedAt,
+        displayStatus,
+        overdueDays,
+        canReturn,
+    };
+}
+
 const postForgotPassword = withErrorBoundary(async (req, res) => {
     const email = (req.body.email || "").trim();
 
@@ -346,8 +381,8 @@ const userProfile = withErrorBoundary(async (req, res) => {
         return;
     }
 
-    const [requests] = await db.query(
-        `SELECT br.id, br.start_date, br.end_date, br.status,
+    const [requestsRaw] = await db.query(
+        `SELECT br.id, br.start_date, br.end_date, br.status, br.returned_at, br.rejection_reason,
                 k.name AS kit_name
          FROM borrow_requests br
          INNER JOIN kits k ON k.id = br.kit_id
@@ -355,6 +390,8 @@ const userProfile = withErrorBoundary(async (req, res) => {
          ORDER BY br.created_at DESC`,
         [userId]
     );
+
+    const requests = requestsRaw.map(normaliseRequestStatus);
 
     const [history] = await db.query(
         `SELECT action_type, points_change, created_at
@@ -386,6 +423,77 @@ const userProfile = withErrorBoundary(async (req, res) => {
         badge,
         averageRating: ratingData.average_rating,
         totalRatings: ratingData.total_ratings,
+        isCoordinatorView: true,
+        canManageReturns: true,
+        currentUserId: req.session.userId,
+    });
+});
+
+const myProfile = withErrorBoundary(async (req, res) => {
+    const userId = req.session.userId;
+
+    const [users] = await db.query(
+        `SELECT id, name, email, role, bio, loyalty_points
+         FROM users
+         WHERE id = ?`,
+        [userId]
+    );
+
+    const user = users[0];
+    if (!user) {
+        res.status(404).render("pages/error", {
+            title: "User Not Found",
+            message: "No user exists for the logged in session.",
+            details: null,
+        });
+        return;
+    }
+
+    const [requestsRaw] = await db.query(
+        `SELECT br.id, br.start_date, br.end_date, br.status, br.returned_at, br.rejection_reason,
+                k.name AS kit_name
+         FROM borrow_requests br
+         INNER JOIN kits k ON k.id = br.kit_id
+         WHERE br.user_id = ?
+         ORDER BY br.created_at DESC`,
+        [userId]
+    );
+
+    const requests = requestsRaw.map(normaliseRequestStatus);
+
+    const [history] = await db.query(
+        `SELECT action_type, points_change, created_at
+         FROM points_history
+         WHERE user_id = ?
+         ORDER BY created_at DESC`,
+        [userId]
+    );
+
+    const [reviews] = await db.query(
+        `SELECT r.stars, r.comment, r.created_at,
+                u.name AS reviewer_name
+         FROM ratings r
+         INNER JOIN users u ON u.id = r.reviewer_user_id
+         WHERE r.rated_user_id = ?
+         ORDER BY r.created_at DESC`,
+        [userId]
+    );
+
+    const ratingData = await getAverageRating(db, userId);
+    const badge = getBadge(user.loyalty_points || 0);
+
+    res.render("pages/user-profile", {
+        title: "My Profile",
+        user,
+        requests,
+        history,
+        reviews,
+        badge,
+        averageRating: ratingData.average_rating,
+        totalRatings: ratingData.total_ratings,
+        isCoordinatorView: false,
+        canManageReturns: true,
+        currentUserId: req.session.userId,
     });
 });
 
@@ -544,8 +652,8 @@ const submitBorrowRequest = withErrorBoundary(async (req, res) => {
 const memberRequests = withErrorBoundary(async (req, res) => {
     const userId = req.session.userId;
 
-    const [requests] = await db.query(
-        `SELECT br.id, br.start_date, br.end_date, br.status, br.rejection_reason,
+    const [requestsRaw] = await db.query(
+        `SELECT br.id, br.start_date, br.end_date, br.status, br.returned_at, br.rejection_reason,
                 k.name AS kit_name
          FROM borrow_requests br
          INNER JOIN kits k ON k.id = br.kit_id
@@ -553,6 +661,8 @@ const memberRequests = withErrorBoundary(async (req, res) => {
          ORDER BY br.created_at DESC`,
         [userId]
     );
+
+    const requests = requestsRaw.map(normaliseRequestStatus);
 
     res.render("pages/member-requests", {
         title: "My Requests",
@@ -563,19 +673,20 @@ const memberRequests = withErrorBoundary(async (req, res) => {
 });
 
 const coordinatorPending = withErrorBoundary(async (req, res) => {
-    const [requests] = await db.query(
-        `SELECT br.id, br.start_date, br.end_date, br.note,
+    const [requestsRaw] = await db.query(
+        `SELECT br.id, br.start_date, br.end_date, br.note, br.status, br.returned_at,
                 u.name AS requester_name,
                 k.name AS kit_name
          FROM borrow_requests br
          INNER JOIN users u ON u.id = br.user_id
          INNER JOIN kits k ON k.id = br.kit_id
-         WHERE br.status = 'Pending'
-         ORDER BY br.created_at ASC`
+         ORDER BY br.created_at DESC`
     );
 
+    const requests = requestsRaw.map(normaliseRequestStatus);
+
     res.render("pages/Coordinator-Approve-Page", {
-        title: "Pending Requests",
+        title: "Manage Requests",
         requests,
     });
 });
@@ -679,14 +790,67 @@ const completeReturn = withErrorBoundary(async (req, res) => {
 
     await db.query(
         `UPDATE borrow_requests
-         SET status = 'Returned'
+         SET status = 'Returned',
+             returned_at = NOW()
          WHERE id = ?`,
         [requestId]
     );
 
     await addPoints(db, requestRow.user_id, 10, "Completed Return", requestId);
 
-    res.redirect("/coordinator/requests/pending");
+    res.redirect("back");
+});
+
+const memberReturnRequest = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+
+    if (!requestId) {
+        res.status(400).render("pages/error", {
+            title: "Invalid Request",
+            message: "A valid request id is required.",
+            details: null,
+        });
+        return;
+    }
+
+    const [rows] = await db.query(
+        `SELECT id, user_id, status
+         FROM borrow_requests
+         WHERE id = ? AND user_id = ?`,
+        [requestId, userId]
+    );
+
+    const requestRow = rows[0];
+    if (!requestRow) {
+        res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request was not found for your account.",
+            details: null,
+        });
+        return;
+    }
+
+    if (requestRow.status !== "Approved") {
+        res.status(400).render("pages/error", {
+            title: "Invalid Status",
+            message: "Only currently borrowed kits can be returned.",
+            details: null,
+        });
+        return;
+    }
+
+    await db.query(
+        `UPDATE borrow_requests
+         SET status = 'Returned',
+             returned_at = NOW()
+         WHERE id = ?`,
+        [requestId]
+    );
+
+    await addPoints(db, userId, 10, "Completed Return", requestId);
+
+    res.redirect("/member/profile");
 });
 
 const addRating = withErrorBoundary(async (req, res) => {
@@ -831,4 +995,6 @@ module.exports = {
     postForgotPassword,
     getResetPasswordPage,
     postResetPassword,
+    myProfile,
+    memberReturnRequest,
 };

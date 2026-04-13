@@ -35,6 +35,12 @@ html(lang="en")
               br
               button#nearestSearchBtn(type="button") Find Nearest Campsite
 
+            div
+              label &nbsp;
+              br
+              form(action="/", method="GET", style="display:inline;")
+                button(type="submit") Back to Home
+
         .content-grid
           #map(style="height: 650px; width: 650px; max-width: 100%; border: 1px solid #ccc; border-radius: 12px;")
           .info-panel

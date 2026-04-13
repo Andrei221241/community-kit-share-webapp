@@ -1,58 +1,48 @@
 extends ../layout
 
 block content
-
-  // Use shared layout (header, footer, etc.)
-
-  // Page title
   h1 My Requests
-
-  // Personalised greeting using logged-in user's name
   p Hello, #{userName}! Here are your past and current borrow requests.
 
-  // Check if user has any requests
   if requests && requests.length
-
-    // Loop through each request
     each req in requests
       .card
-
-        // Display request ID
         h3 Request ID: #{req.id}
 
-        // Display kit name
         p
-          strong Kit: 
-          | #{req.kit_name}
+          strong Kit:
+          |  #{req.kit_name}
 
-        // Display booking dates
         p
-          strong Dates: 
-          | #{req.start_date} to #{req.end_date}
+          strong Dates:
+          |  #{req.start_date} to #{req.end_date}
 
-        // Display request status with different styles
         p
-          strong Status: 
-
-          // If approved
-          if req.status === 'Approved'
-            span.badge.ok Approved
-          else if req.status === 'Rejected'
-            // If rejected
+          strong Status:
+          if req.displayStatus === 'Currently Borrowed'
+            span.badge.ok Currently Borrowed
+          else if req.displayStatus === 'Overdue'
+            span.badge.err Overdue by #{req.overdueDays} day#{req.overdueDays === 1 ? '' : 's'}
+          else if req.displayStatus === 'Rejected'
             span.badge.err Rejected
+          else if req.displayStatus === 'Returned'
+            span.badge.ok Returned
           else
-            // Otherwise pending
             span.badge.warn Pending
 
-        // Show rejection reason if applicable
         if req.status === 'Rejected' && req.rejection_reason
           p
-            strong Reason: 
-            | #{req.rejection_reason}
+            strong Reason:
+            |  #{req.rejection_reason}
 
+        if req.returned_at
+          p
+            strong Returned At:
+            |  #{req.returned_at}
+
+        if req.canReturn
+          form(method="POST", action=`/member/requests/${req.id}/return`)
+            button(type="submit") Return Kit
   else
-    // If no requests exist
-    p You haven't made any borrow requests yet. 
-
-    // Link to browse kits
+    p You haven't made any borrow requests yet.
     a.btn(href="/listings") Browse Kits

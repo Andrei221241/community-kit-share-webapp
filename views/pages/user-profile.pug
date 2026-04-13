@@ -1,22 +1,20 @@
 extends ../layout
 
 block content
-
   .card
-
-    h1 User Profile
-
-    p 
-      strong Name: 
-      | #{user.name}
-
-    pgit
-      strong Role: 
-      | #{user.role}
+    h1= title
 
     p
-      strong Email: 
-      | #{user.email || 'N/A'}
+      strong Name:
+      |  #{user.name}
+
+    p
+      strong Role:
+      |  #{user.role}
+
+    p
+      strong Email:
+      |  #{user.email || 'N/A'}
 
     if user.bio
       p
@@ -24,54 +22,64 @@ block content
         br
         | #{user.bio}
 
-    // Loyalty Points
     p
       strong Loyalty Points:
       |  #{user.loyalty_points || 0}
 
-    // Badge
     p
       strong Badge:
       span.badge.ok #{badge}
 
-    // Rating
     p
       strong Rating:
       |  #{averageRating || 'No ratings'} (#{totalRatings} reviews)
 
-
-  // Borrow Requests
   h2 Borrow Requests
 
   if requests && requests.length
-    table
-      thead
-        tr
-          th Kit Name
-          th Start Date
-          th End Date
-          th Status
+    each req in requests
+      .card
+        p
+          strong Kit:
+          |  #{req.kit_name}
 
-      tbody
-        each req in requests
-          tr
-            td= req.kit_name
-            td= req.start_date
-            td= req.end_date
-            td
-              if req.status === 'Approved'
-                span.badge.ok Approved
-              else if req.status === 'Rejected'
-                span.badge.err Rejected
-              else if req.status === 'Returned'
-                span.badge.ok Returned
-              else
-                span.badge.warn Pending
+        p
+          strong Dates:
+          |  #{req.start_date} to #{req.end_date}
+
+        p
+          strong Status:
+          if req.displayStatus === 'Currently Borrowed'
+            span.badge.ok Currently Borrowed
+          else if req.displayStatus === 'Overdue'
+            span.badge.err Overdue by #{req.overdueDays} day#{req.overdueDays === 1 ? '' : 's'}
+          else if req.displayStatus === 'Rejected'
+            span.badge.err Rejected
+          else if req.displayStatus === 'Returned'
+            span.badge.ok Returned
+          else
+            span.badge.warn Pending
+
+        if req.status === 'Rejected' && req.rejection_reason
+          p
+            strong Reason:
+            |  #{req.rejection_reason}
+
+        if req.returned_at
+          p
+            strong Returned At:
+            |  #{req.returned_at}
+
+        if canManageReturns && req.canReturn
+          if isCoordinatorView
+            form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
+              button(type="submit") Return Kit for User
+          else
+            form(method="POST", action=`/member/requests/${req.id}/return`)
+              button(type="submit") Return My Kit
   else
     p This user has no borrow requests.
 
-
-  // Points
   h2 Points History
 
   if history && history.length
@@ -81,7 +89,6 @@ block content
           th Action
           th Points
           th Date
-
       tbody
         each h in history
           tr
@@ -95,8 +102,6 @@ block content
   else
     p No points history yet.
 
-
-  // Reviews
   h2 Reviews
 
   if reviews && reviews.length

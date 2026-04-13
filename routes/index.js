@@ -28,6 +28,8 @@ router.post("/member/login", pages.postMemberLogin);
 router.get("/member/book", requireMember, pages.memberBook);
 router.get("/member/confirmation", requireMember, pages.memberConfirmation);
 router.get("/member/requests", requireMember, pages.memberRequests);
+router.get("/member/profile", requireMember, pages.myProfile);
+router.post("/member/requests/:id/return", requireMember, pages.memberReturnRequest);
 router.post("/requests", requireMember, pages.submitBorrowRequest);
 
 // Coordinator auth
@@ -46,7 +48,7 @@ router.get("/member/forgot-password", pages.getForgotPasswordPage);
 router.post("/member/forgot-password", pages.postForgotPassword);
 
 router.get("/member/reset-password/:token", pages.getResetPasswordPage);
-router.post("/member/reset-password/:token", pages.postResetPassword);   
+router.post("/member/reset-password/:token", pages.postResetPassword);
 
 // Logout
 router.get("/logout", pages.logout);
