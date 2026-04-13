@@ -1,6 +1,147 @@
 const db = require("../app/services/db");
 const bcrypt = require("bcryptjs");
 const { addPoints, getBadge, getAverageRating } = require("./trust.controller");
+const crypto = require("crypto");
+
+const getForgotPasswordPage = (req, res) => {
+    res.render("pages/member-forgot-password", {
+        title: "Forgot Password",
+        error: null,
+        success: null,
+    });
+};
+
+const postForgotPassword = withErrorBoundary(async (req, res) => {
+    const email = (req.body.email || "").trim();
+
+    if (!email) {
+        return res.render("pages/member-forgot-password", {
+            title: "Forgot Password",
+            error: "Enter your email.",
+            success: null,
+        });
+    }
+
+    const [rows] = await db.promise().query(
+        "SELECT id, email FROM users WHERE email = ? LIMIT 1",
+        [email]
+    );
+
+    // security: always same response
+    if (!rows.length) {
+        return res.render("pages/member-forgot-password", {
+            title: "Forgot Password",
+            error: null,
+            success: "If an account exists, a reset link was generated.",
+        });
+    }
+
+    const user = rows[0];
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await db.promise().query(
+        `UPDATE users 
+         SET reset_token = ?, reset_token_expires = ? 
+         WHERE id = ?`,
+        [resetToken, expiry, user.id]
+    );
+
+    const link = `http://localhost:3000/member/reset-password/${resetToken}`;
+
+    console.log("==== RESET LINK ====");
+    console.log(link);
+    console.log("====================");
+
+    res.render("pages/member-forgot-password", {
+        title: "Forgot Password",
+        error: null,
+        success: "Reset link generated (check terminal).",
+    });
+});
+
+const getResetPasswordPage = withErrorBoundary(async (req, res) => {
+    const token = req.params.token;
+
+    const [rows] = await db.promise().query(
+        `SELECT id FROM users 
+         WHERE reset_token = ? 
+         AND reset_token_expires > NOW()`,
+        [token]
+    );
+
+    if (!rows.length) {
+        return res.render("pages/member-reset-password", {
+            title: "Reset Password",
+            token: null,
+            error: "Invalid or expired link.",
+            success: null,
+        });
+    }
+
+    res.render("pages/member-reset-password", {
+        title: "Reset Password",
+        token,
+        error: null,
+        success: null,
+    });
+});
+
+const postResetPassword = withErrorBoundary(async (req, res) => {
+    const token = req.params.token;
+    const { password, confirm_password } = req.body;
+
+    if (!password || !confirm_password) {
+        return res.render("pages/member-reset-password", {
+            title: "Reset Password",
+            token,
+            error: "Fill all fields.",
+            success: null,
+        });
+    }
+
+    if (password !== confirm_password) {
+        return res.render("pages/member-reset-password", {
+            title: "Reset Password",
+            token,
+            error: "Passwords do not match.",
+            success: null,
+        });
+    }
+
+    const [rows] = await db.promise().query(
+        `SELECT id FROM users 
+         WHERE reset_token = ? 
+         AND reset_token_expires > NOW()`,
+        [token]
+    );
+
+    if (!rows.length) {
+        return res.render("pages/member-reset-password", {
+            title: "Reset Password",
+            token: null,
+            error: "Invalid or expired link.",
+            success: null,
+        });
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    await db.promise().query(
+        `UPDATE users 
+         SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL 
+         WHERE id = ?`,
+        [hashed, rows[0].id]
+    );
+
+    res.render("pages/member-reset-password", {
+        title: "Reset Password",
+        token: null,
+        error: null,
+        success: "Password updated. You can login now.",
+    });
+});
 
 function asNumber(value) {
     const parsed = Number.parseInt(value, 10);
@@ -684,4 +825,8 @@ module.exports = {
     dbTest,
     goodbye,
     hello,
+    getForgotPasswordPage,
+    postForgotPassword,
+    getResetPasswordPage,
+    postResetPassword,
 };

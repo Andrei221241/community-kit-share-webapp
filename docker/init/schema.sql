@@ -151,3 +151,7 @@ INSERT INTO borrow_requests (user_id, kit_id, start_date, end_date, status, note
 (12, 4, '2026-03-29', '2026-04-02', 'Rejected', 'Survival training'),
 (13, 3, '2026-03-30', '2026-04-03', 'Pending', 'Mountain hiking'),
 (14, 5, '2026-03-31', '2026-04-04', 'Approved', 'Navigation course');
+
+ALTER TABLE users
+ADD COLUMN reset_token VARCHAR(255) NULL,
+ADD COLUMN reset_token_expires DATETIME NULL;
