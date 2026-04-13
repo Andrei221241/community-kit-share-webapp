@@ -42,11 +42,11 @@ router.post("/ratings/add", requireMember, pages.addRating);
 router.get("/users", requireCoordinator, pages.usersList);
 router.get("/users/:id", requireCoordinator, pages.userProfile);
 
-router.get("/member/forgot-password", pagesController.getForgotPasswordPage);
-router.post("/member/forgot-password", pagesController.postForgotPassword);
+router.get("/member/forgot-password", pages.getForgotPasswordPage);
+router.post("/member/forgot-password", pages.postForgotPassword);
 
-router.get("/member/reset-password/:token", pagesController.getResetPasswordPage);
-router.post("/member/reset-password/:token", pagesController.postResetPassword);
+router.get("/member/reset-password/:token", pages.getResetPasswordPage);
+router.post("/member/reset-password/:token", pages.postResetPassword);   
 
 // Logout
 router.get("/logout", pages.logout);

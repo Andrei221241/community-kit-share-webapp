@@ -22,7 +22,7 @@ const postForgotPassword = withErrorBoundary(async (req, res) => {
         });
     }
 
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
         "SELECT id, email FROM users WHERE email = ? LIMIT 1",
         [email]
     );
@@ -37,11 +37,10 @@ const postForgotPassword = withErrorBoundary(async (req, res) => {
     }
 
     const user = rows[0];
-
     const resetToken = crypto.randomBytes(32).toString("hex");
     const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    await db.promise().query(
+    await db.query(
         `UPDATE users 
          SET reset_token = ?, reset_token_expires = ? 
          WHERE id = ?`,
@@ -64,7 +63,7 @@ const postForgotPassword = withErrorBoundary(async (req, res) => {
 const getResetPasswordPage = withErrorBoundary(async (req, res) => {
     const token = req.params.token;
 
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
         `SELECT id FROM users 
          WHERE reset_token = ? 
          AND reset_token_expires > NOW()`,
@@ -110,7 +109,7 @@ const postResetPassword = withErrorBoundary(async (req, res) => {
         });
     }
 
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
         `SELECT id FROM users 
          WHERE reset_token = ? 
          AND reset_token_expires > NOW()`,
@@ -128,7 +127,7 @@ const postResetPassword = withErrorBoundary(async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    await db.promise().query(
+    await db.query(
         `UPDATE users 
          SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL 
          WHERE id = ?`,
