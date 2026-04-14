@@ -1,0 +1,31 @@
+doctype html
+
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Member Login
+    link(rel="stylesheet", href="/styles/css/Member-Login-Page.css")
+
+  body
+    main.wrap
+      section.card
+        h1 Community Member Login
+
+        if error
+          p.error-message= error
+
+        form(method="POST", action="/member/login")
+          label(for="email") Email
+          input#email(type="email", name="email", required)
+
+          label(for="password") Password
+          input#password(type="password", name="password", required)
+
+          button(type="submit") Log in
+
+        form(action="/", method="GET")
+          button(type="submit") Back to Home
+
+        p.auth-link
+          a(href="/member/forgot-password") Forgot Password?

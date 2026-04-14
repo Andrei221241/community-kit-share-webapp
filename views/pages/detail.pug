@@ -1,0 +1,107 @@
+extends ../layout
+
+block content
+
+  // Use shared layout (header, footer, etc.)
+
+  // Kit details card
+  .card
+    // Display kit name
+    h1= kit.name
+
+    // Display kit category (fallback if none)
+    p
+      strong Category: 
+      | #{kit.category || 'None'}
+
+    // Display availability status with dynamic styling
+    p
+      strong Status: 
+      span(class=(kit.availability_status === 'Available' ? 'ok' : 'warn'))= kit.availability_status || 'Unknown'
+
+    // Kit description section
+    h3 Description
+    p= kit.description || 'No detailed description available.'
+
+    // Display tags if they exist
+    if tags && tags.length
+      h4 Tags:
+      p
+        each t in tags
+          span.badge(style="margin-right: 5px;")= t.name
+          
+  // Row layout for items + booking form
+  .row
+
+    // Kit contents (items list)
+    .card(style="flex: 1;")
+      h3 Kit Contents (Items)
+
+      // If items exist
+      if items && items.length
+        ul
+          each item in items
+            li #{item.quantity}x #{item.item_name}
+      else
+        p No items defined for this kit.
+    
+    // Booking form only shown if user is logged in
+    if currentUserId
+      .card(style="flex: 1;")
+        h3 Book this kit
+
+        // Form to submit request
+        form(method="POST" action="/requests")
+
+          // Hidden field to send kit ID
+          input(type="hidden" name="kitId" value=kit.id)
+
+          // Start date input
+          div(style="margin-bottom: 10px;")
+            label(for="startDate") Start Date
+            br
+            input(type="date" name="startDate" id="startDate" required)
+
+          // End date input
+          div(style="margin-bottom: 10px;")
+            label(for="endDate") End Date
+            br
+            input(type="date" name="endDate" id="endDate" required)
+
+          // Optional note field
+          div(style="margin-bottom: 15px;")
+            label(for="note") Note (optional)
+            br
+            textarea(name="note" id="note" style="width: 100%;" rows="3")
+
+          // Submit button
+          button(type="submit") Submit Request
+
+  // Client-side script for date validation
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const startInput = document.getElementById('startDate');
+      const endInput = document.getElementById('endDate');
+      
+      if (!startInput || !endInput) return;
+
+      const today = new Date();
+      const tzOffset = today.getTimezoneOffset() * 60000;
+      const todayLocal = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
+      
+      startInput.min = todayLocal;
+      endInput.min = todayLocal;
+
+      startInput.addEventListener('change', (e) => {
+        const selectedStart = e.target.value;
+
+        if (selectedStart) {
+          endInput.min = selectedStart;
+
+          if (endInput.value && endInput.value < selectedStart) {
+            endInput.value = selectedStart;
+          }
+        }
+      });
+    });

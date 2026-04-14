@@ -1,0 +1,119 @@
+extends ../layout
+
+block content
+  .card
+    h1= title
+
+    p
+      strong Name:
+      |  #{user.name}
+
+    p
+      strong Role:
+      |  #{user.role}
+
+    p
+      strong Email:
+      |  #{user.email || 'N/A'}
+
+    if user.bio
+      p
+        strong Bio:
+        br
+        | #{user.bio}
+
+    p
+      strong Loyalty Points:
+      |  #{user.loyalty_points || 0}
+
+    p
+      strong Badge:
+      span.badge.ok #{badge}
+
+    p
+      strong Rating:
+      |  #{averageRating || 'No ratings'} (#{totalRatings} reviews)
+
+  h2 Borrow Requests
+
+  if requests && requests.length
+    each req in requests
+      .card
+        p
+          strong Kit:
+          |  #{req.kit_name}
+
+        p
+          strong Dates:
+          |  #{req.start_date} to #{req.end_date}
+
+        p
+          strong Status:
+          if req.displayStatus === 'Currently Borrowed'
+            span.badge.ok Currently Borrowed
+          else if req.displayStatus === 'Overdue'
+            span.badge.err Overdue by #{req.overdueDays} day#{req.overdueDays === 1 ? '' : 's'}
+          else if req.displayStatus === 'Rejected'
+            span.badge.err Rejected
+          else if req.displayStatus === 'Returned'
+            span.badge.ok Returned
+          else
+            span.badge.warn Pending
+
+        if req.status === 'Rejected' && req.rejection_reason
+          p
+            strong Reason:
+            |  #{req.rejection_reason}
+
+        if req.returned_at
+          p
+            strong Returned At:
+            |  #{req.returned_at}
+
+        if canManageReturns && req.canReturn
+          if isCoordinatorView
+            form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
+              button(type="submit") Return Kit for User
+          else
+            form(method="POST", action=`/member/requests/${req.id}/return`)
+              button(type="submit") Return My Kit
+  else
+    p This user has no borrow requests.
+
+  h2 Points History
+
+  if history && history.length
+    table
+      thead
+        tr
+          th Action
+          th Points
+          th Date
+      tbody
+        each h in history
+          tr
+            td= h.action_type
+            td
+              if h.points_change > 0
+                span.badge.ok +#{h.points_change}
+              else
+                span.badge.err #{h.points_change}
+            td= h.created_at
+  else
+    p No points history yet.
+
+  h2 Reviews
+
+  if reviews && reviews.length
+    each r in reviews
+      .card
+        p
+          strong #{r.reviewer_name}
+          |  – #{r.stars}/5
+
+        if r.comment
+          p= r.comment
+
+        small #{r.created_at}
+  else
+    p No reviews yet.

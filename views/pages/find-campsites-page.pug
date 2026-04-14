@@ -1,0 +1,204 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Find Campsites - Community Kit Share
+    link(rel="stylesheet", href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css")
+    link(rel="stylesheet", href="/styles/css/find-campsite-page.css")
+
+  body
+    .page
+      .card
+        h1 Find Campsites
+        p These are suggested campsites selected by our coordinators to help members find suitable outdoor locations across the UK.
+
+        .topbar
+          .controls
+            div
+              label(for="activityFilter") Filter
+              br
+              select#activityFilter
+                option(value="all") All Campsites
+                option(value="tent") Camping
+                option(value="hiking") Hiking
+                option(value="cooking") Cooking
+                option(value="family") Family
+
+            div
+              label &nbsp;
+              br
+              button#locationBtn(type="button") Use My Location
+
+            div
+              label &nbsp;
+              br
+              button#nearestSearchBtn(type="button") Find Nearest Campsite
+
+            div
+              label &nbsp;
+              br
+              form(action="/", method="GET", style="display:inline;")
+                button(type="submit") Back to Home
+
+        .content-grid
+          #map(style="height: 650px; width: 650px; max-width: 100%; border: 1px solid #ccc; border-radius: 12px;")
+          .info-panel
+            h2 Coordinator Suggested Campsites
+            p
+              | Below is a list of the locations currently suggested by our coordinators. These recommendations are intended to help members find practical and scenic places to use borrowed camping equipment across the UK.
+
+            ul.place-list
+              li
+                strong Lake District Camp Site
+                |  – Suggested for hiking and scenic camping. Usually cooler and fresh, with mixed weather and frequent cloud or light rain.
+              li
+                strong Snowdonia Camping Park
+                |  – Suggested for mountain trips and hiking. Usually cool, windy, and changeable depending on elevation.
+              li
+                strong New Forest Camp Site
+                |  – Suggested for family camping and cooking. Usually mild with woodland shelter and comfortable outdoor conditions.
+              li
+                strong Peak District Camping
+                |  – Suggested for walking weekends and outdoor exploration. Usually cool with open hill conditions.
+              li
+                strong Cornwall Coastal Camp
+                |  – Suggested for coastal camping and family stays. Usually milder with sea breeze and variable coastal weather.
+              li
+                strong Yorkshire Dales Camp
+                |  – Suggested for countryside camping and longer walks. Usually cool and open with occasional rain.
+              li
+                strong Loch Lomond Camp Area
+                |  – Suggested for scenic lochside stays and hiking. Usually cool and fresh with wetter conditions.
+              li
+                strong Cairngorms Camp Spot
+                |  – Suggested for adventurous and experienced outdoor users. Usually colder, windier, and more exposed.
+              li
+                strong Brecon Beacons Camp
+                |  – Suggested for hiking and nature trips. Usually cool, often cloudy, and changeable.
+              li
+                strong Norfolk Broads Camping
+                |  – Suggested for calmer waterside stays and family use. Usually mild with open skies and breeze.
+              li
+                strong Jurassic Coast Camp
+                |  – Suggested for coastal weekends and scenic outdoor trips. Usually mild with windy coastal conditions.
+              li
+                strong Northumberland Camp Site
+                |  – Suggested for peaceful, remote camping. Usually cool and breezy with open weather.
+              li
+                strong Pembrokeshire Coast Camp
+                |  – Suggested for walking and family camping near the coast. Usually mild but windy.
+              li
+                strong Exmoor Camp Area
+                |  – Suggested for countryside stays and relaxed camping. Usually mild to cool with mixed cloud.
+              li
+                strong Forest of Dean Camp
+                |  – Suggested for woodland family trips and gentle hiking. Usually mild and sheltered.
+              li
+                strong North York Moors Camp
+                |  – Suggested for scenic moorland trips and walking. Usually cool and breezy.
+
+            p.note
+              | Ratings and exact travel estimates can be added later using Google APIs. For now, these are coordinator suggestions based on suitability, location, and outdoor use.
+
+        .small Powered by OpenStreetMap
+
+    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
+    script.
+      document.addEventListener("DOMContentLoaded", function () {
+        const map = L.map("map").setView([54.5, -3], 6);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+
+        const campsites = [
+          { name: "Lake District Camp Site", lat: 54.4609, lng: -3.0886, location: "Cumbria", description: "Suggested by our coordinators for hiking and camping.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Derwentwater_from_Catbells.jpg/640px-Derwentwater_from_Catbells.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=54.4609,-3.0886" },
+          { name: "Snowdonia Camping Park", lat: 53.0685, lng: -4.0761, location: "Wales", description: "Suggested by our coordinators for mountain trips and outdoor weekends.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Snowdon_from_Llyn_Llydaw.jpg/640px-Snowdon_from_Llyn_Llydaw.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=53.0685,-4.0761" },
+          { name: "New Forest Camp Site", lat: 50.8728, lng: -1.5760, location: "Hampshire", description: "Suggested by our coordinators for family camping and cooking.", tags: ["tent", "cooking", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/New_Forest_pony.jpg/640px-New_Forest_pony.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=50.8728,-1.5760" },
+          { name: "Peak District Camping", lat: 53.3501, lng: -1.7737, location: "Derbyshire", description: "Suggested by our coordinators for weekend hiking.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Peak_District_view.jpg/640px-Peak_District_view.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=53.3501,-1.7737" },
+          { name: "Cornwall Coastal Camp", lat: 50.2660, lng: -5.0527, location: "Cornwall", description: "Suggested by our coordinators for coastal camping trips.", tags: ["tent", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Kynance_Cove_Cornwall.jpg/640px-Kynance_Cove_Cornwall.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=50.2660,-5.0527" },
+          { name: "Yorkshire Dales Camp", lat: 54.1537, lng: -2.2000, location: "North Yorkshire", description: "Suggested by our coordinators for scenic countryside camping.", tags: ["tent", "hiking", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Yorkshire_Dales.jpg/640px-Yorkshire_Dales.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=54.1537,-2.2000" },
+          { name: "Loch Lomond Camp Area", lat: 56.0931, lng: -4.6420, location: "Scotland", description: "Suggested by our coordinators for lochside camping.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Loch_Lomond.jpg/640px-Loch_Lomond.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=56.0931,-4.6420" },
+          { name: "Cairngorms Camp Spot", lat: 57.0783, lng: -3.7284, location: "Scottish Highlands", description: "Suggested by our coordinators for adventurous outdoor trips.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Cairngorms_National_Park.jpg/640px-Cairngorms_National_Park.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=57.0783,-3.7284" },
+          { name: "Brecon Beacons Camp", lat: 51.8837, lng: -3.4360, location: "Wales", description: "Suggested by our coordinators for hiking and nature trips.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Brecon_Beacons.jpg/640px-Brecon_Beacons.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=51.8837,-3.4360" },
+          { name: "Norfolk Broads Camping", lat: 52.6400, lng: 1.5000, location: "Norfolk", description: "Suggested by our coordinators for calm waterside stays.", tags: ["tent", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Norfolk_Broads.jpg/640px-Norfolk_Broads.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=52.64,1.5" },
+          { name: "Jurassic Coast Camp", lat: 50.7000, lng: -2.7000, location: "Dorset", description: "Suggested by our coordinators for coastal outdoor weekends.", tags: ["tent", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Durdle_Door_overview.jpg/640px-Durdle_Door_overview.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=50.7,-2.7" },
+          { name: "Northumberland Camp Site", lat: 55.2083, lng: -2.0784, location: "Northumberland", description: "Suggested by our coordinators for remote and peaceful camping.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Northumberland_landscape.jpg/640px-Northumberland_landscape.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=55.2083,-2.0784" },
+          { name: "Pembrokeshire Coast Camp", lat: 51.6740, lng: -4.9150, location: "Pembrokeshire", description: "Suggested by our coordinators for coastal camping and walking.", tags: ["tent", "hiking", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Pembrokeshire_Coast.jpg/640px-Pembrokeshire_Coast.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=51.674,-4.915" },
+          { name: "Exmoor Camp Area", lat: 51.1947, lng: -3.6360, location: "Somerset", description: "Suggested by our coordinators for countryside camping.", tags: ["tent", "family"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Exmoor_landscape.jpg/640px-Exmoor_landscape.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=51.1947,-3.636" },
+          { name: "Forest of Dean Camp", lat: 51.8000, lng: -2.6000, location: "Gloucestershire", description: "Suggested by our coordinators for woodland trips and family stays.", tags: ["tent", "family", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Forest_of_Dean.jpg/640px-Forest_of_Dean.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=51.8,-2.6" },
+          { name: "North York Moors Camp", lat: 54.3950, lng: -0.9310, location: "North Yorkshire", description: "Suggested by our coordinators for scenic moorland trips.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/North_York_Moors.jpg/640px-North_York_Moors.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=54.395,-0.931" }
+        ];
+
+        let markers = [];
+        let userMarker = null;
+        let userLat = null;
+        let userLng = null;
+
+        function renderMarkers(filter) {
+          markers.forEach(marker => map.removeLayer(marker));
+          markers = [];
+          campsites.forEach(site => {
+            if (filter === "all" || site.tags.includes(filter)) {
+              const marker = L.marker([site.lat, site.lng]).addTo(map);
+              marker.bindPopup(`
+                <div style="max-width:220px;">
+                  <img src="${site.image}" alt="${site.name}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:8px;">
+                  <h3 style="margin:0 0 6px 0;">${site.name}</h3>
+                  <p style="margin:0 0 6px 0;"><strong>${site.location}</strong></p>
+                  <p style="margin:0 0 8px 0;">${site.description}</p>
+                  <a href="${site.directions}" target="_blank">Get Directions</a>
+                </div>
+              `);
+              markers.push(marker);
+            }
+          });
+        }
+
+        renderMarkers("all");
+
+        const filterEl = document.getElementById("activityFilter");
+        if (filterEl) {
+          filterEl.addEventListener("change", function () {
+            renderMarkers(this.value);
+          });
+        }
+
+        const locationBtn = document.getElementById("locationBtn");
+        if (locationBtn) {
+          locationBtn.addEventListener("click", function () {
+            if (!navigator.geolocation) {
+              alert("Geolocation is not supported by your browser.");
+              return;
+            }
+            navigator.geolocation.getCurrentPosition(
+              function (position) {
+                userLat = position.coords.latitude;
+                userLng = position.coords.longitude;
+                map.setView([userLat, userLng], 8);
+                if (userMarker) map.removeLayer(userMarker);
+                userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("You are here").openPopup();
+              },
+              function () {
+                alert("Unable to get your location. Please allow location access.");
+              }
+            );
+          });
+        }
+
+        const nearestSearchBtn = document.getElementById("nearestSearchBtn");
+        if (nearestSearchBtn) {
+          nearestSearchBtn.addEventListener("click", function () {
+            if (userLat && userLng) {
+              window.open(`https://www.google.com/maps/search/campsites/@${userLat},${userLng},10z`, "_blank");
+            } else {
+              window.open("https://www.google.com/maps/search/nearest+campsite+to+me", "_blank");
+            }
+          });
+        }
+
+        setTimeout(function () {
+          map.invalidateSize();
+        }, 200);
+      });

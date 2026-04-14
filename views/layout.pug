@@ -1,0 +1,59 @@
+// Define HTML document
+doctype html
+
+// Root HTML element
+html(lang="en")
+  head
+    // Character encoding
+    meta(charset="utf-8")
+
+    // Responsive layout for mobile devices
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    // Dynamic page title
+    title #{title}
+
+    // Link to external CSS file for layout styling
+    link(rel="stylesheet", href="/styles/css/layout.css")
+
+    // Placeholder for page-specific CSS
+    block styles
+
+  body
+
+    // Navigation bar (visible on all pages)
+    nav
+
+      // Always visible links
+      a(href="/") Home
+      a(href="/listings") Listings
+      a(href="/tags") Tags/Categories
+
+      // Show only for Coordinator users
+      if sessionUser && sessionUser.role === 'Coordinator'
+        a(href="/users") Users
+        a(href="/coordinator/requests/pending") Pending Requests
+        a(href="/member/profile") My Profile
+
+      // Show only for Member users
+      if sessionUser && sessionUser.role === 'Member'
+        a(href="/member/requests") My Requests
+        a(href="/member/profile") My Profile
+
+      // If user is logged in
+      if sessionUser
+        // Display user name and role
+        span.muted  |  #{sessionUser.name} (#{sessionUser.role})
+        |   
+        // Logout link
+        a(href="/logout") Log out
+
+      else
+        // If NOT logged in
+        a(href="/member/login") Log in
+
+    // Hidden horizontal rule used for spacing
+    hr
+
+    // Placeholder where page content will be injected
+    block content

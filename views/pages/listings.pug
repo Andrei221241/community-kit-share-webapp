@@ -1,0 +1,89 @@
+extends ../layout
+
+block content
+
+  // Use shared layout (header, footer, navigation)
+  // Main content section
+
+  // Page title
+  h1 Listing Page
+
+  // Description explaining purpose (linked to user stories)
+  p.muted US1/US2: list kits with availability and filter/search.
+
+  // Form for searching and filtering kits (GET request updates URL)
+  form(method="get" action="/listings")
+
+    // First row of filter inputs
+    .row
+
+      // Search input (filters by kit name or description)
+      div
+        label(for="search") Search
+        br
+        input#search(
+          type="text"
+          name="search"
+          value=selected.search
+          placeholder="kit name or description"
+        )
+
+      // Category dropdown filter
+      div
+        label(for="category") Category
+        br
+        select#category(name="category")
+          option(value="") All
+          // Loop through categories dynamically
+          each category in categories
+            option(
+              value=category.name
+              selected=(selected.category===category.name)
+            )= category.name
+
+      // Tag dropdown filter
+      div
+        label(for="tag") Tag
+        br
+        select#tag(name="tag")
+          option(value="") All
+          // Loop through tags dynamically
+          each tagItem in tags
+            option(
+              value=tagItem.name
+              selected=(selected.tag===tagItem.name)
+            )= tagItem.name
+
+    // Buttons row
+    .row
+      // Submit filters
+      button(type="submit") Apply Filters
+
+      // Clear filters (reload page without parameters)
+      a(href="/listings") Clear Filters
+
+  // If no kits match filters
+  if !kits.length
+    p No kits found for current filters.
+
+  else
+    // Loop through each kit and display it
+    each kit in kits
+      .card
+
+        // Kit name with link to details page
+        h3
+          a(href=`/listings/${kit.id}`)= kit.name
+
+        // Display category (fallback if missing)
+        p
+          strong Category: 
+          | #{kit.category || 'Uncategorized'}
+
+        // Short description of the kit
+        p= kit.short_description
+
+        // Availability status with conditional styling
+        p
+          strong Availability: 
+          span(class=(kit.availability_status === 'Available' ? 'ok' : 'warn'))= kit.availability_status || 'Unknown'

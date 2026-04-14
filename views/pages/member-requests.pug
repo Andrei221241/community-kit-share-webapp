@@ -1,0 +1,48 @@
+extends ../layout
+
+block content
+  h1 My Requests
+  p Hello, #{userName}! Here are your past and current borrow requests.
+
+  if requests && requests.length
+    each req in requests
+      .card
+        h3 Request ID: #{req.id}
+
+        p
+          strong Kit:
+          |  #{req.kit_name}
+
+        p
+          strong Dates:
+          |  #{req.start_date} to #{req.end_date}
+
+        p
+          strong Status:
+          if req.displayStatus === 'Currently Borrowed'
+            span.badge.ok Currently Borrowed
+          else if req.displayStatus === 'Overdue'
+            span.badge.err Overdue by #{req.overdueDays} day#{req.overdueDays === 1 ? '' : 's'}
+          else if req.displayStatus === 'Rejected'
+            span.badge.err Rejected
+          else if req.displayStatus === 'Returned'
+            span.badge.ok Returned
+          else
+            span.badge.warn Pending
+
+        if req.status === 'Rejected' && req.rejection_reason
+          p
+            strong Reason:
+            |  #{req.rejection_reason}
+
+        if req.returned_at
+          p
+            strong Returned At:
+            |  #{req.returned_at}
+
+        if req.canReturn
+          form(method="POST", action=`/member/requests/${req.id}/return`)
+            button(type="submit") Return Kit
+  else
+    p You haven't made any borrow requests yet.
+    a.btn(href="/listings") Browse Kits

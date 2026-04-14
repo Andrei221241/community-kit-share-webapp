@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+
+  // Use shared layout (header, footer, etc.)
+  // Main content block
+
+  // Page title
+  h1 Tags & Categories
+
+  // Description text
+  p.muted Browse all available tags and categories
+
+  // Layout row containing two sections
+  .row
+
+    // Categories section
+    .card(style="flex: 1;")
+      h2 Categories
+
+      // Check if categories exist
+      if categories.length
+        ul
+          // Loop through each category
+          each category in categories
+            li
+              // Link filters listings page by selected category
+              a(href=`/listings?category=${encodeURIComponent(category.name)}`)= category.name
+      else
+        // If no categories available
+        p No categories defined.
+
+    // Tags section
+    .card(style="flex: 1;")
+      h2 Tags
+
+      // Check if tags exist
+      if tags.length
+        ul
+          // Loop through each tag
+          each tag in tags
+            li
+              // Link filters listings page by selected tag
+              a(href=`/listings?tag=${encodeURIComponent(tag.name)}`)= tag.name
+      else
+        // If no tags available
+        p No tags defined.

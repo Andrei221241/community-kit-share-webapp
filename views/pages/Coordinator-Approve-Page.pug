@@ -1,0 +1,70 @@
+extends ../layout
+
+block styles
+  link(rel="stylesheet", href="/styles/css/Coordinator-Approve-Page.css")
+
+block content
+  main.wrap
+    section.card
+      h1 Manage Requests
+
+      if requests && requests.length
+        each req in requests
+          div.card
+            p
+              strong Request ID:
+              |  #{req.id}
+
+            p
+              strong Member:
+              |  #{req.requester_name}
+
+            p
+              strong Kit:
+              |  #{req.kit_name}
+
+            p
+              strong Dates:
+              |  #{req.start_date} to #{req.end_date}
+
+            p
+              strong Note:
+              |  #{req.note || 'None'}
+
+            p
+              strong Status:
+              if req.displayStatus === 'Currently Borrowed'
+                span.badge.ok Currently Borrowed
+              else if req.displayStatus === 'Overdue'
+                span.badge.err Overdue by #{req.overdueDays} day#{req.overdueDays === 1 ? '' : 's'}
+              else if req.displayStatus === 'Rejected'
+                span.badge.err Rejected
+              else if req.displayStatus === 'Returned'
+                span.badge.ok Returned
+              else
+                span.badge.warn Pending
+
+            div(style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;")
+              if req.status === 'Pending'
+                form(method="POST", action=`/coordinator/requests/${req.id}/approve`)
+                  button(type="submit", style="background-color: #28a745;") Approve
+
+                form(method="POST", action=`/coordinator/requests/${req.id}/reject`)
+                  input(
+                    type="text",
+                    name="reason",
+                    placeholder="Optional reason...",
+                    style="margin-right: 10px;"
+                  )
+                  button(type="submit", style="background-color: #dc3545;") Reject
+
+              if req.canReturn
+                form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
+                  button(type="submit") Return Kit for User
+      else
+        p(style="margin-bottom: 20px;") No requests found
+
+        a(
+          href="/listings",
+          style="display: inline-block; padding: 10px 20px; background: #1e3c72; color: white; border-radius: 20px; text-decoration: none;"
+        ) Return to Listings

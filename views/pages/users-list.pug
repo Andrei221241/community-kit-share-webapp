@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+
+  // Use shared layout (header, footer, etc.)
+  // Main content block
+
+  // Page title
+  h1 Users
+
+  // Description text
+  p.muted All community members
+
+  // Check if there are any users
+  if users && users.length
+
+    // Table to display users
+    table
+      thead
+        tr
+          th Name
+          th Role
+          th Email
+          th Actions
+
+      tbody
+        // Loop through each user
+        each user in users
+          tr
+
+            // Display user name
+            td= user.name
+
+            // Display user role (e.g. member, coordinator)
+            td= user.role
+
+            // Display email (fallback if missing)
+            td= user.email || 'N/A'
+
+            // Action column (link to profile page)
+            td
+              a(href=`/users/${user.id}`) View Profile
+
+  else
+    // If no users exist
+    p No users found
