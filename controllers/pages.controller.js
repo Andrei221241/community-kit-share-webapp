@@ -12,6 +12,76 @@ const getForgotPasswordPage = (req, res) => {
     });
 };
 
+const memberRegister = (req, res) => {
+    if (req.session.userId) {
+        return res.redirect("/listings");
+    }
+
+    res.render("pages/Member-Register-Page", {
+        title: "Create Account",
+        error: null,
+        success: null,
+    });
+};
+
+const postMemberRegister = withErrorBoundary(async (req, res) => {
+    const name = (req.body.name || "").trim();
+    const email = (req.body.email || "").trim().toLowerCase();
+    const password = req.body.password || "";
+    const confirmPassword = req.body.confirm_password || "";
+
+    if (!name || !email || !password || !confirmPassword) {
+        return res.render("pages/Member-Register-Page", {
+            title: "Create Account",
+            error: "All fields are required.",
+            success: null,
+        });
+    }
+
+    if (password !== confirmPassword) {
+        return res.render("pages/Member-Register-Page", {
+            title: "Create Account",
+            error: "Passwords do not match.",
+            success: null,
+        });
+    }
+
+    if (password.length < 6) {
+        return res.render("pages/Member-Register-Page", {
+            title: "Create Account",
+            error: "Password must be at least 6 characters long.",
+            success: null,
+        });
+    }
+
+    const [existingUsers] = await db.query(
+        `SELECT id FROM users WHERE email = ? LIMIT 1`,
+        [email]
+    );
+
+    if (existingUsers.length > 0) {
+        return res.render("pages/Member-Register-Page", {
+            title: "Create Account",
+            error: "An account with that email already exists.",
+            success: null,
+        });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await db.query(
+        `INSERT INTO users (name, email, role, password_hash, bio, loyalty_points)
+         VALUES (?, ?, 'Member', ?, NULL, 0)`,
+        [name, email, hashedPassword]
+    );
+
+    res.render("pages/Member-Register-Page", {
+        title: "Create Account",
+        error: null,
+        success: "Account created successfully. You can now log in.",
+    });
+});
+
 function normaliseRequestStatus(req) {
     const today = new Date();
     const end = new Date(req.end_date);
@@ -997,4 +1067,6 @@ module.exports = {
     postResetPassword,
     myProfile,
     memberReturnRequest,
+    memberRegister,
+    postMemberRegister,
 };

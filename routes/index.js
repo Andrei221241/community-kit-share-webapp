@@ -31,6 +31,8 @@ router.get("/member/requests", requireMember, pages.memberRequests);
 router.get("/member/profile", requireMember, pages.myProfile);
 router.post("/member/requests/:id/return", requireMember, pages.memberReturnRequest);
 router.post("/requests", requireMember, pages.submitBorrowRequest);
+router.get("/member/register", pages.memberRegister);
+router.post("/member/register", pages.postMemberRegister);
 
 // Coordinator auth
 router.get("/coordinator/login", pages.coordinatorLogin);
