@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -29,7 +32,26 @@ jobs:
       - name: Detect configured npm scripts
         id: script-check
         run: |
-          node -e "const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));const scripts=pkg.scripts||{};const hasLint=Boolean(scripts.lint);const hasBuild=Boolean(scripts.build);const hasTest=Boolean(scripts.test)&&!/no test specified/i.test(scripts.test);const out=process.env.GITHUB_OUTPUT;fs.appendFileSync(out,`has_lint=${hasLint}\n`);fs.appendFileSync(out,`has_test=${hasTest}\n`);fs.appendFileSync(out,`has_build=${hasBuild}\n`);"
+          node <<'NODE'
+          const fs = require('fs');
+
+          try {
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const scripts = pkg.scripts || {};
+            const hasLint = Boolean(scripts.lint);
+            const hasBuild = Boolean(scripts.build);
+            const hasTest = Boolean(scripts.test) && !/no test specified/i.test(scripts.test);
+            const out = process.env.GITHUB_OUTPUT;
+
+            fs.appendFileSync(out, `has_lint=${hasLint}\n`);
+            fs.appendFileSync(out, `has_test=${hasTest}\n`);
+            fs.appendFileSync(out, `has_build=${hasBuild}\n`);
+          } catch (error) {
+            console.error('Failed to detect npm scripts from package.json');
+            console.error(error instanceof Error ? error.message : error);
+            process.exit(1);
+          }
+          NODE
 
       - name: Run lint
         if: steps.script-check.outputs.has_lint == 'true'
