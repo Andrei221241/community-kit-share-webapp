@@ -24,7 +24,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -40,7 +39,8 @@ jobs:
             const scripts = pkg.scripts || {};
             const hasLint = Boolean(scripts.lint);
             const hasBuild = Boolean(scripts.build);
-            const hasTest = Boolean(scripts.test) && !/no test specified/i.test(scripts.test);
+            const defaultTestScript = /^\s*echo\s+["']Error: no test specified["']\s*&&\s*exit 1\s*$/i;
+            const hasTest = Boolean(scripts.test) && !defaultTestScript.test(scripts.test);
             const out = process.env.GITHUB_OUTPUT;
 
             fs.appendFileSync(out, `has_lint=${hasLint}\n`);
