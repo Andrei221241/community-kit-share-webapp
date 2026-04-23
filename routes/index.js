@@ -1,20 +1,31 @@
+//- Import Express framework
 const express = require("express");
 
+//- Import page controller functions
 const pages = require("../controllers/pages.controller");
 
+//- Create a new router instance
 const router = express.Router();
 
+//- Middleware to ensure the user is logged in as a member
 function requireMember(req, res, next) {
+    //- Check if user session exists
     if (!req.session.userId) {
+        //- Redirect to member login if not authenticated
         return res.redirect("/member/login");
     }
+    //- Proceed to next middleware/route if authenticated
     next();
 }
 
+//- Middleware to ensure the user is logged in as a coordinator
 function requireCoordinator(req, res, next) {
+    //- Check if user is not logged in OR does not have Coordinator role
     if (!req.session.userId || req.session.userRole !== "Coordinator") {
+        //- Redirect to coordinator login if not authorized
         return res.redirect("/coordinator/login");
     }
+    //- Proceed to next middleware/route if authorized
     next();
 }
 
@@ -31,6 +42,8 @@ router.get("/member/requests", requireMember, pages.memberRequests);
 router.get("/member/profile", requireMember, pages.myProfile);
 router.post("/member/requests/:id/return", requireMember, pages.memberReturnRequest);
 router.post("/requests", requireMember, pages.submitBorrowRequest);
+router.get("/member/register", pages.memberRegister);
+router.post("/member/register", pages.postMemberRegister);
 
 // Coordinator auth
 router.get("/coordinator/login", pages.coordinatorLogin);

@@ -1,52 +1,70 @@
+//- Extends the main layout template
 extends ../layout
 
+//- Defines the content block that will be inserted into the layout
 block content
+  //- Card container for displaying user profile information
   .card
+    //- Page title
     h1= title
 
+    //- Display user's name
     p
       strong Name:
       |  #{user.name}
 
+    //- Display user's role
     p
       strong Role:
       |  #{user.role}
 
+    //- Display user's email, or 'N/A' if no email exists
     p
       strong Email:
       |  #{user.email || 'N/A'}
 
+    //- Display user's bio only if it exists
     if user.bio
       p
         strong Bio:
         br
         | #{user.bio}
 
+    //- Display user's loyalty points, defaulting to 0 if none exist
     p
       strong Loyalty Points:
       |  #{user.loyalty_points || 0}
 
+    //- Display user's badge
     p
       strong Badge:
       span.badge.ok #{badge}
 
+    //- Display average rating and total number of reviews
     p
       strong Rating:
       |  #{averageRating || 'No ratings'} (#{totalRatings} reviews)
 
+  //- Section heading for borrow requests
   h2 Borrow Requests
 
+  //- Check if borrow requests exist
   if requests && requests.length
+    //- Loop through each borrow request
     each req in requests
+      //- Card container for each borrow request
       .card
+        //- Display kit name
         p
           strong Kit:
           |  #{req.kit_name}
 
+        //- Display borrowing dates
         p
           strong Dates:
           |  #{req.start_date} to #{req.end_date}
 
+        //- Display request status with different badge styles
         p
           strong Status:
           if req.displayStatus === 'Currently Borrowed'
@@ -60,29 +78,38 @@ block content
           else
             span.badge.warn Pending
 
+        //- Show rejection reason if request was rejected and a reason exists
         if req.status === 'Rejected' && req.rejection_reason
           p
             strong Reason:
             |  #{req.rejection_reason}
 
+        //- Show return timestamp if kit has been returned
         if req.returned_at
           p
             strong Returned At:
             |  #{req.returned_at}
 
+        //- Show return button only if returns can be managed and the request is returnable
         if canManageReturns && req.canReturn
           if isCoordinatorView
+            //- Coordinator return form
             form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
               button(type="submit") Return Kit for User
           else
+            //- Member return form
             form(method="POST", action=`/member/requests/${req.id}/return`)
               button(type="submit") Return My Kit
   else
+    //- Message shown when user has no borrow requests
     p This user has no borrow requests.
 
+  //- Section heading for points history
   h2 Points History
 
+  //- Check if points history exists
   if history && history.length
+    //- Table showing points history
     table
       thead
         tr
@@ -90,30 +117,41 @@ block content
           th Points
           th Date
       tbody
+        //- Loop through each points history entry
         each h in history
           tr
             td= h.action_type
             td
+              //- Show positive points in green and negative points in red
               if h.points_change > 0
                 span.badge.ok +#{h.points_change}
               else
                 span.badge.err #{h.points_change}
             td= h.created_at
   else
+    //- Message shown when there is no points history
     p No points history yet.
 
+  //- Section heading for reviews
   h2 Reviews
 
+  //- Check if reviews exist
   if reviews && reviews.length
+    //- Loop through each review
     each r in reviews
+      //- Card container for each review
       .card
+        //- Display reviewer name and star rating
         p
           strong #{r.reviewer_name}
           |  – #{r.stars}/5
 
+        //- Display comment only if it exists
         if r.comment
           p= r.comment
 
+        //- Display review creation date
         small #{r.created_at}
   else
+    //- Message shown when there are no reviews
     p No reviews yet.

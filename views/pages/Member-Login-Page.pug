@@ -1,31 +1,56 @@
+//- Document type declaration
 doctype html
 
+//- Root HTML element with language set to English
 html(lang="en")
   head
+    //- Character encoding
     meta(charset="UTF-8")
+    
+    //- Responsive viewport settings
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    
+    //- Page title
     title Member Login
+    
+    //- Link to external CSS stylesheet
     link(rel="stylesheet", href="/styles/css/Member-Login-Page.css")
 
   body
+    //- Main wrapper container
     main.wrap
+      //- Card section for login form
       section.card
+        
+        //- Page heading
         h1 Community Member Login
 
+        //- Display error message if 'error' exists
         if error
           p.error-message= error
 
+        //- Login form (POST request)
         form(method="POST", action="/member/login")
+          
+          //- Email input field
           label(for="email") Email
           input#email(type="email", name="email", required)
 
+          //- Password input field
           label(for="password") Password
           input#password(type="password", name="password", required)
 
+          //- Submit button to log in
           button(type="submit") Log in
 
+        //- Form to navigate to account creation page
+        form(action="/member/register", method="GET")
+          button(type="submit") Create Account
+
+        //- Form to navigate back to home page
         form(action="/", method="GET")
           button(type="submit") Back to Home
 
+        //- Link to forgot password page
         p.auth-link
           a(href="/member/forgot-password") Forgot Password?

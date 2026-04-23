@@ -1,31 +1,52 @@
+//- Document type declaration
 doctype html
 
+//- Root HTML element with language set to English
 html(lang="en")
   head
+    //- Character encoding
     meta(charset="UTF-8")
+    
+    //- Responsive viewport settings
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    
+    //- Page title
     title Coordinator Login
+    
+    //- Link to external CSS stylesheet specific to coordinator login
     link(rel="stylesheet", href="/styles/css/Coordinator-Login-Page.css")
 
   body
+    //- Main wrapper container
     main.wrap
+      //- Card section for login form
       section.card
+        
+        //- Page heading
         h1 Coordinator Login
 
+        //- Display error message if 'error' exists
         if error
           p.error-message= error
 
+        //- Login form for coordinator (POST request)
         form(method="POST", action="/coordinator/login")
+          
+          //- Email input field
           label(for="email") Email
           input#email(type="email", name="email", required)
 
+          //- Password input field
           label(for="password") Password
           input#password(type="password", name="password", required)
 
+          //- Submit button to log in
           button(type="submit") Log in
 
+        //- Form to navigate back to home page
         form(action="/", method="GET")
           button(type="submit") Back to Home
 
+        //- Link to forgot password page (shared with member route)
         p.auth-link
           a(href="/member/forgot-password") Forgot Password?
