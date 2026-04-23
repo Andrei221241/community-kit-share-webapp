@@ -59,7 +59,8 @@ jobs:
 
       - name: Skip lint (not configured)
         if: steps.script-check.outputs.has_lint != 'true'
-        run: echo "Skipping lint: no 'lint' script found in package.json"
+        run: |
+          echo "Skipping lint: no 'lint' script found in package.json"
 
       - name: Run tests
         if: steps.script-check.outputs.has_test == 'true'
@@ -67,7 +68,8 @@ jobs:
 
       - name: Skip tests (not configured)
         if: steps.script-check.outputs.has_test != 'true'
-        run: echo "Skipping tests: no usable 'test' script found in package.json"
+        run: |
+          echo "Skipping tests: no usable 'test' script found in package.json"
 
       - name: Run production build
         if: steps.script-check.outputs.has_build == 'true'
@@ -75,4 +77,5 @@ jobs:
 
       - name: Skip production build (not configured)
         if: steps.script-check.outputs.has_build != 'true'
-        run: echo "Skipping build: no 'build' script found in package.json"
+        run: |
+          echo "Skipping build: no 'build' script found in package.json"
