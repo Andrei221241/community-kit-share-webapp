@@ -45,6 +45,29 @@ block content
         if req.canReturn
           form(method="POST", action=`/member/requests/${req.id}/return`)
             button(type="submit") Return Kit
+
+        if req.status === 'Returned'
+          form(method="POST", action=`/member/requests/${req.id}/review`, style="margin-top: 15px;")
+            label Review this kit
+            br
+            select(name="stars" required)
+              option(value="") Select rating
+              option(value="1") 1 - Poor
+              option(value="2") 2 - Below Average
+              option(value="3") 3 - Average
+              option(value="4") 4 - Good
+              option(value="5") 5 - Excellent
+
+            br
+            input(
+              type="text"
+              name="comment"
+              placeholder="Write a short review"
+              style="margin-top: 8px; width: 100%; max-width: 400px;"
+            )
+
+            br
+            button(type="submit", style="margin-top: 8px;") Submit Review
   else
     p You haven't made any borrow requests yet.
     a.btn(href="/listings") Browse Kits

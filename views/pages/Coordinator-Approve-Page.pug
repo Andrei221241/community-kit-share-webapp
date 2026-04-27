@@ -64,29 +64,6 @@ block content
               if req.canReturn
                 form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
                   button(type="submit") Return Kit for User
-
-            // C
-            form(method="POST", action=`/coordinator/requests/${req.id}/rate`, style="margin-top: 15px;")
-              label Rating
-              br
-              select(name="stars" required)
-                option(value="") Select rating
-                option(value="1") 1 - Poor
-                option(value="2") 2 - Below Average
-                option(value="3") 3 - Average
-                option(value="4") 4 - Good
-                option(value="5") 5 - Excellent
-
-              br
-              input(
-                type="text",
-                name="comment",
-                placeholder="Reason or note for this rating",
-                style="margin-top: 8px; width: 100%; max-width: 400px;"
-              )
-
-              br
-              button(type="submit", style="margin-top: 8px;") Submit Rating
       else
         p(style="margin-bottom: 20px;") No requests found
 

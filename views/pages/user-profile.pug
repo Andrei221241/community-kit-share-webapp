@@ -30,9 +30,27 @@ block content
       strong Badge:
       span.badge.ok #{badge}
 
-    p
-      strong Rating:
-      |  #{averageRating || 'No ratings'} (#{totalRatings} reviews)
+  if isCoordinatorView && user.role === 'Member'
+    .card
+      h2 Award Loyalty Points
+
+      form(method="POST", action=`/coordinator/users/${user.id}/points`)
+        label Points
+        br
+        input(type="number", name="points", min="1", max="100", required)
+
+        br
+        label Comment
+        br
+        input(
+          type="text"
+          name="comment"
+          placeholder="Reason for awarding points"
+          style="width: 100%; max-width: 400px;"
+        )
+
+        br
+        button(type="submit", style="margin-top: 8px;") Award Points
 
   h2 Borrow Requests
 
@@ -89,6 +107,7 @@ block content
           th Action
           th Points
           th Date
+          th Comment
       tbody
         each h in history
           tr
@@ -99,21 +118,26 @@ block content
               else
                 span.badge.err #{h.points_change}
             td= h.created_at
+            td= h.comment || 'N/A'
   else
     p No points history yet.
 
-  h2 Reviews
+  h2 Kit Reviews
 
   if reviews && reviews.length
     each r in reviews
       .card
         p
-          strong #{r.reviewer_name}
-          |  – #{r.stars}/5
+          strong Kit:
+          |  #{r.kit_name}
+
+        p
+          strong Rating:
+          |  #{r.stars}/5
 
         if r.comment
           p= r.comment
 
         small #{r.created_at}
   else
-    p No reviews yet.
+    p No kit reviews yet.

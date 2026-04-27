@@ -59,22 +59,3 @@ block content
             placeholder="Optional rejection reason"
           )
           button(type="submit") Reject
-
-        // Coordinator rating form
-        form(method="post" action=`/coordinator/requests/${request.id}/rate`)
-          label Rating
-          select(name="stars" required)
-            option(value="") Select rating
-            option(value="1") 1 - Poor
-            option(value="2") 2 - Below Average
-            option(value="3") 3 - Average
-            option(value="4") 4 - Good
-            option(value="5") 5 - Excellent
-
-          input(
-            type="text"
-            name="comment"
-            placeholder="Reason or note for this rating"
-          )
-
-          button(type="submit") Submit Rating

@@ -77,6 +77,24 @@ block content
           // Submit button
           button(type="submit") Submit Request
 
+  // Product reviews section
+  .card
+    h2 Kit Reviews
+
+    if reviews && reviews.length
+      each review in reviews
+        .card
+          p
+            strong= review.reviewer_name
+            |  - #{review.stars}/5 stars
+
+          if review.comment
+            p= review.comment
+
+          small= review.created_at
+    else
+      p No reviews yet.
+
   // Client-side script for date validation
   script.
     document.addEventListener('DOMContentLoaded', () => {
