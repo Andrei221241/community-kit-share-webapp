@@ -44,6 +44,9 @@ block content
           strong Note: 
           | #{request.note || 'No note'}
 
+        // Link to request message thread
+        a.btn(href=`/coordinator/requests/${request.id}/messages`) Messages
+
         // Approve form (sends POST request to backend)
         form.inline(method="post" action=`/coordinator/requests/${request.id}/approve`)
           button(type="submit") Approve

@@ -1,0 +1,62 @@
+//- Extends the main layout template
+extends ../layout
+
+//- Main content block
+block content
+  //- Main container for messages page
+  main.messages-page
+    //- Page heading
+    h1 Request Messages
+
+    //- Display request summary if request exists
+    if request
+      section.request-summary
+        //- Show kit name
+        h2= request.kit_name
+
+        //- Display request ID
+        p
+          strong Request ID:
+          |  #{request.id}
+
+        //- Display member name if available
+        if request.member_name
+          p
+            strong Member:
+            |  #{request.member_name}
+
+        //- Display request status if available
+        if request.status
+          p
+            strong Status:
+            |  #{request.status}
+
+    //- Messages display section
+    section.messages-box
+      //- Check if there are messages
+      if messages.length
+        //- Loop through each message
+        each msg in messages
+          div.message-card
+            //- Display sender name
+            p
+              strong= msg.sender_name
+            //- Display message content
+            p= msg.message
+            //- Display message timestamp
+            small= msg.created_at
+      else
+        //- Message when no messages exist
+        p No messages yet.
+
+    //- Form to send a new message
+    form(method="POST").message-form
+      label(for="message") Write a message
+      textarea#message(name="message" required placeholder="Type your message here...")
+      button(type="submit") Send Message
+
+    //- Navigation link based on user role
+    if userRole === "Coordinator"
+      a(href="/coordinator/requests/pending") Back to pending requests
+    else
+      a(href="/member/requests") Back to my requests

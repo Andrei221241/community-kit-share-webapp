@@ -1,31 +1,20 @@
-//- Import Express framework
 const express = require("express");
 
-//- Import page controller functions
 const pages = require("../controllers/pages.controller");
 
-//- Create a new router instance
 const router = express.Router();
 
-//- Middleware to ensure the user is logged in as a member
 function requireMember(req, res, next) {
-    //- Check if user session exists
     if (!req.session.userId) {
-        //- Redirect to member login if not authenticated
         return res.redirect("/member/login");
     }
-    //- Proceed to next middleware/route if authenticated
     next();
 }
 
-//- Middleware to ensure the user is logged in as a coordinator
 function requireCoordinator(req, res, next) {
-    //- Check if user is not logged in OR does not have Coordinator role
     if (!req.session.userId || req.session.userRole !== "Coordinator") {
-        //- Redirect to coordinator login if not authorized
         return res.redirect("/coordinator/login");
     }
-    //- Proceed to next middleware/route if authorized
     next();
 }
 
@@ -62,6 +51,19 @@ router.post("/member/forgot-password", pages.postForgotPassword);
 
 router.get("/member/reset-password/:token", pages.getResetPasswordPage);
 router.post("/member/reset-password/:token", pages.postResetPassword);
+
+// Member reviews a kit/product after borrowing it
+router.post("/member/requests/:id/review", requireMember, pages.memberReviewKit);
+
+// Coordinator gives loyalty points to a member
+router.post("/coordinator/users/:id/points", requireCoordinator, pages.coordinatorGivePoints);
+
+// Request messaging
+router.get("/member/requests/:id/messages", requireMember, pages.memberRequestMessages);
+router.post("/member/requests/:id/messages", requireMember, pages.postMemberRequestMessage);
+
+router.get("/coordinator/requests/:id/messages", requireCoordinator, pages.coordinatorRequestMessages);
+router.post("/coordinator/requests/:id/messages", requireCoordinator, pages.postCoordinatorRequestMessage); 
 
 // Logout
 router.get("/logout", pages.logout);

@@ -1,12 +1,12 @@
 //- Extends the main layout template
 extends ../layout
 
-//- Defines additional styles specific to this page
+//- Include page-specific styles
 block styles
-  //- Link to coordinator approve/manage requests stylesheet
+  //- Link to coordinator manage requests stylesheet
   link(rel="stylesheet", href="/styles/css/Coordinator-Approve-Page.css")
 
-//- Defines the main content block
+//- Main content block
 block content
   //- Main wrapper container
   main.wrap
@@ -46,7 +46,7 @@ block content
               strong Note:
               |  #{req.note || 'None'}
 
-            //- Display request status with appropriate badge styling
+            //- Display request status with badge styling
             p
               strong Status:
               if req.displayStatus === 'Currently Borrowed'
@@ -60,16 +60,19 @@ block content
               else
                 span.badge.warn Pending
 
-            //- Action buttons container (approve, reject, return)
+            //- Action buttons container
             div(style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;")
               
+              //- Button to view messages for this request
+              a.btn(href=`/coordinator/requests/${req.id}/messages`) Messages
+
               //- Show approve/reject options only if request is pending
               if req.status === 'Pending'
                 //- Approve request form
                 form(method="POST", action=`/coordinator/requests/${req.id}/approve`)
                   button(type="submit", style="background-color: #28a745;") Approve
 
-                //- Reject request form with optional reason input
+                //- Reject request form with optional reason
                 form(method="POST", action=`/coordinator/requests/${req.id}/reject`)
                   input(
                     type="text",

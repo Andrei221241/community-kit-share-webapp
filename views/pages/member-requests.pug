@@ -1,7 +1,7 @@
 //- Extends the main layout template
 extends ../layout
 
-//- Defines the content block for this page
+//- Main content block
 block content
   //- Page heading
   h1 My Requests
@@ -28,7 +28,7 @@ block content
           strong Dates:
           |  #{req.start_date} to #{req.end_date}
 
-        //- Display request status with appropriate badge styling
+        //- Display request status with badge styling
         p
           strong Status:
           if req.displayStatus === 'Currently Borrowed'
@@ -42,24 +42,51 @@ block content
           else
             span.badge.warn Pending
 
-        //- Show rejection reason if request was rejected and reason exists
+        //- Show rejection reason if applicable
         if req.status === 'Rejected' && req.rejection_reason
           p
             strong Reason:
             |  #{req.rejection_reason}
 
-        //- Show return timestamp if the kit has been returned
+        //- Show return timestamp if returned
         if req.returned_at
           p
             strong Returned At:
             |  #{req.returned_at}
 
-        //- Show return button if the request can be returned
+        //- Link to view messages for this request
+        a.btn(href=`/member/requests/${req.id}/messages`) View Messages
+
+        //- Show return form if the kit can be returned
         if req.canReturn
           form(method="POST", action=`/member/requests/${req.id}/return`)
             button(type="submit") Return Kit
+
+        //- Show review form only if request is returned
+        if req.status === 'Returned'
+          form(method="POST", action=`/member/requests/${req.id}/review`, style="margin-top: 15px;")
+            label Review this kit
+            br
+            select(name="stars" required)
+              option(value="") Select rating
+              option(value="1") 1 - Poor
+              option(value="2") 2 - Below Average
+              option(value="3") 3 - Average
+              option(value="4") 4 - Good
+              option(value="5") 5 - Excellent
+
+            br
+            input(
+              type="text"
+              name="comment"
+              placeholder="Write a short review"
+              style="margin-top: 8px; width: 100%; max-width: 400px;"
+            )
+
+            br
+            button(type="submit", style="margin-top: 8px;") Submit Review
   else
-    //- Message shown when no requests exist
+    //- Message if no requests exist
     p You haven't made any borrow requests yet.
 
     //- Link to browse available kits

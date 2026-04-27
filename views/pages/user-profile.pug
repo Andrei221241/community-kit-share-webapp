@@ -1,9 +1,9 @@
 //- Extends the main layout template
 extends ../layout
 
-//- Defines the content block that will be inserted into the layout
+//- Main content block
 block content
-  //- Card container for displaying user profile information
+  //- Card displaying user profile information
   .card
     //- Page title
     h1= title
@@ -18,41 +18,59 @@ block content
       strong Role:
       |  #{user.role}
 
-    //- Display user's email, or 'N/A' if no email exists
+    //- Display user's email or fallback to 'N/A'
     p
       strong Email:
       |  #{user.email || 'N/A'}
 
-    //- Display user's bio only if it exists
+    //- Display bio only if it exists
     if user.bio
       p
         strong Bio:
         br
         | #{user.bio}
 
-    //- Display user's loyalty points, defaulting to 0 if none exist
+    //- Display loyalty points (default 0)
     p
       strong Loyalty Points:
       |  #{user.loyalty_points || 0}
 
-    //- Display user's badge
+    //- Display badge
     p
       strong Badge:
       span.badge.ok #{badge}
 
-    //- Display average rating and total number of reviews
-    p
-      strong Rating:
-      |  #{averageRating || 'No ratings'} (#{totalRatings} reviews)
+  //- Section for coordinators to award points (only visible in coordinator view for members)
+  if isCoordinatorView && user.role === 'Member'
+    .card
+      h2 Award Loyalty Points
+
+      //- Form to submit points and optional comment
+      form(method="POST", action=`/coordinator/users/${user.id}/points`)
+        label Points
+        br
+        input(type="number", name="points", min="1", max="100", required)
+
+        br
+        label Comment
+        br
+        input(
+          type="text"
+          name="comment"
+          placeholder="Reason for awarding points"
+          style="width: 100%; max-width: 400px;"
+        )
+
+        br
+        button(type="submit", style="margin-top: 8px;") Award Points
 
   //- Section heading for borrow requests
   h2 Borrow Requests
 
-  //- Check if borrow requests exist
+  //- Check if requests exist
   if requests && requests.length
-    //- Loop through each borrow request
+    //- Loop through each request
     each req in requests
-      //- Card container for each borrow request
       .card
         //- Display kit name
         p
@@ -64,7 +82,7 @@ block content
           strong Dates:
           |  #{req.start_date} to #{req.end_date}
 
-        //- Display request status with different badge styles
+        //- Display request status with badges
         p
           strong Status:
           if req.displayStatus === 'Currently Borrowed'
@@ -78,80 +96,83 @@ block content
           else
             span.badge.warn Pending
 
-        //- Show rejection reason if request was rejected and a reason exists
+        //- Show rejection reason if applicable
         if req.status === 'Rejected' && req.rejection_reason
           p
             strong Reason:
             |  #{req.rejection_reason}
 
-        //- Show return timestamp if kit has been returned
+        //- Show return timestamp if returned
         if req.returned_at
           p
             strong Returned At:
             |  #{req.returned_at}
 
-        //- Show return button only if returns can be managed and the request is returnable
+        //- Show return actions depending on role
         if canManageReturns && req.canReturn
           if isCoordinatorView
-            //- Coordinator return form
             form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
               button(type="submit") Return Kit for User
           else
-            //- Member return form
             form(method="POST", action=`/member/requests/${req.id}/return`)
               button(type="submit") Return My Kit
   else
-    //- Message shown when user has no borrow requests
+    //- Message if no requests exist
     p This user has no borrow requests.
 
   //- Section heading for points history
   h2 Points History
 
-  //- Check if points history exists
+  //- Check if history exists
   if history && history.length
-    //- Table showing points history
     table
       thead
         tr
           th Action
           th Points
           th Date
+          th Comment
       tbody
-        //- Loop through each points history entry
+        //- Loop through each history record
         each h in history
           tr
             td= h.action_type
             td
-              //- Show positive points in green and negative points in red
+              //- Display positive or negative points with styling
               if h.points_change > 0
                 span.badge.ok +#{h.points_change}
               else
                 span.badge.err #{h.points_change}
             td= h.created_at
+            td= h.comment || 'N/A'
   else
-    //- Message shown when there is no points history
+    //- Message if no history exists
     p No points history yet.
 
-  //- Section heading for reviews
-  h2 Reviews
+  //- Section heading for kit reviews
+  h2 Kit Reviews
 
   //- Check if reviews exist
   if reviews && reviews.length
     //- Loop through each review
     each r in reviews
-      //- Card container for each review
       .card
-        //- Display reviewer name and star rating
+        //- Display kit name
         p
-          strong #{r.reviewer_name}
-          |  – #{r.stars}/5
+          strong Kit:
+          |  #{r.kit_name}
 
-        //- Display comment only if it exists
+        //- Display rating
+        p
+          strong Rating:
+          |  #{r.stars}/5
+
+        //- Display comment if it exists
         if r.comment
           p= r.comment
 
-        //- Display review creation date
+        //- Display creation date
         small #{r.created_at}
   else
-    //- Message shown when there are no reviews
-    p No reviews yet.
+    //- Message if no reviews exist
+    p No kit reviews yet.

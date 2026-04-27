@@ -593,18 +593,22 @@ const kitsList = withErrorBoundary(async (req, res) => {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     const [kits] = await db.query(
-        `SELECT DISTINCT k.id, k.name,
-                c.name AS category,
-                k.short_description,
-                k.availability_status
-         FROM kits k
-         LEFT JOIN categories c ON c.id = k.category_id
-         LEFT JOIN kit_tags kt ON kt.kit_id = k.id
-         LEFT JOIN tags t ON t.id = kt.tag_id
-         ${whereClause}
-         ORDER BY k.name ASC`,
-        params
-    );
+    `SELECT DISTINCT k.id, k.name,
+            c.name AS category,
+            k.short_description,
+            k.availability_status,
+            COALESCE(ROUND(AVG(kr.stars), 1), 0) AS average_rating,
+            COUNT(kr.id) AS review_count
+     FROM kits k
+     LEFT JOIN categories c ON c.id = k.category_id
+     LEFT JOIN kit_tags kt ON kt.kit_id = k.id
+     LEFT JOIN tags t ON t.id = kt.tag_id
+     LEFT JOIN kit_reviews kr ON kr.kit_id = k.id
+     ${whereClause}
+     GROUP BY k.id, k.name, c.name, k.short_description, k.availability_status
+     ORDER BY k.name ASC`,
+    params
+);
 
     const [categories] = await db.query(`SELECT name FROM categories ORDER BY name ASC`);
     const [tags] = await db.query(`SELECT name FROM tags ORDER BY name ASC`);
@@ -1035,6 +1039,277 @@ function hello(req, res) {
     res.send("Hello " + req.params.name);
 }
 
+// Member: view messages for one borrow request
+const memberRequestMessages = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+
+    const [requestRows] = await db.query(
+        `
+        SELECT br.*, k.name AS kit_name
+        FROM borrow_requests br
+        JOIN kits k ON br.kit_id = k.id
+        WHERE br.id = ? AND br.user_id = ?
+        `,
+        [requestId, userId]
+    );
+
+    if (requestRows.length === 0) {
+        return res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request could not be found.",
+            details: "The request may not belong to your account.",
+        });
+    }
+
+    const [messages] = await db.query(
+        `
+        SELECT rm.*, u.name AS sender_name
+        FROM request_messages rm
+        JOIN users u ON rm.sender_id = u.id
+        WHERE rm.request_id = ?
+        ORDER BY rm.created_at ASC
+        `,
+        [requestId]
+    );
+
+    res.render("pages/request-messages", {
+        title: "Request Messages",
+        request: requestRows[0],
+        messages,
+        userRole: "Member",
+    });
+});
+
+// Member: send message
+const postMemberRequestMessage = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+    const message = req.body.message?.trim();
+
+    if (!message) {
+        return res.redirect(`/member/requests/${requestId}/messages`);
+    }
+
+    await db.query(
+        `
+        INSERT INTO request_messages (request_id, sender_id, message)
+        VALUES (?, ?, ?)
+        `,
+        [requestId, userId, message]
+    );
+
+    res.redirect(`/member/requests/${requestId}/messages`);
+});
+
+// Coordinator: view messages for one borrow request
+const coordinatorRequestMessages = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+
+    const [requestRows] = await db.query(
+        `
+        SELECT br.*, k.name AS kit_name, u.name AS member_name
+        FROM borrow_requests br
+        JOIN kits k ON br.kit_id = k.id
+        JOIN users u ON br.user_id = u.id
+        WHERE br.id = ?
+        `,
+        [requestId]
+    );
+
+    if (requestRows.length === 0) {
+        return res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request could not be found.",
+            details: "The request may have been deleted.",
+        });
+    }
+
+    const [messages] = await db.query(
+        `
+        SELECT rm.*, u.name AS sender_name
+        FROM request_messages rm
+        JOIN users u ON rm.sender_id = u.id
+        WHERE rm.request_id = ?
+        ORDER BY rm.created_at ASC
+        `,
+        [requestId]
+    );
+
+    res.render("pages/request-messages", {
+        title: "Request Messages",
+        request: requestRows[0],
+        messages,
+        userRole: "Coordinator",
+    });
+});
+
+// Coordinator: send message
+const postCoordinatorRequestMessage = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+    const message = req.body.message?.trim();
+
+    if (!message) {
+        return res.redirect(`/coordinator/requests/${requestId}/messages`);
+    }
+
+    await db.query(
+        `
+        INSERT INTO request_messages (request_id, sender_id, message)
+        VALUES (?, ?, ?)
+        `,
+        [requestId, userId, message]
+    );
+
+    res.redirect(`/coordinator/requests/${requestId}/messages`);
+});
+
+// Member: submit a review for a kit/product after the request has been returned
+const memberReviewKit = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+    const stars = asNumber(req.body.stars);
+    const comment = (req.body.comment || "").trim();
+
+    if (!requestId || !stars) {
+        return res.status(400).render("pages/error", {
+            title: "Missing Review Data",
+            message: "Request ID and star rating are required.",
+            details: null,
+        });
+    }
+
+    if (stars < 1 || stars > 5) {
+        return res.status(400).render("pages/error", {
+            title: "Invalid Rating",
+            message: "Rating must be between 1 and 5 stars.",
+            details: null,
+        });
+    }
+
+    // Check that this request belongs to the logged-in member
+    const [requestRows] = await db.query(
+        `
+        SELECT id, user_id, kit_id, status
+        FROM borrow_requests
+        WHERE id = ? AND user_id = ?
+        `,
+        [requestId, userId]
+    );
+
+    const requestRow = requestRows[0];
+
+    if (!requestRow) {
+        return res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request could not be found for your account.",
+            details: null,
+        });
+    }
+
+    // Members can only review kits after they have returned them
+    if (requestRow.status !== "Returned") {
+        return res.status(400).render("pages/error", {
+            title: "Review Not Allowed",
+            message: "You can only review a kit after it has been returned.",
+            details: null,
+        });
+    }
+
+    // Prevent duplicate reviews for the same request
+    const [existingReviews] = await db.query(
+        `
+        SELECT id
+        FROM kit_reviews
+        WHERE request_id = ? AND user_id = ?
+        `,
+        [requestId, userId]
+    );
+
+    if (existingReviews.length > 0) {
+        return res.status(400).render("pages/error", {
+            title: "Duplicate Review",
+            message: "You have already reviewed this kit for this request.",
+            details: null,
+        });
+    }
+
+    // Save the product/kit review
+    await db.query(
+        `
+        INSERT INTO kit_reviews (kit_id, user_id, request_id, stars, comment)
+        VALUES (?, ?, ?, ?, ?)
+        `,
+        [requestRow.kit_id, userId, requestId, stars, comment || null]
+    );
+
+    res.redirect("/member/requests");
+});
+
+// Coordinator: give loyalty points to a member with a reason/comment
+const coordinatorGivePoints = withErrorBoundary(async (req, res) => {
+    const memberId = asNumber(req.params.id);
+    const coordinatorId = req.session.userId;
+    const points = asNumber(req.body.points);
+    const comment = (req.body.comment || "").trim();
+
+    if (!memberId || !points) {
+        return res.status(400).render("pages/error", {
+            title: "Missing Points Data",
+            message: "Member and points value are required.",
+            details: null,
+        });
+    }
+
+    if (points < 1 || points > 100) {
+        return res.status(400).render("pages/error", {
+            title: "Invalid Points",
+            message: "Points must be between 1 and 100.",
+            details: null,
+        });
+    }
+
+    // Check the member exists
+    const [users] = await db.query(
+        `
+        SELECT id
+        FROM users
+        WHERE id = ? AND role = 'Member'
+        `,
+        [memberId]
+    );
+
+    if (!users.length) {
+        return res.status(404).render("pages/error", {
+            title: "Member Not Found",
+            message: "This member could not be found.",
+            details: null,
+        });
+    }
+
+    // Add points to the member's total loyalty points
+    await db.query(
+        `
+        UPDATE users
+        SET loyalty_points = loyalty_points + ?
+        WHERE id = ?
+        `,
+        [points, memberId]
+    );
+
+    // Store a points history record with coordinator comment
+    await db.query(
+        `
+        INSERT INTO points_history (user_id, action_type, points_change, comment)
+        VALUES (?, ?, ?, ?)
+        `,
+        [memberId, "Coordinator Award", points, comment || null]
+    );
+
+    res.redirect(`/users/${memberId}`);
+});
+
 module.exports = {
     getIntroPage,
     findCampsites,
@@ -1069,4 +1344,10 @@ module.exports = {
     memberReturnRequest,
     memberRegister,
     postMemberRegister,
+    memberRequestMessages,
+    postMemberRequestMessage,
+    coordinatorRequestMessages,
+    postCoordinatorRequestMessage,
+    memberReviewKit,
+    coordinatorGivePoints,
 };
