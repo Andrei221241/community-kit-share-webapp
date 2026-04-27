@@ -65,6 +65,9 @@ router.post("/member/requests/:id/messages", requireMember, pages.postMemberRequ
 router.get("/coordinator/requests/:id/messages", requireCoordinator, pages.coordinatorRequestMessages);
 router.post("/coordinator/requests/:id/messages", requireCoordinator, pages.postCoordinatorRequestMessage); 
 
+// Member reviews a returned kit
+router.post("/member/requests/:id/review", requireMember, pages.memberReviewKit);
+
 // Logout
 router.get("/logout", pages.logout);
 

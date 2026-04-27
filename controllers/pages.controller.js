@@ -593,18 +593,22 @@ const kitsList = withErrorBoundary(async (req, res) => {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     const [kits] = await db.query(
-        `SELECT DISTINCT k.id, k.name,
-                c.name AS category,
-                k.short_description,
-                k.availability_status
-         FROM kits k
-         LEFT JOIN categories c ON c.id = k.category_id
-         LEFT JOIN kit_tags kt ON kt.kit_id = k.id
-         LEFT JOIN tags t ON t.id = kt.tag_id
-         ${whereClause}
-         ORDER BY k.name ASC`,
-        params
-    );
+    `SELECT DISTINCT k.id, k.name,
+            c.name AS category,
+            k.short_description,
+            k.availability_status,
+            COALESCE(ROUND(AVG(kr.stars), 1), 0) AS average_rating,
+            COUNT(kr.id) AS review_count
+     FROM kits k
+     LEFT JOIN categories c ON c.id = k.category_id
+     LEFT JOIN kit_tags kt ON kt.kit_id = k.id
+     LEFT JOIN tags t ON t.id = kt.tag_id
+     LEFT JOIN kit_reviews kr ON kr.kit_id = k.id
+     ${whereClause}
+     GROUP BY k.id, k.name, c.name, k.short_description, k.availability_status
+     ORDER BY k.name ASC`,
+    params
+);
 
     const [categories] = await db.query(`SELECT name FROM categories ORDER BY name ASC`);
     const [tags] = await db.query(`SELECT name FROM tags ORDER BY name ASC`);
