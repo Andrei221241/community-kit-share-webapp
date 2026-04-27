@@ -52,6 +52,16 @@ router.post("/member/forgot-password", pages.postForgotPassword);
 router.get("/member/reset-password/:token", pages.getResetPasswordPage);
 router.post("/member/reset-password/:token", pages.postResetPassword);
 
+// Coordinator can rate a member for a borrow request
+router.post("/coordinator/requests/:id/rate", requireCoordinator, pages.coordinatorRateMember);
+
+// Request messaging
+router.get("/member/requests/:id/messages", requireMember, pages.memberRequestMessages);
+router.post("/member/requests/:id/messages", requireMember, pages.postMemberRequestMessage);
+
+router.get("/coordinator/requests/:id/messages", requireCoordinator, pages.coordinatorRequestMessages);
+router.post("/coordinator/requests/:id/messages", requireCoordinator, pages.postCoordinatorRequestMessage); 
+
 // Logout
 router.get("/logout", pages.logout);
 

@@ -1035,6 +1035,173 @@ function hello(req, res) {
     res.send("Hello " + req.params.name);
 }
 
+// Member: view messages for one borrow request
+const memberRequestMessages = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+
+    const [requestRows] = await db.query(
+        `
+        SELECT br.*, k.name AS kit_name
+        FROM borrow_requests br
+        JOIN kits k ON br.kit_id = k.id
+        WHERE br.id = ? AND br.user_id = ?
+        `,
+        [requestId, userId]
+    );
+
+    if (requestRows.length === 0) {
+        return res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request could not be found.",
+            details: "The request may not belong to your account.",
+        });
+    }
+
+    const [messages] = await db.query(
+        `
+        SELECT rm.*, u.name AS sender_name
+        FROM request_messages rm
+        JOIN users u ON rm.sender_id = u.id
+        WHERE rm.request_id = ?
+        ORDER BY rm.created_at ASC
+        `,
+        [requestId]
+    );
+
+    res.render("pages/request-messages", {
+        title: "Request Messages",
+        request: requestRows[0],
+        messages,
+        userRole: "Member",
+    });
+});
+
+// Member: send message
+const postMemberRequestMessage = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+    const message = req.body.message?.trim();
+
+    if (!message) {
+        return res.redirect(`/member/requests/${requestId}/messages`);
+    }
+
+    await db.query(
+        `
+        INSERT INTO request_messages (request_id, sender_id, message)
+        VALUES (?, ?, ?)
+        `,
+        [requestId, userId, message]
+    );
+
+    res.redirect(`/member/requests/${requestId}/messages`);
+});
+
+// Coordinator: view messages for one borrow request
+const coordinatorRequestMessages = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+
+    const [requestRows] = await db.query(
+        `
+        SELECT br.*, k.name AS kit_name, u.name AS member_name
+        FROM borrow_requests br
+        JOIN kits k ON br.kit_id = k.id
+        JOIN users u ON br.user_id = u.id
+        WHERE br.id = ?
+        `,
+        [requestId]
+    );
+
+    if (requestRows.length === 0) {
+        return res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request could not be found.",
+            details: "The request may have been deleted.",
+        });
+    }
+
+    const [messages] = await db.query(
+        `
+        SELECT rm.*, u.name AS sender_name
+        FROM request_messages rm
+        JOIN users u ON rm.sender_id = u.id
+        WHERE rm.request_id = ?
+        ORDER BY rm.created_at ASC
+        `,
+        [requestId]
+    );
+
+    res.render("pages/request-messages", {
+        title: "Request Messages",
+        request: requestRows[0],
+        messages,
+        userRole: "Coordinator",
+    });
+});
+
+// Coordinator: send message
+const postCoordinatorRequestMessage = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const userId = req.session.userId;
+    const message = req.body.message?.trim();
+
+    if (!message) {
+        return res.redirect(`/coordinator/requests/${requestId}/messages`);
+    }
+
+    await db.query(
+        `
+        INSERT INTO request_messages (request_id, sender_id, message)
+        VALUES (?, ?, ?)
+        `,
+        [requestId, userId, message]
+    );
+
+    res.redirect(`/coordinator/requests/${requestId}/messages`);
+});
+
+// Coordinator: give a rating and comment to the member linked to a borrow request
+const coordinatorRateMember = withErrorBoundary(async (req, res) => {
+    const requestId = asNumber(req.params.id);
+    const coordinatorId = req.session.userId;
+    const stars = asNumber(req.body.stars);
+    const comment = req.body.comment?.trim();
+
+    if (!stars || stars < 1 || stars > 5) {
+        return res.redirect("/coordinator/requests/pending");
+    }
+
+    const [requestRows] = await db.query(
+        `
+        SELECT user_id
+        FROM borrow_requests
+        WHERE id = ?
+        `,
+        [requestId]
+    );
+
+    if (!requestRows.length) {
+        return res.status(404).render("pages/error", {
+            title: "Request Not Found",
+            message: "This request could not be found.",
+            details: "Unable to rate this member.",
+        });
+    }
+
+    const ratedUserId = requestRows[0].user_id;
+
+    await db.query(
+        `
+        INSERT INTO ratings (rated_user_id, reviewer_user_id, request_id, stars, comment)
+        VALUES (?, ?, ?, ?, ?)
+        `,
+        [ratedUserId, coordinatorId, requestId, stars, comment]
+    );
+
+    res.redirect("/coordinator/requests/pending");
+});
+
 module.exports = {
     getIntroPage,
     findCampsites,
@@ -1069,4 +1236,9 @@ module.exports = {
     memberReturnRequest,
     memberRegister,
     postMemberRegister,
+    memberRequestMessages,
+    postMemberRequestMessage,
+    coordinatorRequestMessages,
+    postCoordinatorRequestMessage,
+    coordinatorRateMember,
 };

@@ -1,0 +1,43 @@
+extends ../layout
+
+block content
+  main.messages-page
+    h1 Request Messages
+
+    if request
+      section.request-summary
+        h2= request.kit_name
+        p
+          strong Request ID:
+          |  #{request.id}
+
+        if request.member_name
+          p
+            strong Member:
+            |  #{request.member_name}
+
+        if request.status
+          p
+            strong Status:
+            |  #{request.status}
+
+    section.messages-box
+      if messages.length
+        each msg in messages
+          div.message-card
+            p
+              strong= msg.sender_name
+            p= msg.message
+            small= msg.created_at
+      else
+        p No messages yet.
+
+    form(method="POST").message-form
+      label(for="message") Write a message
+      textarea#message(name="message" required placeholder="Type your message here...")
+      button(type="submit") Send Message
+
+    if userRole === "Coordinator"
+      a(href="/coordinator/requests/pending") Back to pending requests
+    else
+      a(href="/member/requests") Back to my requests

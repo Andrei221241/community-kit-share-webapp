@@ -40,6 +40,8 @@ block content
             strong Returned At:
             |  #{req.returned_at}
 
+        a.btn(href=`/member/requests/${req.id}/messages`) View Messages
+
         if req.canReturn
           form(method="POST", action=`/member/requests/${req.id}/return`)
             button(type="submit") Return Kit
