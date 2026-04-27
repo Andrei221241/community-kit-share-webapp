@@ -1,20 +1,31 @@
+// Import Express framework
 const express = require("express");
 
+// Import page controller functions
 const pages = require("../controllers/pages.controller");
 
+// Create a new Express router
 const router = express.Router();
 
+// Middleware to require a logged-in member
 function requireMember(req, res, next) {
+    // Redirect to member login if no user session exists
     if (!req.session.userId) {
         return res.redirect("/member/login");
     }
+
+    // Continue if member is logged in
     next();
 }
 
+// Middleware to require a logged-in coordinator
 function requireCoordinator(req, res, next) {
+    // Redirect if user is not logged in or is not a coordinator
     if (!req.session.userId || req.session.userRole !== "Coordinator") {
         return res.redirect("/coordinator/login");
     }
+
+    // Continue if coordinator is authorized
     next();
 }
 
@@ -46,9 +57,11 @@ router.post("/ratings/add", requireMember, pages.addRating);
 router.get("/users", requireCoordinator, pages.usersList);
 router.get("/users/:id", requireCoordinator, pages.userProfile);
 
+// Forgot password routes
 router.get("/member/forgot-password", pages.getForgotPasswordPage);
 router.post("/member/forgot-password", pages.postForgotPassword);
 
+// Reset password routes
 router.get("/member/reset-password/:token", pages.getResetPasswordPage);
 router.post("/member/reset-password/:token", pages.postResetPassword);
 
@@ -77,8 +90,10 @@ router.get("/listings/:id", pages.kitDetail);
 router.get("/tags", pages.tagsAndCategories);
 router.get("/find-campsites", pages.findCampsites);
 
+// Test/demo routes
 router.get("/db_test", pages.dbTest);
 router.get("/goodbye", pages.goodbye);
 router.get("/hello/:name", pages.hello);
 
+// Export router for use in the main app
 module.exports = router;

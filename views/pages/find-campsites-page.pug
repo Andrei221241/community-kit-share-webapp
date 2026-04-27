@@ -1,20 +1,39 @@
+//- Document type declaration
 doctype html
+
+//- Root HTML element with language set to English
 html(lang="en")
   head
+    //- Character encoding
     meta(charset="UTF-8")
+    
+    //- Responsive viewport settings for mobile and desktop
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    
+    //- Page title shown in the browser tab
     title Find Campsites - Community Kit Share
+    
+    //- Leaflet map library stylesheet
     link(rel="stylesheet", href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css")
+    
+    //- Custom stylesheet for the find campsite page
     link(rel="stylesheet", href="/styles/css/find-campsite-page.css")
 
   body
+    //- Main page wrapper
     .page
+      //- Main content card
       .card
+        //- Page heading
         h1 Find Campsites
+        
+        //- Introductory text explaining the purpose of the page
         p These are suggested campsites selected by our coordinators to help members find suitable outdoor locations across the UK.
 
+        //- Top control bar containing filters and action buttons
         .topbar
           .controls
+            //- Campsite activity filter dropdown
             div
               label(for="activityFilter") Filter
               br
@@ -25,29 +44,37 @@ html(lang="en")
                 option(value="cooking") Cooking
                 option(value="family") Family
 
+            //- Button to use the user's current location
             div
               label &nbsp;
               br
               button#locationBtn(type="button") Use My Location
 
+            //- Button to search for the nearest campsite
             div
               label &nbsp;
               br
               button#nearestSearchBtn(type="button") Find Nearest Campsite
 
+            //- Button to return to the home page
             div
               label &nbsp;
               br
               form(action="/", method="GET", style="display:inline;")
                 button(type="submit") Back to Home
 
+        //- Main content grid containing map and campsite information
         .content-grid
+          //- Leaflet map container
           #map(style="height: 650px; width: 650px; max-width: 100%; border: 1px solid #ccc; border-radius: 12px;")
+          
+          //- Side panel listing suggested campsites and descriptions
           .info-panel
             h2 Coordinator Suggested Campsites
             p
               | Below is a list of the locations currently suggested by our coordinators. These recommendations are intended to help members find practical and scenic places to use borrowed camping equipment across the UK.
 
+            //- Static list of coordinator suggested campsites
             ul.place-list
               li
                 strong Lake District Camp Site
@@ -98,20 +125,29 @@ html(lang="en")
                 strong North York Moors Camp
                 |  – Suggested for scenic moorland trips and walking. Usually cool and breezy.
 
+            //- Note about future Google API enhancements
             p.note
               | Ratings and exact travel estimates can be added later using Google APIs. For now, these are coordinator suggestions based on suitability, location, and outdoor use.
 
+        //- Small footer note crediting OpenStreetMap
         .small Powered by OpenStreetMap
 
+    //- Leaflet JavaScript library
     script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
+    
+    //- Inline JavaScript to create and control the interactive campsite map
     script.
+      // Wait until the page content is fully loaded before running the map code
       document.addEventListener("DOMContentLoaded", function () {
+        // Create the map and set its default center and zoom level
         const map = L.map("map").setView([54.5, -3], 6);
 
+        // Add the OpenStreetMap tile layer to the map
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "&copy; OpenStreetMap contributors"
         }).addTo(map);
 
+        // Array of campsite objects containing map and popup data
         const campsites = [
           { name: "Lake District Camp Site", lat: 54.4609, lng: -3.0886, location: "Cumbria", description: "Suggested by our coordinators for hiking and camping.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Derwentwater_from_Catbells.jpg/640px-Derwentwater_from_Catbells.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=54.4609,-3.0886" },
           { name: "Snowdonia Camping Park", lat: 53.0685, lng: -4.0761, location: "Wales", description: "Suggested by our coordinators for mountain trips and outdoor weekends.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Snowdon_from_Llyn_Llydaw.jpg/640px-Snowdon_from_Llyn_Llydaw.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=53.0685,-4.0761" },
@@ -131,14 +167,23 @@ html(lang="en")
           { name: "North York Moors Camp", lat: 54.3950, lng: -0.9310, location: "North Yorkshire", description: "Suggested by our coordinators for scenic moorland trips.", tags: ["tent", "hiking"], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/North_York_Moors.jpg/640px-North_York_Moors.jpg", directions: "https://www.google.com/maps/dir/?api=1&destination=54.395,-0.931" }
         ];
 
+        // Array to store current map markers
         let markers = [];
+        
+        // Marker for the user's location
         let userMarker = null;
+        
+        // Variables to store user's latitude and longitude
         let userLat = null;
         let userLng = null;
 
+        // Function to render campsite markers based on selected filter
         function renderMarkers(filter) {
+          // Remove existing markers from the map
           markers.forEach(marker => map.removeLayer(marker));
           markers = [];
+          
+          // Add markers for campsites matching the filter
           campsites.forEach(site => {
             if (filter === "all" || site.tags.includes(filter)) {
               const marker = L.marker([site.lat, site.lng]).addTo(map);
@@ -156,16 +201,23 @@ html(lang="en")
           });
         }
 
+        // Render all markers when the page first loads
         renderMarkers("all");
 
+        // Get the activity filter dropdown element
         const filterEl = document.getElementById("activityFilter");
+        
+        // Add filter change listener if element exists
         if (filterEl) {
           filterEl.addEventListener("change", function () {
             renderMarkers(this.value);
           });
         }
 
+        // Get the use location button element
         const locationBtn = document.getElementById("locationBtn");
+        
+        // Add click handler for geolocation if button exists
         if (locationBtn) {
           locationBtn.addEventListener("click", function () {
             if (!navigator.geolocation) {
@@ -174,10 +226,17 @@ html(lang="en")
             }
             navigator.geolocation.getCurrentPosition(
               function (position) {
+                // Save user coordinates
                 userLat = position.coords.latitude;
                 userLng = position.coords.longitude;
+                
+                // Center map on user location
                 map.setView([userLat, userLng], 8);
+                
+                // Remove previous user marker if it exists
                 if (userMarker) map.removeLayer(userMarker);
+                
+                // Add a new marker for the user's location
                 userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("You are here").openPopup();
               },
               function () {
@@ -187,17 +246,23 @@ html(lang="en")
           });
         }
 
+        // Get the nearest campsite search button element
         const nearestSearchBtn = document.getElementById("nearestSearchBtn");
+        
+        // Add click handler for nearest campsite search
         if (nearestSearchBtn) {
           nearestSearchBtn.addEventListener("click", function () {
+            // If user location is known, open Google Maps search near their coordinates
             if (userLat && userLng) {
               window.open(`https://www.google.com/maps/search/campsites/@${userLat},${userLng},10z`, "_blank");
             } else {
+              // Otherwise, do a general nearest campsite search
               window.open("https://www.google.com/maps/search/nearest+campsite+to+me", "_blank");
             }
           });
         }
 
+        // Refresh map size after a short delay to ensure proper rendering
         setTimeout(function () {
           map.invalidateSize();
         }, 200);

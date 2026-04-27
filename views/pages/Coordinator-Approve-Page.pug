@@ -1,36 +1,52 @@
+//- Extends the main layout template
 extends ../layout
 
+//- Include page-specific stylesheet
 block styles
+  //- Link to coordinator approval page styles
   link(rel="stylesheet", href="/styles/css/Coordinator-Approve-Page.css")
 
+//- Main content block
 block content
+  //- Main wrapper container
   main.wrap
+    //- Main card for managing requests
     section.card
+      //- Page heading
       h1 Manage Requests
 
+      //- Check if there are any requests
       if requests && requests.length
+        //- Loop through each request
         each req in requests
+          //- Individual request card
           div.card
+            //- Display request ID
             p
               strong Request ID:
               |  #{req.id}
 
+            //- Display member name
             p
               strong Member:
               |  #{req.requester_name}
 
+            //- Display kit name
             p
               strong Kit:
               |  #{req.kit_name}
 
+            //- Display booking dates
             p
               strong Dates:
               |  #{req.start_date} to #{req.end_date}
 
+            //- Display note or fallback
             p
               strong Note:
               |  #{req.note || 'None'}
 
+            //- Display request status with conditional styling
             p
               strong Status:
               if req.displayStatus === 'Currently Borrowed'
@@ -44,14 +60,19 @@ block content
               else
                 span.badge.warn Pending
 
+            //- Action buttons container
             div(style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;")
-              // Message button for coordinator
+              
+              //- Button to view messages related to this request
               a.btn(href=`/coordinator/requests/${req.id}/messages`) Messages
 
+              //- Show approve/reject options if request is pending
               if req.status === 'Pending'
+                //- Approve request form
                 form(method="POST", action=`/coordinator/requests/${req.id}/approve`)
                   button(type="submit", style="background-color: #28a745;") Approve
 
+                //- Reject request form with optional reason
                 form(method="POST", action=`/coordinator/requests/${req.id}/reject`)
                   input(
                     type="text",
@@ -61,12 +82,15 @@ block content
                   )
                   button(type="submit", style="background-color: #dc3545;") Reject
 
+              //- Show return option if applicable
               if req.canReturn
                 form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
                   button(type="submit") Return Kit for User
       else
+        //- Message when no requests are found
         p(style="margin-bottom: 20px;") No requests found
 
+        //- Link to return to listings page
         a(
           href="/listings",
           style="display: inline-block; padding: 10px 20px; background: #1e3c72; color: white; border-radius: 20px; text-decoration: none;"

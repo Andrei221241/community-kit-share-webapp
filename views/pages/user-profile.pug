@@ -1,39 +1,52 @@
+//- Extends the main layout template
 extends ../layout
 
+//- Main content block
 block content
+  //- User profile information card
   .card
+    //- Page title
     h1= title
 
+    //- Display user's name
     p
       strong Name:
       |  #{user.name}
 
+    //- Display user's role
     p
       strong Role:
       |  #{user.role}
 
+    //- Display user's email or fallback to N/A
     p
       strong Email:
       |  #{user.email || 'N/A'}
 
+    //- Display bio only if it exists
     if user.bio
       p
         strong Bio:
         br
         | #{user.bio}
 
+    //- Display loyalty points or fallback to 0
     p
       strong Loyalty Points:
       |  #{user.loyalty_points || 0}
 
+    //- Display user's badge
     p
       strong Badge:
       span.badge.ok #{badge}
 
+  //- Show award points form only for coordinators viewing a member
   if isCoordinatorView && user.role === 'Member'
     .card
+      //- Section heading for awarding loyalty points
       h2 Award Loyalty Points
 
+      //- Form to award points to the member
       form(method="POST", action=`/coordinator/users/${user.id}/points`)
         label Points
         br
@@ -52,19 +65,25 @@ block content
         br
         button(type="submit", style="margin-top: 8px;") Award Points
 
+  //- Borrow requests section heading
   h2 Borrow Requests
 
+  //- Check if borrow requests exist
   if requests && requests.length
+    //- Loop through each borrow request
     each req in requests
       .card
+        //- Display kit name
         p
           strong Kit:
           |  #{req.kit_name}
 
+        //- Display borrowing dates
         p
           strong Dates:
           |  #{req.start_date} to #{req.end_date}
 
+        //- Display request status with badge styling
         p
           strong Status:
           if req.displayStatus === 'Currently Borrowed'
@@ -78,16 +97,19 @@ block content
           else
             span.badge.warn Pending
 
+        //- Show rejection reason if request was rejected and a reason exists
         if req.status === 'Rejected' && req.rejection_reason
           p
             strong Reason:
             |  #{req.rejection_reason}
 
+        //- Show returned date/time if available
         if req.returned_at
           p
             strong Returned At:
             |  #{req.returned_at}
 
+        //- Show return button if returns can be managed and request can be returned
         if canManageReturns && req.canReturn
           if isCoordinatorView
             form(method="POST", action=`/coordinator/requests/${req.id}/complete-return`)
@@ -96,10 +118,13 @@ block content
             form(method="POST", action=`/member/requests/${req.id}/return`)
               button(type="submit") Return My Kit
   else
+    //- Message shown when there are no borrow requests
     p This user has no borrow requests.
 
+  //- Points history section heading
   h2 Points History
 
+  //- Check if points history exists
   if history && history.length
     table
       thead
@@ -109,10 +134,12 @@ block content
           th Date
           th Comment
       tbody
+        //- Loop through each points history row
         each h in history
           tr
             td= h.action_type
             td
+              //- Display positive points with ok badge, otherwise error badge
               if h.points_change > 0
                 span.badge.ok +#{h.points_change}
               else
@@ -120,24 +147,33 @@ block content
             td= h.created_at
             td= h.comment || 'N/A'
   else
+    //- Message shown when there is no points history
     p No points history yet.
 
+  //- Kit reviews section heading
   h2 Kit Reviews
 
+  //- Check if kit reviews exist
   if reviews && reviews.length
+    //- Loop through each kit review
     each r in reviews
       .card
+        //- Display reviewed kit name
         p
           strong Kit:
           |  #{r.kit_name}
 
+        //- Display review rating
         p
           strong Rating:
           |  #{r.stars}/5
 
+        //- Display review comment if it exists
         if r.comment
           p= r.comment
 
+        //- Display review creation date
         small #{r.created_at}
   else
+    //- Message shown when there are no kit reviews
     p No kit reviews yet.
