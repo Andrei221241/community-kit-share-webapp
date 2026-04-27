@@ -1,64 +1,41 @@
-//- Document type declaration
 doctype html
-
-//- Root HTML element with language set to English
 html(lang="en")
   head
-    //- Character encoding
     meta(charset="UTF-8")
-    
-    //- Page title shown in the browser tab
     title Community Kit Share
-    
-    //- Link to homepage stylesheet
     link(rel="stylesheet", href="/styles/css/Intro-Page.css")
 
   body
 
-    //- Hero section with main title, description, and navigation buttons
+    // HERO SECTION
     section.hero
-      //- Main homepage heading
       h1 Community Kit Share
-      
-      //- Short description of the platform
       p Sharing equipment, building community, and supporting outdoor experiences.
 
-      //- Button group for main navigation options
       .buttons
-        //- Link to member login page
         a.btn(href="/member/login") Member Login
-        
-        //- Link to coordinator/admin login page
         a.btn.secondary(href="/coordinator/login") Admin Login
-        
-        //- Link to campsite finder page
         a.btn.outline(href="/find-campsites") Campsite Finder
 
-    //- About section explaining the purpose of the platform
+    // ABOUT SECTION
     section.about
-      //- Section heading
       h2 About Us
-      
-      //- Description of the project and its goals
       p 
         | We are a team of software engineering students developing a community-driven platform 
         | that allows users to borrow and share outdoor equipment kits. Our goal is to promote 
         | sustainability, reduce costs, and encourage community collaboration by making essential 
         | gear accessible to everyone.
 
-    //- Videos section showing embedded outdoor inspiration videos
     // VIDEOS SECTION
     section.videos
-      //- Section heading
       h2 Explore Outdoor Inspiration
 
-      //- Grid layout containing embedded YouTube videos
       .video-grid
         iframe(src="https://www.youtube.com/embed/u1deJaJq4Ho", allowfullscreen)
         iframe(src="https://www.youtube.com/embed/djziBOPR9VE", allowfullscreen)
         iframe(src="https://www.youtube.com/embed/Uu25VdfxE6U", allowfullscreen)
         iframe(src="https://www.youtube.com/embed/HICGhesPSAY", allowfullscreen)
 
-    //- Footer section with copyright text
+    // FOOTER
     footer
       p © 2026 Community Kit Share | Built by our team

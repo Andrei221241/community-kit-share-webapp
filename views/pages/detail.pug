@@ -81,56 +81,42 @@ block content
   .card
     h2 Kit Reviews
 
-    // Display reviews if they exist
     if reviews && reviews.length
-      // Loop through each review
       each review in reviews
         .card
-          // Display reviewer name and star rating
           p
             strong= review.reviewer_name
             |  - #{review.stars}/5 stars
 
-          // Display review comment if provided
           if review.comment
             p= review.comment
 
-          // Display review creation date
           small= review.created_at
     else
-      // Message shown when there are no reviews
       p No reviews yet.
 
   // Client-side script for date validation
   script.
-    // Run date validation setup after page content has loaded
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Get start and end date input elements
       const startInput = document.getElementById('startDate');
       const endInput = document.getElementById('endDate');
       
-      // Stop script if date inputs are not present
       if (!startInput || !endInput) return;
 
-      // Calculate today's date in local timezone
       const today = new Date();
       const tzOffset = today.getTimezoneOffset() * 60000;
       const todayLocal = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
       
-      // Prevent users from selecting past dates
       startInput.min = todayLocal;
       endInput.min = todayLocal;
 
-      // Update end date minimum when start date changes
       startInput.addEventListener('change', (e) => {
         const selectedStart = e.target.value;
 
         if (selectedStart) {
-          // End date cannot be before selected start date
           endInput.min = selectedStart;
 
-          // Adjust end date if it is earlier than start date
           if (endInput.value && endInput.value < selectedStart) {
             endInput.value = selectedStart;
           }

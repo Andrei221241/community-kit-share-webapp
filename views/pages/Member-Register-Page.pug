@@ -4,31 +4,34 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    title Member Login
+    title Create Account
     link(rel="stylesheet", href="/styles/css/Member-Login-Page.css")
 
   body
     main.wrap
       section.card
-        h1 Community Member Login
+        h1 Create Member Account
 
-        if error
+        if error  
           p.error-message= error
 
-        form(method="POST", action="/member/login")
+        if success
+          p.success-message= success
+
+        form(method="POST", action="/member/register")
+          label(for="name") Name
+          input#name(type="text", name="name", required)
+
           label(for="email") Email
           input#email(type="email", name="email", required)
 
           label(for="password") Password
           input#password(type="password", name="password", required)
 
-          button(type="submit") Log in
+          label(for="confirm_password") Confirm Password
+          input#confirm_password(type="password", name="confirm_password", required)
 
-        form(action="/member/register", method="GET")
           button(type="submit") Create Account
 
-        form(action="/", method="GET")
-          button(type="submit") Back to Home
-
-        p.auth-link
-          a(href="/member/forgot-password") Forgot Password?
+        form(action="/member/login", method="GET")
+          button(type="submit") Back to Login
